@@ -20,23 +20,27 @@ Supports GPT Image 2 / Midjourney v6 / Stable Diffusion XL / Sora / Runway / Kli
 
 ## Quick Start
 
-**30 seconds to start:**
+### Default Mode (recommend first, you choose, then generate)
 
 ```
-You: Help me make a storyboard for this: [paste your story]
+You: [paste your story]
 AI: [Smart Recommendation] Based on your story, here are the best matches...
-You: 1
+     Recommend 1 (best match): Style X + Format Y — reason
+     Recommend 2 (backup):     Style A + Format B — reason
+     Recommend 3 (different):  Style C + Format D — reason
+You: 1          ← Reply with number to confirm, or say "全来" for 4 at once
 AI: [Full prompt]
 ```
 
-**One-click modes:**
+### Quick Mode (skip recommendations, output directly)
 
 | Command | Effect |
 |---------|--------|
-| `一键生成` (one-click generate) | Full pipeline auto-completed, no options shown |
+| `一键生成` (one-click generate) | Full pipeline auto, no options shown |
 | `一键全平台` (one-click all platforms) | Full pipeline + GPT/MJ/SD outputs |
-| `一键多版本` (one-click multi-version) | Full pipeline + A/B/C version comparison |
+| `一键多版本` (one-click multi-version) | Full pipeline + A/B/C comparison |
 | `一键全来` (one-click everything) | 3 styles × 4 formats × 3 platforms = 36 prompts |
+| `全来` | 4 most relevant format prompts |
 
 ---
 
