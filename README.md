@@ -64,7 +64,7 @@ AI：【智能推荐】
 AI：```[完整场景概念卡 prompt]```
 ```
 
-![雨夜独行 - 场景概念卡](examples/rain-night-scene.jpg)
+![雨夜独行 - 场景概念卡](examples/rain-night-scene.png)
 > 雨夜独行 · 都市情绪电影板 · 场景概念卡
 
 ---
@@ -81,7 +81,7 @@ AI：【智能推荐】
 AI：```[全案板 prompt，含师徒关系构图加成]```
 ```
 
-![宿敌对决 - 全案板](examples/enemy-duel-board.jpg)
+![宿敌对决 - 全案板](examples/enemy-duel-board.png)
 > 宿敌对决 · 东方玄幻 · 全案板 · R3师徒关系加成
 
 ---
@@ -98,7 +98,7 @@ AI：【智能推荐】
 AI：```[暧昧场景 prompt，含R14关系加成]```
 ```
 
-![办公室暧昧 - 场景概念卡](examples/office-romance.jpg)
+![办公室暧昧 - 场景概念卡](examples/office-romance.png)
 > 办公室暧昧 · 都市情绪 · R14暧昧拉扯关系加成
 
 ---
@@ -110,7 +110,7 @@ AI：```[暧昧场景 prompt，含R14关系加成]```
 AI：```[融合风格 prompt，60%王家卫霓虹+40%吉卜力手绘水彩]```
 ```
 
-![王家卫×吉卜力 - 融合风格](examples/wong-ghibli-fusion.jpg)
+![王家卫×吉卜力 - 融合风格](examples/wong-ghibli-fusion.png)
 > 风格融合 · 王家卫霓虹 × 吉卜力手绘水彩
 
 ---
@@ -124,7 +124,7 @@ AI：【版本 A：东方玄幻】[prompt A]
     【版本 C：吉卜力】[prompt C]
 ```
 
-![多版本对比](examples/multi-version-compare.jpg)
+![多版本对比](examples/multi-version-compare.png)
 > 同一故事 · 三种视觉诠释对比
 
 ---
@@ -137,6 +137,9 @@ AI：【GPT Image 2 版本】[中文完整描述]
     【Midjourney v6 版本】[英文 + --cref + --v 6]
     【Stable Diffusion XL 版本】[正面/负面/参数]
 ```
+
+![全平台管线](examples/full-pipeline.png)
+> 同一故事 · 三平台输出管线展示
 
 ---
 
