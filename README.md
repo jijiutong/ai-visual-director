@@ -321,11 +321,34 @@ ai-visual-director/
 
 ## 安装
 
+### 方式一：npx skills 安装（推荐）
+
+```bash
+# 全局安装 — 所有项目可用
+npx skills add jijiutong/ai-visual-director -g -y
+
+# 项目级安装 — 仅当前项目可用
+npx skills add jijiutong/ai-visual-director
+```
+
+安装后 Claude Code 自动发现，在对话中粘贴故事即可使用。
+
+### 方式二：手动安装
+
 ```bash
 git clone git@github.com:jijiutong/ai-visual-director.git
 ```
 
-将 `SKILL.md` 放入你的 AI Agent 技能目录即可使用。
+将 `SKILL.md` 及 `references/`、`templates/` 放入 `~/.claude/skills/ai-story-board/`（全局）或 `<project>/.claude/skills/ai-story-board/`（项目级）。
+
+### 方式三：直接用
+
+不做任何安装，在 Claude Code 中直接说：
+```
+帮我做这个故事板：[粘贴你的故事片段]
+```
+
+AI 会根据 SKILL.md 的指令自动生成 prompt。
 
 ---
 
