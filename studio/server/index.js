@@ -50,6 +50,7 @@ app.use('/api/workflow', require('./routes/workflow'));
 app.use('/api/config', require('./routes/config'));
 app.use('/api/vault', require('./routes/vault'));
 app.use('/api/preview', require('./routes/preview'));
+app.use('/api/chat', require('./routes/chat'));
 
 // Serve UI static files
 const uiDir = path.join(__dirname, '..', 'ui');
