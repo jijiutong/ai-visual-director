@@ -979,6 +979,54 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 - **Prompt 压缩** → "压缩到MJ/SD" 自动精简到平台最佳长度
 - **批量处理** → "处理这一章" 整章小说自动拆场景批量生成
 
+---
+
+## AI Story Studio（Web 流程画布）
+
+配套的本地 Web 流程画布，通过对话命令一键启动。
+
+| 特性 | 说明 |
+|------|------|
+| 启动方式 | 在对话中说 `启动画布` / `打开工作室` / `start` |
+| 简单版 | 5 个预设流程卡片，点一下自动跑通 |
+| 专业版 | 节点拖拽画布，自由连线搭流程，分支并行 Agent |
+| 配置面板 | 可视化编辑 Obsidian Vault 根目录的 `config.yml` |
+| Obsidian 读取 | 自动扫描 Vault 目录，识别角色/场景文件夹 |
+| API 代理 | Key 保存在本地 config.yml，不暴露前端 |
+
+### 启动画布
+
+- **用户说"启动画布"/"打开工作室"/"start"** → 执行以下步骤：
+  1. 检查 `studio/node_modules` 是否存在，如果不存在则执行 `cd studio && npm install`
+  2. 执行 `cd studio && node server/index.js` 启动本地服务
+  3. 服务启动后自动打开浏览器访问 `http://localhost:3000`
+  4. 告知用户：「🎬 AI Story Studio 已启动，在浏览器中操作画布。这里继续对话处理故事。」
+
+- **用户说"配置 API"** → 引导用户在 Studio 的 Config 面板（⚙️ 标签）中可视化编辑 API Key，或直接编辑 Vault 根目录的 `config.yml`
+
+### 项目结构
+
+```
+studio/
+├── server/            # Node.js 本地服务
+│   ├── index.js       # Express + WebSocket 入口
+│   ├── vault-reader.js    # Obsidian 文件读取
+│   ├── config-manager.js  # config.yml 读写
+│   ├── api-proxy.js       # API 代理（Key 安全）
+│   ├── workflow-engine.js # DAG 流程引擎
+│   ├── agent-pool.js      # 并行 Agent 调度
+│   ├── skill-bridge.js    # Claude Skill 桥接
+│   └── routes/            # API 路由
+├── workflows/         # 5 个内置流程定义（JSON）
+├── ui/                # Web 画布前端
+│   ├── index.html     # 主页面
+│   ├── css/studio.css # 暗色主题样式
+│   └── js/            # 组件（simple-view, pro-view, canvas 等）
+└── package.json
+```
+
+详细设计见 `docs/superpowers/specs/2026-06-09-ai-story-studio-design.md`
+
 ## 负面清单（所有输出必须包含，专属负面词见 `references/negative-prompt.md`）
 
 ```
