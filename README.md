@@ -138,8 +138,11 @@ AI：【智能推荐】1. 黑金动作 + 1. 全案板
 
 **视频生成效果：**
 
-[![一剑开天 15s 视频](examples/图4.png)](https://github.com/jijiutong/ai-visual-director/blob/main/examples/copy_B8B1E9A0-0359-45B4-8019-9F0F2958D26E.MOV)
-> 《一剑开天》15s 完整视频 — 点击播放 — 故事板主参考 + 角色锚点 + 画面锚点 + 平滑过渡
+<p align="center">
+  <video src="https://raw.githubusercontent.com/jijiutong/ai-visual-director/main/examples/copy_B8B1E9A0-0359-45B4-8019-9F0F2958D26E.MOV" controls autoplay muted loop width="100%"></video>
+</p>
+
+> 《一剑开天》15s 完整视频 — 故事板主参考 + 角色锚点 + 画面锚点 + 平滑过渡
 
 ---
 
