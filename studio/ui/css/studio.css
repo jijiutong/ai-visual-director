@@ -1165,6 +1165,38 @@ body {
 .run-status.completed { background: rgba(76,175,132,0.2); color: var(--green); }
 .run-status.failed { background: rgba(224,85,85,0.2); color: var(--red); }
 
+/* ========== Toast ========== */
+.studio-toast {
+  position: fixed;
+  bottom: 30px;
+  left: 50%;
+  transform: translateX(-50%) translateY(20px);
+  padding: 12px 24px;
+  background: var(--bg-card);
+  border: 1px solid var(--accent);
+  border-radius: var(--radius);
+  color: var(--text);
+  font-size: 14px;
+  font-weight: 650;
+  z-index: 9999;
+  opacity: 0;
+  transition: opacity 0.25s, transform 0.25s;
+  pointer-events: none;
+  box-shadow: var(--shadow);
+}
+.studio-toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+
+/* ========== Button States ========== */
+.btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
+.btn-primary:disabled { background: var(--bg-card); border-color: var(--border); color: var(--text-dim); }
+
+/* ========== Skeleton Loading ========== */
+@keyframes skeleton-pulse {
+  0%, 100% { opacity: 0.4; }
+  50% { opacity: 0.7; }
+}
+.output-card.skeleton { animation: skeleton-pulse 1.5s infinite; min-height: 64px; }
+
 /* ========== Scrollbar ========== */
 ::-webkit-scrollbar { width: 6px; height: 6px; }
 ::-webkit-scrollbar-track { background: transparent; }

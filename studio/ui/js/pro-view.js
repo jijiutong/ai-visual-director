@@ -85,13 +85,15 @@ class ProView {
     if (!action) return;
     switch (action.type) {
       case 'switchTab':
-        switchTab(action.tab);
+        if (typeof switchTool === 'function') switchTool(action.tab === 'simple' ? 'storyboard' : action.tab);
         break;
       case 'startFlow':
         if (confirm(`启动流程「${action.flowName}」？`)) {
-          const simpleView = window.simpleView || new SimpleView();
-          simpleView.startFlow({ name: action.flowName, flowFile: action.flowFile, icon: '🎬' });
-          switchTab('simple');
+          if (window.marketView) {
+            window.marketView.selectedStyle = null;
+            window.marketView.render();
+          }
+          if (typeof switchTool === 'function') switchTool('storyboard');
         }
         break;
       case 'clearChat':
@@ -117,23 +119,34 @@ class ProView {
     try {
       const data = await api.listFlows();
       const flows = data.flows || [];
-      const names = flows.map((f, i) => `${i + 1}. ${f.name}`).join('\n');
-      const choice = prompt(`选一个预设流程加载到画布：\n\n${names}\n\n输入编号：`);
-      if (choice) {
-        const idx = parseInt(choice) - 1;
-        if (flows[idx]) {
-          const flowFile = flows[idx].flowFile;
-          const resp = await fetch(`./workflows/${flowFile}.json`);
-          if (resp.ok) {
-            const flowDef = await resp.json();
-            this.canvas.loadFlow(flowDef);
-            this.flowName = flowDef.name;
-          } else {
-            // Use fallback: load locally from api
-            this.canvas.loadFlow({ nodes: [], edges: [] });
-          }
+      if (flows.length === 0) { alert('没有可用的预设流程'); return; }
+
+      // Create a quick dropdown rather than prompt()
+      const existing = document.getElementById('presetFlowSelect');
+      if (existing) existing.remove();
+
+      const select = document.createElement('select');
+      select.id = 'presetFlowSelect';
+      select.style.cssText = 'position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:9999;padding:12px 20px;font-size:15px;background:var(--bg-card);color:var(--text);border:2px solid var(--accent);border-radius:8px;cursor:pointer;min-width:280px;';
+      select.innerHTML = `<option value="">— 选择预设流程 —</option>` +
+        flows.map((f, i) => `<option value="${i}">${f.icon || ''} ${f.name}</option>`).join('');
+
+      select.addEventListener('change', async () => {
+        const idx = parseInt(select.value);
+        if (isNaN(idx)) return;
+        const flow = flows[idx];
+        const resp = await fetch(`/workflows/${flow.flowFile}.json`);
+        if (resp.ok) {
+          const flowDef = await resp.json();
+          this.canvas.loadFlow(flowDef);
+          this.flowName = flowDef.name;
         }
-      }
+        select.remove();
+      });
+
+      select.addEventListener('blur', () => setTimeout(() => select.remove(), 200));
+      document.body.appendChild(select);
+      select.focus();
     } catch (e) {
       alert('加载失败：' + e.message);
     }

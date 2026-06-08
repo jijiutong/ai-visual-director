@@ -8,6 +8,17 @@ function setChatVisible(visible) {
   if (chatMessages) chatMessages.style.display = visible ? 'flex' : 'none';
 }
 
+function renderToolPage(title, icon, desc, placeholder, flowFile) {
+  return `
+    <div class="tool-workspace">
+      <div class="tool-hero"><h2>${icon} ${title}</h2><p>${desc}</p></div>
+      <textarea id="toolInput" class="story-textarea" placeholder="${placeholder}" rows="4"></textarea>
+      <br/>
+      <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('${flowFile}')">▶ 生成</button>
+      <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
+    </div>`;
+}
+
 function switchTool(tool) {
   currentTool = tool;
 
@@ -67,62 +78,23 @@ function switchTool(tool) {
       break;
 
     case 'character':
-      workspace.innerHTML = `
-        <div class="tool-workspace">
-          <div class="tool-hero"><h2>👤 角色设计</h2><p>角色DNA → 角色卡 → 三视图 → 12表情</p></div>
-          <textarea id="toolInput" class="story-textarea" placeholder="描述你的角色：姓名、外貌、性格、身份..." rows="4"></textarea>
-          <br/>
-          <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('character-design')">▶ 生成角色</button>
-          <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
-        </div>`;
+      workspace.innerHTML = renderToolPage('角色设计', '👤', '角色DNA → 角色卡 → 三视图 → 12表情', '描述你的角色：姓名、外貌、性格、身份...', 'character-design');
       setChatVisible(false);
       break;
-
     case 'scene':
-      workspace.innerHTML = `
-        <div class="tool-workspace">
-          <div class="tool-hero"><h2>🏞️ 场景概念</h2><p>场景概念图 + 氛围参考</p></div>
-          <textarea id="toolInput" class="story-textarea" placeholder="描述你的场景：地点、时代、天气、氛围..." rows="4"></textarea>
-          <br/>
-          <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('scene-card')">▶ 生成场景</button>
-          <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
-        </div>`;
+      workspace.innerHTML = renderToolPage('场景概念', '🏞️', '场景概念图 + 氛围参考', '描述你的场景：地点、时代、天气、氛围...', 'scene-card');
       setChatVisible(false);
       break;
-
     case 'video':
-      workspace.innerHTML = `
-        <div class="tool-workspace">
-          <div class="tool-hero"><h2>🎥 分镜转视频</h2><p>分镜图 → 合并帧 → Prompt → 出片</p></div>
-          <textarea id="toolInput" class="story-textarea" placeholder="描述分镜内容、运镜方式..." rows="4"></textarea>
-          <br/>
-          <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('board-to-video')">▶ 生成视频Prompt</button>
-          <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
-        </div>`;
+      workspace.innerHTML = renderToolPage('分镜转视频', '🎥', '分镜图 → 合并帧 → Prompt → 出片', '描述分镜内容、运镜方式...', 'board-to-video');
       setChatVisible(false);
       break;
-
     case 'poster':
-      workspace.innerHTML = `
-        <div class="tool-workspace">
-          <div class="tool-hero"><h2>🎨 海报</h2><p>生成电影海报 / 宣传海报</p></div>
-          <textarea id="toolInput" class="story-textarea" placeholder="片名、标语、关键场景描述..." rows="4"></textarea>
-          <br/>
-          <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('poster')">▶ 生成海报</button>
-          <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
-        </div>`;
+      workspace.innerHTML = renderToolPage('海报', '🎨', '生成电影海报 / 宣传海报', '片名、标语、关键场景描述...', 'poster');
       setChatVisible(false);
       break;
-
     case 'allinone':
-      workspace.innerHTML = `
-        <div class="tool-workspace">
-          <div class="tool-hero"><h2>⚡ 一键全来</h2><p>全案板+角色卡+海报+情绪板 一次出</p></div>
-          <textarea id="toolInput" class="story-textarea" placeholder="粘贴你的故事..." rows="4"></textarea>
-          <br/>
-          <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('one-click-all')">▶ 一键生成</button>
-          <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
-        </div>`;
+      workspace.innerHTML = renderToolPage('一键全来', '⚡', '全案板+角色卡+海报+情绪板 一次出', '粘贴你的故事...', 'one-click-all');
       setChatVisible(false);
       break;
 
@@ -158,6 +130,18 @@ function switchTool(tool) {
       setChatVisible(false);
       break;
   }
+}
+
+// ---- Toast ----
+function showToast(msg) {
+  const existing = document.querySelector('.studio-toast');
+  if (existing) existing.remove();
+  const toast = document.createElement('div');
+  toast.className = 'studio-toast';
+  toast.textContent = msg;
+  document.body.appendChild(toast);
+  requestAnimationFrame(() => toast.classList.add('show'));
+  setTimeout(() => { toast.classList.remove('show'); setTimeout(() => toast.remove(), 300); }, 3000);
 }
 
 // ---- Theme Toggle ----

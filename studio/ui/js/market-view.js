@@ -149,12 +149,9 @@ class MarketView {
   }
 
   render() {
-    // Gallery renders lazily on toggle (hidden by default)
     this.renderRecommendations();
     this._bindStoryInput();
     this.updateButtonState();
-    // Sidebar renders independently via sidebar-tools.js
-    if (typeof window.sidebarTools?.render === 'function') window.sidebarTools.render();
   }
 
   // ---- Style Gallery (by category) ----
@@ -214,7 +211,8 @@ class MarketView {
   // ---- Story Input ----
   _bindStoryInput() {
     const input = document.getElementById('storyInput');
-    if (!input) return;
+    if (!input || input.dataset.studioBound) return;
+    input.dataset.studioBound = '1';
 
     let debounceTimer;
     input.addEventListener('input', () => {
@@ -272,19 +270,38 @@ class MarketView {
         return { ...style, format, reason, matchCount };
       });
     } else {
-      // Fallback for stories without clear keyword matches
       const charLen = story.replace(/\s/g, '').length;
+      // Smart fallback based on story length and detected tone
+      const hasAction = /打|杀|战|剑|刀|枪|火|爆/.test(story);
+      const hasRomance = /爱|情|恋|吻|心|温柔|拥抱/.test(story);
+      const hasMystery = /鬼|死|暗|谜|秘密|消失/.test(story);
+
       if (charLen > 500) {
         recs = [
-          { ...STYLES[2], format: '全案板', reason: '长篇故事，叙事宏大，东方玄幻给你最佳视觉', matchCount: 0 },
-          { ...STYLES[28], format: '海报', reason: '故事有强烈的中国元素，张艺谋式色彩叙事', matchCount: 0 },
-          { ...STYLES[1], format: '全案板', reason: '冲突驱动，黑金动作风格突出张力', matchCount: 0 }
+          { ...STYLES[2], format: '全案板', reason: '长篇叙事，科幻机甲风格呈现宏大世界观', matchCount: 0 },
+          { ...STYLES[23], format: '场景概念卡', reason: '故事篇幅长，吉卜力治愈风格适合细腻叙事', matchCount: 0 },
+          { ...STYLES[1], format: '全案板', reason: '黑金动作风格突出叙事张力', matchCount: 0 }
+        ];
+      } else if (hasAction) {
+        recs = [
+          { ...STYLES[1], format: '全案板', reason: '动作元素明显，黑金风格最配', matchCount: 0 },
+          { ...STYLES[29], format: '快速故事板', reason: '韩式冷峻美学给动作戏加分', matchCount: 0 }
+        ];
+      } else if (hasRomance) {
+        recs = [
+          { ...STYLES[5], format: '情绪板', reason: '情感细腻，都市情绪风格聚焦氛围', matchCount: 0 },
+          { ...STYLES[41], format: '海报', reason: '浪漫梦幻风格呈现温柔质感', matchCount: 0 }
+        ];
+      } else if (hasMystery) {
+        recs = [
+          { ...STYLES[4], format: '情绪板', reason: '悬疑氛围需要暗调和有限光源', matchCount: 0 },
+          { ...STYLES[40], format: '场景概念卡', reason: '心理迷宫风格呈现不安感', matchCount: 0 }
         ];
       } else {
         recs = [
-          { ...STYLES[5], format: '情绪板', reason: '篇幅精炼，都市情绪风格更聚焦氛围', matchCount: 0 },
+          { ...STYLES[5], format: '情绪板', reason: '篇幅精炼，都市情绪风格聚焦氛围', matchCount: 0 },
           { ...STYLES[49], format: '海报', reason: '概念性强，极简主义让视觉更纯粹', matchCount: 0 },
-          { ...STYLES[31], format: '情绪板', reason: '文艺气质，欧洲艺术电影风格', matchCount: 0 }
+          { ...STYLES[31], format: '情绪板', reason: '文艺气质，欧洲艺术电影风格呈现', matchCount: 0 }
         ];
       }
     }
@@ -361,9 +378,9 @@ class MarketView {
     const story = document.getElementById('storyInput')?.value?.trim() || '';
     if (!story) { alert('请先粘贴故事'); return; }
 
+    this._setGenerating(true);
     this._showOutput();
 
-    // Subscribe to progress
     if (this.unsubscribe) this.unsubscribe();
     this.unsubscribe = window.onProgress((data) => {
       if (data.nodeId) {
@@ -385,6 +402,7 @@ class MarketView {
     } catch (e) {
       this._showOutputError(e.message);
     }
+    this._setGenerating(false);
   }
 
   async generateAll() {
@@ -392,6 +410,7 @@ class MarketView {
     const story = document.getElementById('storyInput')?.value?.trim() || '';
     if (!story) { alert('请先粘贴故事'); return; }
 
+    this._setGenerating(true);
     this._showOutput();
     if (this.unsubscribe) this.unsubscribe();
     this.unsubscribe = window.onProgress((data) => {
@@ -413,21 +432,28 @@ class MarketView {
     } catch (e) {
       this._showOutputError(e.message);
     }
+    this._setGenerating(false);
+  }
+
+  _setGenerating(active) {
+    const btnGen = document.getElementById('btnGenerate');
+    const btnAll = document.getElementById('btnAllInOne');
+    if (btnGen) { btnGen.disabled = active; btnGen.textContent = active ? '🔄 生成中...' : '🎬 生成分镜'; }
+    if (btnAll) btnAll.disabled = active;
   }
 
   _showOutput() {
     const area = document.getElementById('outputArea');
-    if (area) {
-      area.style.display = 'block';
-      // Add hint to use Claude Code for real prompt generation
+    if (!area) return;
+    area.style.display = 'block';
+
+    // Prevent duplicate hint
+    if (!document.querySelector('.output-hint')) {
       const grid = document.getElementById('outputGrid');
       if (grid) {
         const hint = document.createElement('div');
         hint.className = 'output-hint';
-        hint.innerHTML = `
-          <p>💡 <b>完整 Prompt 在 Claude Code 中生成</b></p>
-          <p>在对话中说「<code>${this.storyText.slice(0, 20)}... 用${this._getSelectedStyleName()}风格出分镜</code>」即可获得专业级 Prompt</p>
-        `;
+        hint.innerHTML = `<p>💡 风格和故事已选定。在对话中说「<code>帮我生成 ${this._getSelectedStyleName()} 风格的故事板</code>」获得完整 Prompt</p>`;
         grid.parentNode.appendChild(hint);
       }
     }

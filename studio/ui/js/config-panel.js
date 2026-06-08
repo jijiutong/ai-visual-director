@@ -78,8 +78,6 @@ class ConfigPanel {
 
     document.getElementById('cfgSaveBtn').onclick = async () => {
       const updated = { platforms: {}, image_platforms: {}, defaults: {} };
-
-      // Vault path
       const vaultEl = document.getElementById('cfg-vault-path');
       if (vaultEl && vaultEl.value) updated.vault_path = vaultEl.value;
 
@@ -98,9 +96,9 @@ class ConfigPanel {
 
       try {
         await api.updateConfig(updated);
-        alert('配置已保存 ✅' + (updated.vault_path ? '\nVault 路径已更新，重启服务生效。' : ''));
+        showToast('✅ 配置已保存' + (updated.vault_path ? '（重启服务后 Vault 路径生效）' : ''));
       } catch (e) {
-        alert('保存失败: ' + e.message);
+        showToast('❌ 保存失败: ' + e.message);
       }
     };
   }
