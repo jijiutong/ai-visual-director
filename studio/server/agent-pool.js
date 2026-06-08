@@ -56,13 +56,12 @@ class AgentPool {
       case 'generate_character': case 'generate_character_sheet': case 'generate_turnaround':
       case 'generate_expressions': case 'generate_scene': case 'generate_storyboard':
       case 'generate_full_board': case 'generate_poster': case 'generate_moodboard':
-        return this._buildPrompt(type, params, context, prev);
+        return this._buildGenerateResult(type, params, context, prev);
       case 'merge_frames':
-        return { frameCount: params.frame_count || context.shotCount || 7, mergeCount: params.merge_count || 4, note: '合并帧：将分镜帧合并为参考图' };
+        return { label: '合并帧', note: '将分镜帧合并为视频参考图' };
       case 'video_prompt': {
         const storyContent = this._getStoryContent(context, prev);
-        const prompt = this._buildVideoPrompt(storyContent, params, context);
-        return { mode: params.mode || 'compressed', prompt, note: '视频 Prompt 已生成' };
+        return { label: '视频 Prompt', mode: params.mode || 'compressed', hasContent: !!storyContent };
       }
       case 'call_video_api':
         if (this.apiProxy) {
@@ -88,79 +87,20 @@ class AgentPool {
     return context.pastedStory || '';
   }
 
-  _buildPrompt(type, params, context, prev) {
-    const story = this._getStoryContent(context, prev).slice(0, 500);
-    const style = context.style || params.style || 'auto';
-    const aspectRatio = params.aspect_ratio || context.aspectRatio || '16:9';
-    const shots = context.shotCount || 7;
-
-    const formatLabels = {
-      generate_character: '角色设定卡',
-      generate_character_sheet: '角色设定卡（6模块）',
-      generate_turnaround: '角色三视图',
-      generate_expressions: '12表情范围图',
-      generate_scene: '场景概念卡',
-      generate_storyboard: '故事板分镜',
-      generate_full_board: '全案板',
-      generate_poster: '电影海报',
-      generate_moodboard: '情绪板'
+  _buildGenerateResult(type, params, context, prev) {
+    const story = this._getStoryContent(context, prev);
+    const style = context.style || 'auto';
+    const labelMap = {
+      generate_character: '角色设定卡', generate_character_sheet: '角色设定卡', generate_turnaround: '角色三视图',
+      generate_expressions: '12表情图', generate_scene: '场景概念卡', generate_storyboard: '故事板分镜',
+      generate_full_board: '全案板', generate_poster: '电影海报', generate_moodboard: '情绪板'
     };
-
-    const label = formatLabels[type] || type;
-    const prompt = [
-      `【${label}】`,
-      `风格: ${style}`,
-      `画幅: ${aspectRatio}`,
-      `分镜数: ${shots}镜`,
-      '',
-      '--- 故事内容 ---',
-      story || '（待输入）',
-      '',
-      '--- Prompt 模板 ---',
-      `[${label}] [${style}] [${aspectRatio}] --ar ${aspectRatio.replace(':', '')}`,
-      story ? `基于故事片段生成，${shots}个关键帧，cinematic lighting, professional composition` : '',
-      'no watermark, no text overlay, high quality'
-    ].filter(Boolean).join('\n');
-
     return {
-      format: type,
-      label,
-      style,
-      aspectRatio,
-      shots,
-      prompt,
-      hasContent: !!story
+      label: labelMap[type] || type,
+      style, aspectRatio: context.aspectRatio || '16:9',
+      shots: context.shotCount || 7,
+      hasStory: !!story
     };
-  }
-
-  _buildVideoPrompt(story, params, context) {
-    const lines = [
-      '【视频 Prompt — 压缩模式】',
-      '',
-      '=== 整体约束 ===',
-      `时长: ${context.duration || 15}s`,
-      `画幅: ${context.aspectRatio || '16:9'}`,
-      '连续单镜头，帧间平滑过渡，不生硬跳转',
-      '',
-      '=== 画面内容 ==='
-    ];
-
-    if (story) {
-      const segments = story.slice(0, 800).split(/[。！？\n]+/).filter(Boolean);
-      segments.forEach((seg, i) => {
-        lines.push(`帧${i + 1}: ${seg.trim().slice(0, 60)}`);
-      });
-    } else {
-      lines.push('（请先在故事板中生成分镜）');
-    }
-
-    lines.push('');
-    lines.push('=== 运镜 ===');
-    lines.push('sequence of dynamic camera movements | smooth transitions');
-    lines.push('');
-    lines.push('no flickering, no morphing, no body distortion, continuous single shot');
-
-    return lines.join('\n');
   }
 
   async _execObsidianRead(params, context) {

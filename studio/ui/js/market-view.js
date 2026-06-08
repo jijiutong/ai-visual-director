@@ -417,7 +417,26 @@ class MarketView {
 
   _showOutput() {
     const area = document.getElementById('outputArea');
-    if (area) area.style.display = 'block';
+    if (area) {
+      area.style.display = 'block';
+      // Add hint to use Claude Code for real prompt generation
+      const grid = document.getElementById('outputGrid');
+      if (grid) {
+        const hint = document.createElement('div');
+        hint.className = 'output-hint';
+        hint.innerHTML = `
+          <p>💡 <b>完整 Prompt 在 Claude Code 中生成</b></p>
+          <p>在对话中说「<code>${this.storyText.slice(0, 20)}... 用${this._getSelectedStyleName()}风格出分镜</code>」即可获得专业级 Prompt</p>
+        `;
+        grid.parentNode.appendChild(hint);
+      }
+    }
+  }
+
+  _getSelectedStyleName() {
+    if (!this.selectedStyle) return '推荐';
+    const s = STYLES.find(s => s.id === this.selectedStyle);
+    return s ? s.name : '推荐';
   }
 
   _renderOutputSteps(plan) {
@@ -448,28 +467,16 @@ class MarketView {
     }
     card.className = `output-card status-${data.status}`;
 
-    // Show prompt content when completed
     const body = document.getElementById(`body-${data.nodeId}`);
     if (body && data.status === 'completed' && data.result) {
-      if (data.result.prompt) {
-        body.innerHTML = `
-          <pre class="prompt-text">${this._escapeHtml(data.result.prompt.slice(0, 600))}${data.result.prompt.length > 600 ? '...' : ''}</pre>
-          <button class="btn btn-sm" onclick="navigator.clipboard.writeText(\`${this._escapeJs(data.result.prompt)}\`);this.textContent='✅ 已复制'">📋 复制 Prompt</button>
-        `;
-      } else if (data.result.label) {
-        body.innerHTML = `<span class="output-item">${data.result.label} · ${data.result.aspectRatio || ''} · ${data.result.shots || ''}镜</span>`;
-      }
+      const r = data.result;
+      body.innerHTML = r.label
+        ? `<span class="output-item">${r.label} · ${r.style || ''} · ${r.shots || ''}镜 · ${r.aspectRatio || ''}</span>`
+        : `<span class="output-item">${r.note || '完成'}</span>`;
     }
     if (body && data.status === 'failed') {
       body.innerHTML = `<span class="output-error">${data.error || '失败'}</span>`;
     }
-  }
-
-  _escapeHtml(s) {
-    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-  }
-  _escapeJs(s) {
-    return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,'\\n');
   }
 
   _showOutputError(msg) {

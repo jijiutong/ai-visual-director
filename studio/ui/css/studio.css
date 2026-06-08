@@ -634,6 +634,25 @@ body {
 .output-item { font-size: 12px; color: var(--text-muted); }
 .output-error { font-size: 12px; color: var(--red); }
 
+.output-hint {
+  margin-top: 16px;
+  padding: 14px 18px;
+  background: rgba(85, 230, 210, 0.06);
+  border: 1px solid rgba(85, 230, 210, 0.2);
+  border-radius: var(--radius);
+  font-size: 13px;
+  color: var(--text-muted);
+  line-height: 1.8;
+}
+
+.output-hint code {
+  background: var(--bg-card);
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--accent);
+}
+
 .btn-sm {
   padding: 4px 10px;
   font-size: 11px;
