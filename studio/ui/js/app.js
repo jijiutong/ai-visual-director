@@ -20,6 +20,16 @@ function switchTool(tool) {
     case 'storyboard':
       workspace.innerHTML = `
         <div class="storyboard-workspace">
+          <header class="studio-header">
+            <div>
+              <h1>AI Story Studio</h1>
+              <p>把故事快速推进到分镜、角色、海报和视频 Prompt</p>
+            </div>
+            <div class="studio-header-actions">
+              <span class="studio-status-pill">本地工作台</span>
+              <span class="studio-status-pill studio-status-live">WebSocket</span>
+            </div>
+          </header>
           <div class="market-main">
             <div class="story-input-area">
               <textarea id="storyInput" class="story-textarea" placeholder="📝 粘贴你的故事、小说段落、剧本片段..." rows="4"></textarea>
@@ -33,6 +43,7 @@ function switchTool(tool) {
             <div class="market-actions">
               <button class="btn btn-primary btn-lg" id="btnGenerate" disabled onclick="window.marketView.generateStoryboard()">🎬 生成分镜</button>
               <button class="btn btn-lg" id="btnAllInOne" disabled onclick="window.marketView.generateAll()">⚡ 一键全来</button>
+              <button class="btn btn-lg" id="btnSave" onclick="window.marketView.saveWork()">💾 保存</button>
               <span class="selection-status" id="selectionStatus">👆 先选一个风格</span>
             </div>
             <div class="output-area" id="outputArea" style="display:none">
@@ -107,6 +118,15 @@ function switchTool(tool) {
 
     case 'pro':
       workspace.innerHTML = `
+        <header class="studio-header pro-header">
+          <div>
+            <h1>专业流程画布</h1>
+            <p>拖拽节点、编排故事生产链路，并直接运行本地工作流</p>
+          </div>
+          <div class="studio-header-actions">
+            <span class="studio-status-pill">Flow Canvas</span>
+          </div>
+        </header>
         <div class="pro-layout">
           <div class="canvas-area"><svg id="canvasSvg" class="flow-canvas"></svg></div>
           <aside class="node-library" id="nodeLibrary"></aside>

@@ -420,6 +420,36 @@ class MarketView {
     const grid = document.getElementById('outputGrid');
     if (grid) grid.innerHTML += `<div class="workflow-error">❌ ${msg}</div>`;
   }
+
+  // ---- Save ----
+  saveWork() {
+    const story = document.getElementById('storyInput')?.value?.trim() || '';
+    const style = this.selectedStyle ? STYLES.find(s => s.id === this.selectedStyle) : null;
+
+    if (!story && !style) { alert('请先输入故事或选择风格'); return; }
+
+    // Build a markdown document
+    const now = new Date().toISOString().slice(0, 19).replace('T', ' ');
+    let md = `# 故事板 — ${now}\n\n`;
+    if (style) md += `**风格**: ${style.name} (${style.emoji})\n\n`;
+    if (story) md += `## 故事\n\n${story}\n\n`;
+    md += `## 生成配置\n\n`;
+    md += `- 风格: ${style ? style.name : '未选'}\n`;
+    md += `- 时间: ${now}\n`;
+    md += `---\n`;
+
+    // Download as .md file
+    const blob = new Blob([md], { type: 'text/markdown;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `storyboard_${now.replace(/[: ]/g, '_').slice(0, 16)}.md`;
+    a.click();
+    URL.revokeObjectURL(url);
+
+    const status = document.getElementById('selectionStatus');
+    if (status) { status.textContent = '✅ 已保存到本地'; setTimeout(() => this.updateButtonState(), 2000); }
+  }
 }
 
 window.marketView = new MarketView();
