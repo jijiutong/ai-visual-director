@@ -157,4 +157,4 @@ class SimpleView {
   }
 }
 
-const simpleView = new SimpleView();
+window.simpleView = new SimpleView();

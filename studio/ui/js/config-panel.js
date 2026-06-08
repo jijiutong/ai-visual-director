@@ -78,4 +78,4 @@ class ConfigPanel {
   }
 }
 
-const configPanel = new ConfigPanel();
+window.configPanel = new ConfigPanel();

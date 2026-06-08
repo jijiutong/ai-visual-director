@@ -39,7 +39,8 @@ class ProView {
     display.id = 'chatMessages';
     display.className = 'chat-messages';
     display.innerHTML = '<div class="chat-hint">💡 输入 <code>/help</code> 查看可用命令，或直接打字发到 Claude Code</div>';
-    chatBar.parentNode.insertBefore(display, chatBar);
+    // Insert above chatBar in body
+    document.body.insertBefore(display, chatBar);
   }
 
   async _sendMessage() {
@@ -51,7 +52,7 @@ class ProView {
     this._addChatBubble(message, 'user');
 
     try {
-      const resp = await fetch('http://localhost:9999/api/chat/send', {
+      const resp = await fetch(`${api.base}/api/chat/send`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ message })
@@ -143,12 +144,15 @@ class ProView {
     try {
       const flowDef = this.canvas.exportFlow();
       if (flowDef.nodes.length === 0) { alert('画布为空，请先拖节点或加载预设流程'); return; }
-      const flowFile = `temp_${Date.now()}`;
-      const result = await api.startWorkflow({
-        flowFile,
-        platform: 'seedance',
-        pastedStory: '自定义画布流程'
+
+      const resp = await fetch(`${api.base}/api/workflow/start-custom`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ flowDef, platform: 'seedance', pastedStory: '自定义画布流程' })
       });
+      if (!resp.ok) throw new Error(await resp.text());
+      const result = await resp.json();
+
       console.log('Workflow started:', result);
       alert(`流程已启动: ${result.workflowId}`);
     } catch (e) {
@@ -183,4 +187,4 @@ class ProView {
   }
 }
 
-const proView = new ProView();
+window.proView = new ProView();

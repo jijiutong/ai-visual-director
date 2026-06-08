@@ -1,7 +1,11 @@
 // api-client.js — API + WebSocket client
 const API_BASE = 'http://localhost:9999/api';
 
+const API_BASE_URL = 'http://localhost:9999';
+const API_BASE = API_BASE_URL + '/api';
+
 const api = {
+  base: API_BASE_URL,
   async startWorkflow(options) {
     const resp = await fetch(`${API_BASE}/workflow/start`, {
       method: 'POST',
@@ -62,7 +66,8 @@ const wsCallbacks = [];
 
 function connectWebSocket() {
   try {
-    ws = new WebSocket('ws://localhost:9999');
+    const wsUrl = API_BASE_URL.replace('http://', 'ws://').replace('https://', 'wss://');
+    ws = new WebSocket(wsUrl);
     ws.onopen = () => {
       console.log('WS connected');
       document.body.classList.add('ws-connected');

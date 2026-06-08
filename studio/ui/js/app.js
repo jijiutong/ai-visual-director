@@ -11,17 +11,17 @@ function switchTab(tab) {
   switch (tab) {
     case 'simple':
       document.getElementById('simpleViewContainer').classList.add('active');
-      if (simpleView) simpleView.render();
+      if (window.simpleView) window.simpleView.render();
       if (chatBar) chatBar.style.display = 'none';
       break;
     case 'pro':
       document.getElementById('proViewContainer').classList.add('active');
-      if (proView) proView.render();
+      if (window.proView) window.proView.render();
       if (chatBar) chatBar.style.display = 'flex';
       break;
     case 'config':
       document.getElementById('configPanelContainer').classList.add('active');
-      if (configPanel) configPanel.render();
+      if (window.configPanel) window.configPanel.render();
       if (chatBar) chatBar.style.display = 'none';
       break;
   }

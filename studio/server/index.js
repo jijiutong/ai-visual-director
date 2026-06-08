@@ -36,10 +36,10 @@ const agentPool = new AgentPool({
 });
 
 // Share services with routes
-app.locals = {
+Object.assign(app.locals, {
   vaultReader, configManager, apiProxy, workflowEngine, agentPool, skillBridge,
   vaultPath, flowsDir: path.join(__dirname, '..', 'workflows')
-};
+});
 
 // Middleware
 app.use(cors());
@@ -55,6 +55,9 @@ app.use('/api/chat', require('./routes/chat'));
 // Serve UI static files
 const uiDir = path.join(__dirname, '..', 'ui');
 app.use(express.static(uiDir));
+
+// Serve workflow definitions as static
+app.use('/workflows', express.static(path.join(__dirname, '..', 'workflows')));
 
 // WebSocket
 wss.on('connection', (ws) => {
