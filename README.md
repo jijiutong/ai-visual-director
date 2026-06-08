@@ -53,7 +53,7 @@ npx skills add jijiutong/ai-visual-director
 ### 方式二：手动安装
 
 ```bash
-git clone git@github.com:jijiutong/ai-visual-director.git
+git clone https://github.com/jijiutong/ai-visual-director.git
 ```
 
 将 `SKILL.md` 及 `references/`、`templates/` 放入 `~/.claude/skills/ai-story-board/`（全局）或 `<project>/.claude/skills/ai-story-board/`（项目级）。

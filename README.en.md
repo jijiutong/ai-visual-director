@@ -337,7 +337,7 @@ After installation, Claude Code auto-discovers the skill. Paste any story in con
 ### Option 2: Manual Install
 
 ```bash
-git clone git@github.com:jijiutong/ai-visual-director.git
+git clone https://github.com/jijiutong/ai-visual-director.git
 ```
 
 Place `SKILL.md` along with `references/` and `templates/` into `~/.claude/skills/ai-story-board/` (global) or `<project>/.claude/skills/ai-story-board/` (project-level).
