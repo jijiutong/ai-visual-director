@@ -176,7 +176,41 @@ const imageUrl = `${COMFYUI_BASE_URL}/view?filename=${result.filename}`;
 
 ---
 
-## 六、Recraft
+## 六、Stable Diffusion XL/3 (Stability AI)
+
+```javascript
+const response = await fetch("https://api.stability.ai/v2beta/stable-image/generate/sd3", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.STABILITY_API_KEY}`,
+    "Accept": "application/json"
+  },
+  body: new FormData()
+    .append("prompt", `[英文 prompt]`)
+    .append("output_format", "png")
+    .append("aspect_ratio", "16:9")
+});
+
+const result = await response.json();
+const imageUrl = result.image;
+```
+
+**适用场景**：SD3 角色一致性好，SDXL 生态成熟，ControlNet 精细控制
+
+---
+
+## 七、Midjourney（无官方 API）
+
+Midjourney 没有公开 REST API，只有 Discord Bot 方式。推荐替代：
+- **SDXL 替代** → 用 Stability AI API 或 ComfyUI 本地
+- **画质替代** → 用 Flux (Replicate)，画质接近甚至超越 MJ
+- **角色一致替代** → 用 ComfyUI + IP-Adapter，一致性远超 MJ --cref
+
+如必须用 Midjourney：通过 Discord Bot 发送 `/imagine` 命令（需 Discord Token + 订阅 MJ），不推荐生产使用。
+
+---
+
+## 八、Recraft
 
 ```javascript
 const response = await fetch("https://api.recraft.ai/v1/images/generations", {

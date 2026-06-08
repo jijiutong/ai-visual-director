@@ -426,8 +426,10 @@ HE3 中国古风 | TR1 快切 | SD: SE2雨声+FX15剑鸣
 → 回复"用 Flux 生成 [格式]"→ 调 Replicate API 出图
 → 回复"用 Ideogram 生成 [格式]"→ 调 Ideogram API 出图
 → 回复"用 通义万相 生成 [格式]"→ 调 DashScope API 出图
+→ 回复"用 SD 生成 [格式]"→ 调 Stability AI API 出图（SDXL/SD3）
 → 回复"用 ComfyUI 生成 [格式]"→ 调本地 ComfyUI 出图
 → 回复"用 Recraft 生成 [格式]"→ 调 Recraft API 出图
+→ Midjourney 无官方公开 API，推荐用 Flux 或 ComfyUI 替代
 → 详见 `references/api-integration.md`
 
 【视频专属负面提示词】（自动附加到视频 prompt 尾部）：
