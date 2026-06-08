@@ -433,6 +433,15 @@ HE3 中国古风 | TR1 快切 | SD: SE2雨声+FX15剑鸣
 → Midjourney 无官方公开 API，推荐用 Flux 或 ComfyUI 替代
 → 详见 `references/api-integration.md`
 
+【API 直接生成视频】（配置 API Key 后，直接调平台接口出片，全自动轮询下载）：
+→ 回复"用 Seedance 生成视频"→ 调火山引擎 Ark API（多图输入，中文原生，音频输出）
+→ 回复"用 Runway 生成视频"→ 调 Runway Gen-4.5 API（最成熟，SDK 完善）
+→ 回复"用 可灵 生成视频"→ 调阿里云百炼 DashScope API（4K 输出，角色ID复用）
+→ 回复"用 Luma 生成视频"→ 调 Luma Dream Machine API（首尾帧插值，丝滑过渡）
+→ 回复"用 Pika 生成视频"→ 调 fal.ai Pika API（社交短视频，快速验证）
+→ 视频 API 为异步模式：创建任务→轮询结果→下载视频文件
+→ 详见 `references/video-api-integration.md`
+
 【视频专属负面提示词】（自动附加到视频 prompt 尾部）：
 ```
 no flickering, no frame flashing, no sudden brightness jumps, no color shifts,
@@ -548,6 +557,8 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 | `references/one-click.md` | 一键输出工作流（生成/全平台/多版本/全来） |
 | `references/video-prompt.md` | AI 视频 Prompt 适配（Sora/Runway/可灵） |
 | `references/video-prompt-assembly.md` | 视频 Prompt 组装逻辑（故事板为主+角色卡锚点+分镜图锚点→完整视频 prompt） |
+| `references/api-integration.md` | 图片 API 集成（9 平台：GPT Image/Nano Banana/Flux/Ideogram/通义万相/ComfyUI/SD/Recraft） |
+| `references/video-api-integration.md` | 视频 API 集成（5 平台：Seedance/Runway/可灵/Luma/Pika） |
 | `references/single-shot-edit.md` | 精准单镜修改（只改指定镜，DNA 传播） |
 | `references/audio-reference.md` | 音乐音效参考（每幕/每镜音乐 mood + 音效） |
 | `references/industry-export.md` | 行业格式导出（Storyboard Pro / FrameForge / Celtx） |
@@ -612,6 +623,12 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 - **视频负面提示词** → 自动附加到所有视频 prompt 尾部，防闪烁/扭曲/漂移/跳色/断连续性
 - **检查视频 / 视频检查** → 出片后逐项打勾，场景/角色/光照/道具/动作/画面/转场/字幕/材质 10 项，定位问题归属
 - **用 [平台] 生成 [格式]** → 调 API 直接出图（Flux/Ideogram/通义万相/ComfyUI/Recraft），需先配置 API Key
+- **用 Seedance 生成视频** → 调火山引擎 Ark API，多图输入+中文原生+音频，异步轮询模式
+- **用 Runway 生成视频** → 调 Runway Gen-4.5 API，SDK 完善，支持图生视频/文生视频
+- **用 可灵 生成视频** → 调阿里云百炼 DashScope API，4K 输出，角色 ID 复用
+- **用 Luma 生成视频** → 调 Luma Dream Machine API，首尾帧插值，丝滑过渡
+- **用 Pika 生成视频** → 调 fal.ai Pika API，社交短视频，快速验证
+- **视频 API** → 所有视频 API 为异步模式（创建任务→轮询→下载），需使用 `node_repl` MCP 执行
 - **质量评分** → 0-100 分自动评估，低于 75 自动优化
 - **连续性检查** → 自动检查时间线/空间/角色/情绪连贯性，标注断裂点
 - **多画幅** → "适配小红书/抖音/朋友圈/所有平台" 自动切换画幅
