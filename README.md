@@ -136,14 +136,6 @@ AI：【智能推荐】1. 黑金动作 + 1. 全案板
 ![角色设定卡 6 模块](examples/图5.png)
 > 角色设定卡（角色锚点）— 三视图/面部/表情/手部/武器/发型+不可变标注
 
-**视频生成效果：**
-
-<p align="center">
-  <video src="https://raw.githubusercontent.com/jijiutong/ai-visual-director/main/examples/copy_B8B1E9A0-0359-45B4-8019-9F0F2958D26E.MOV" controls autoplay muted loop width="100%"></video>
-</p>
-
-> 《一剑开天》15s 完整视频 — 故事板主参考 + 角色锚点 + 画面锚点 + 平滑过渡
-
 ---
 
 ### 示例 1：东方玄幻 · 宿敌对决
