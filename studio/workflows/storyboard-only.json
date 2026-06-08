@@ -1,0 +1,19 @@
+{
+  "name": "仅出分镜",
+  "icon": "🎬",
+  "description": "贴故事 → 全案板 + 角色卡",
+  "nodes": [
+    { "id": "paste", "type": "paste_story", "label": "📋 粘贴故事", "params": {} },
+    { "id": "extract", "type": "extract_all", "label": "🧬 提取信息", "params": {} },
+    { "id": "fullBoard", "type": "generate_full_board", "label": "🎬 全案板", "params": {} },
+    { "id": "character", "type": "generate_character", "label": "👤 角色卡", "params": {} },
+    { "id": "export", "type": "export", "label": "📦 导出", "params": {} }
+  ],
+  "edges": [
+    { "from": "paste", "to": "extract" },
+    { "from": "extract", "to": "fullBoard" },
+    { "from": "extract", "to": "character" },
+    { "from": "fullBoard", "to": "export" },
+    { "from": "character", "to": "export" }
+  ]
+}

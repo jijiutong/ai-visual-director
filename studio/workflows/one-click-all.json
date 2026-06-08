@@ -1,0 +1,25 @@
+{
+  "name": "一键全来",
+  "icon": "⚡",
+  "description": "3风格×4格式 一次出全",
+  "nodes": [
+    { "id": "paste", "type": "paste_story", "label": "📋 粘贴故事", "params": {} },
+    { "id": "extract", "type": "extract_all", "label": "🧬 提取信息", "params": {} },
+    { "id": "fullBoard", "type": "generate_full_board", "label": "🎬 全案板", "params": {} },
+    { "id": "character", "type": "generate_character", "label": "👤 角色卡", "params": {} },
+    { "id": "poster", "type": "generate_poster", "label": "🎨 海报", "params": {} },
+    { "id": "mood", "type": "generate_moodboard", "label": "🌈 情绪板", "params": {} },
+    { "id": "export", "type": "export", "label": "📦 导出", "params": {} }
+  ],
+  "edges": [
+    { "from": "paste", "to": "extract" },
+    { "from": "extract", "to": "fullBoard" },
+    { "from": "extract", "to": "character" },
+    { "from": "extract", "to": "poster" },
+    { "from": "extract", "to": "mood" },
+    { "from": "fullBoard", "to": "export" },
+    { "from": "character", "to": "export" },
+    { "from": "poster", "to": "export" },
+    { "from": "mood", "to": "export" }
+  ]
+}

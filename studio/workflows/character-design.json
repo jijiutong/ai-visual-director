@@ -1,0 +1,22 @@
+{
+  "name": "角色设计",
+  "icon": "👤",
+  "description": "角色 DNA → 角色卡 → 三视图 → 表情图",
+  "nodes": [
+    { "id": "paste", "type": "paste_story", "label": "📋 描述角色", "params": {} },
+    { "id": "extract", "type": "extract_character", "label": "🧬 提取DNA", "params": {} },
+    { "id": "sheet", "type": "generate_character_sheet", "label": "👤 角色卡", "params": {} },
+    { "id": "turnaround", "type": "generate_turnaround", "label": "🔄 三视图", "params": {} },
+    { "id": "expressions", "type": "generate_expressions", "label": "😊 12表情", "params": {} },
+    { "id": "export", "type": "export", "label": "📦 导出", "params": {} }
+  ],
+  "edges": [
+    { "from": "paste", "to": "extract" },
+    { "from": "extract", "to": "sheet" },
+    { "from": "extract", "to": "turnaround" },
+    { "from": "extract", "to": "expressions" },
+    { "from": "sheet", "to": "export" },
+    { "from": "turnaround", "to": "export" },
+    { "from": "expressions", "to": "export" }
+  ]
+}

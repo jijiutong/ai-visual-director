@@ -1,0 +1,28 @@
+{
+  "name": "小说转短剧",
+  "icon": "📖→🎬",
+  "description": "从 Obsidian 章节到视频的完整管线",
+  "nodes": [
+    { "id": "read", "type": "obsidian_read", "label": "📖 读取 Obsidian", "params": {} },
+    { "id": "extract", "type": "extract_all", "label": "🧬 提取信息", "params": {} },
+    { "id": "character", "type": "generate_character", "label": "👤 角色卡", "params": {} },
+    { "id": "scene", "type": "generate_scene", "label": "🏞 场景图", "params": {} },
+    { "id": "storyboard", "type": "generate_storyboard", "label": "🎬 分镜", "params": {} },
+    { "id": "merge", "type": "merge_frames", "label": "🖼 合并帧", "params": {} },
+    { "id": "prompt", "type": "video_prompt", "label": "📝 视频Prompt", "params": { "mode": "compressed" } },
+    { "id": "video", "type": "call_video_api", "label": "🎥 生成视频", "params": {} },
+    { "id": "export", "type": "export", "label": "📦 导出", "params": {} }
+  ],
+  "edges": [
+    { "from": "read", "to": "extract" },
+    { "from": "extract", "to": "character" },
+    { "from": "extract", "to": "scene" },
+    { "from": "extract", "to": "storyboard" },
+    { "from": "character", "to": "merge" },
+    { "from": "scene", "to": "merge" },
+    { "from": "storyboard", "to": "merge" },
+    { "from": "merge", "to": "prompt" },
+    { "from": "prompt", "to": "video" },
+    { "from": "video", "to": "export" }
+  ]
+}

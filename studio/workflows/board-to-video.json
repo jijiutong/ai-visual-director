@@ -1,0 +1,18 @@
+{
+  "name": "分镜转视频",
+  "icon": "🎥",
+  "description": "已有分镜图 → 合并帧 → Prompt → 出片",
+  "nodes": [
+    { "id": "paste", "type": "paste_story", "label": "📋 贴分镜描述", "params": {} },
+    { "id": "merge", "type": "merge_frames", "label": "🖼 合并帧", "params": {} },
+    { "id": "prompt", "type": "video_prompt", "label": "📝 视频Prompt", "params": { "mode": "compressed" } },
+    { "id": "video", "type": "call_video_api", "label": "🎥 生成视频", "params": {} },
+    { "id": "export", "type": "export", "label": "📦 导出", "params": {} }
+  ],
+  "edges": [
+    { "from": "paste", "to": "merge" },
+    { "from": "merge", "to": "prompt" },
+    { "from": "prompt", "to": "video" },
+    { "from": "video", "to": "export" }
+  ]
+}
