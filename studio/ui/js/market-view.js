@@ -1,59 +1,67 @@
 // market-view.js — 故事板市场（主界面）
 const STYLES = [
-  { id: 1, name: '黑金动作', emoji: '⚔️', color: '#1a1a1a', accent: '#d4a843', tags: ['武侠','动作'] },
-  { id: 2, name: '科幻机甲', emoji: '🤖', color: '#0a1a2e', accent: '#4dc9f6', tags: ['机甲','赛博'] },
-  { id: 3, name: '东方玄幻', emoji: '🐉', color: '#1a0a0a', accent: '#e8a850', tags: ['修仙','古风'] },
-  { id: 4, name: '悬疑惊悚', emoji: '🔍', color: '#0f0f0f', accent: '#c0392b', tags: ['犯罪','恐怖'] },
-  { id: 5, name: '都市情绪', emoji: '🌆', color: '#1a1a2e', accent: '#e858a0', tags: ['爱情','职场'] },
-  { id: 6, name: '青春校园', emoji: '🌸', color: '#fef9ef', accent: '#ff9aa2', tags: ['初恋','成长'] },
-  { id: 7, name: '废土末日', emoji: '🏚️', color: '#3d3025', accent: '#e07020', tags: ['求生','丧尸'] },
-  { id: 8, name: '宫廷权谋', emoji: '👑', color: '#1a0a0a', accent: '#c9a84c', tags: ['宫斗','古装'] },
-  { id: 9, name: '蒸汽朋克', emoji: '⚙️', color: '#2d1f14', accent: '#c8956c', tags: ['机械','维多利亚'] },
-  { id: 10, name: '童话绘本', emoji: '📖', color: '#f0f8e8', accent: '#7ec8a0', tags: ['魔法','森林'] },
-  { id: 11, name: '二次元动漫', emoji: '🎌', color: '#fff0f5', accent: '#ff69b4', tags: ['日漫','轻小说'] },
-  { id: 12, name: '写实摄影', emoji: '📷', color: '#2d2d2d', accent: '#888888', tags: ['纪实','真实'] },
-  { id: 13, name: '复古胶片', emoji: '📽️', color: '#3d2a1a', accent: '#d4a574', tags: ['怀旧','年代'] },
-  { id: 14, name: '北欧极简', emoji: '❄️', color: '#f5f5f5', accent: '#88c0d0', tags: ['维京','冰雪'] },
-  { id: 15, name: '拉美魔幻', emoji: '🦋', color: '#1a3d2e', accent: '#ff6b35', tags: ['热带','亡灵'] },
-  { id: 16, name: '赛博佛学', emoji: '🧘', color: '#1a0a2e', accent: '#ff6600', tags: ['赛博+东方'] },
-  { id: 17, name: '中世纪史诗', emoji: '🏰', color: '#2d2d1a', accent: '#8b7355', tags: ['骑士','龙族'] },
-  { id: 18, name: '非洲部落', emoji: '🥁', color: '#3d2010', accent: '#e8a040', tags: ['草原','原始'] },
-  { id: 19, name: '新中式国潮', emoji: '🏮', color: '#cc0000', accent: '#ffd700', tags: ['国风','潮流'] },
-  { id: 20, name: '暗黑哥特', emoji: '🦇', color: '#0a0a0a', accent: '#8b0000', tags: ['吸血鬼','宗教'] },
-  { id: 21, name: 'Disney Pixar 3D', emoji: '✨', color: '#1a3d5e', accent: '#ffcc00', tags: ['动画','3D'] },
-  { id: 22, name: 'Disney 2D 手绘', emoji: '🎨', color: '#faf0e6', accent: '#4169e1', tags: ['歌舞','手绘'] },
-  { id: 23, name: 'Studio Ghibli', emoji: '🌿', color: '#e8f4e0', accent: '#5b8c5a', tags: ['吉卜力','治愈'] },
-  { id: 24, name: '好莱坞商业大片', emoji: '💥', color: '#0a1a2e', accent: '#ff4400', tags: ['Marvel','超英'] },
-  { id: 25, name: 'Wes Anderson', emoji: '🎀', color: '#f5e6d3', accent: '#e8a0c0', tags: ['对称','粉彩'] },
-  { id: 26, name: 'Tim Burton 哥特', emoji: '🌙', color: '#1a1a2e', accent: '#8b5cf6', tags: ['暗黑童话','扭曲'] },
-  { id: 27, name: '王家卫情绪', emoji: '💨', color: '#0a1a1a', accent: '#ff0066', tags: ['霓虹','香港'] },
-  { id: 28, name: '张艺谋色彩', emoji: '🔴', color: '#8b0000', accent: '#ffd700', tags: ['红色','中国'] },
-  { id: 29, name: '韩国犯罪美学', emoji: '🔪', color: '#1a1a2e', accent: '#4a90d9', tags: ['冷峻','写实'] },
-  { id: 30, name: '印度宝莱坞', emoji: '🕺', color: '#1a0a2e', accent: '#ff6600', tags: ['歌舞','戏剧'] },
-  { id: 31, name: '欧洲艺术电影', emoji: '🎭', color: '#2d2d2d', accent: '#8b7355', tags: ['长镜头','极简'] },
-  { id: 32, name: '中国水墨意境', emoji: '🖌️', color: '#f5f0e8', accent: '#2d2d2d', tags: ['水墨','留白'] },
-  { id: 33, name: '新浪潮自由', emoji: '🎞️', color: '#2d2d1a', accent: '#e07070', tags: ['跳接','实验'] },
-  { id: 34, name: '赛博佛学朋克', emoji: '💻', color: '#0a0a2e', accent: '#ff8800', tags: ['佛学科技'] },
-  { id: 35, name: '暗黑科幻', emoji: '👽', color: '#0a0a0a', accent: '#00ff88', tags: ['太空恐怖','AI失控'] },
-  { id: 36, name: '废土末日生存', emoji: '☢️', color: '#3d3025', accent: '#ff4400', tags: ['废土','求生'] },
-  { id: 37, name: '都市情绪电影', emoji: '🌃', color: '#0a0a2e', accent: '#e8a0a0', tags: ['都市','文艺'] },
-  { id: 38, name: '青春校园物语', emoji: '📚', color: '#f5f0e8', accent: '#88b8e8', tags: ['校园','运动'] },
-  { id: 39, name: '悬疑惊悚导演', emoji: '🎬', color: '#0f0f0f', accent: '#c0392b', tags: ['密室','心理'] },
-  { id: 40, name: '心理迷宫', emoji: '🧩', color: '#1a1a2e', accent: '#9b59b6', tags: ['人格分裂','记忆'] },
-  { id: 41, name: '浪漫梦幻', emoji: '💕', color: '#faf0f5', accent: '#ff69b4', tags: ['求婚','星空'] },
-  { id: 42, name: '音乐 MV', emoji: '🎵', color: '#0a0a0a', accent: '#ff0066', tags: ['舞蹈','演唱会'] },
-  { id: 43, name: '中国水墨动画', emoji: '🐼', color: '#f5f0e0', accent: '#2d2d2d', tags: ['国风短片'] },
-  { id: 44, name: '像素复古游戏', emoji: '👾', color: '#0a2e0a', accent: '#00ff00', tags: ['8bit','像素'] },
-  { id: 45, name: '黏土定格动画', emoji: '🧱', color: '#e8d5b7', accent: '#8b6914', tags: ['定格','手工'] },
-  { id: 46, name: '沙画叙事', emoji: '🏜️', color: '#d4b896', accent: '#8b6914', tags: ['创意','叙事'] },
-  { id: 47, name: '剪纸中国风', emoji: '✂️', color: '#cc0000', accent: '#ffd700', tags: ['非遗','中国风'] },
-  { id: 48, name: '浮世绘日本', emoji: '🗾', color: '#f5e6d3', accent: '#1a3d7e', tags: ['江户','日本'] },
-  { id: 49, name: '极简主义', emoji: '⬜', color: '#ffffff', accent: '#2d2d2d', tags: ['广告','概念'] },
-  { id: 50, name: '故障艺术 Glitch', emoji: '📺', color: '#0a0a0a', accent: '#ff00ff', tags: ['赛博','Glitch'] },
-  { id: 51, name: '超现实主义', emoji: '🫧', color: '#1a0a2e', accent: '#ff8800', tags: ['梦境','潜意识'] },
-  { id: 52, name: '广告大片质感', emoji: '💎', color: '#0a0a0a', accent: '#ffd700', tags: ['奢侈品','时尚'] },
-  { id: 53, name: '粗粝 B 级片', emoji: '🧟', color: '#2d1a0a', accent: '#ff4400', tags: ['Cult','另类'] }
+  { id: 1, name: '黑金动作', emoji: '⚔️', cat: '动作科幻', color: '#1a1a1a', accent: '#d4a843' },
+  { id: 2, name: '科幻机甲', emoji: '🤖', cat: '动作科幻', color: '#0a1a2e', accent: '#4dc9f6' },
+  { id: 9, name: '蒸汽朋克', emoji: '⚙️', cat: '动作科幻', color: '#2d1f14', accent: '#c8956c' },
+  { id: 24, name: '好莱坞商业大片', emoji: '💥', cat: '动作科幻', color: '#0a1a2e', accent: '#ff4400' },
+  { id: 35, name: '暗黑科幻', emoji: '👽', cat: '动作科幻', color: '#0a0a0a', accent: '#00ff88' },
+  { id: 50, name: '故障艺术 Glitch', emoji: '📺', cat: '动作科幻', color: '#0a0a0a', accent: '#ff00ff' },
+
+  { id: 3, name: '东方玄幻', emoji: '🐉', cat: '东方美学', color: '#1a0a0a', accent: '#e8a850' },
+  { id: 8, name: '宫廷权谋', emoji: '👑', cat: '东方美学', color: '#1a0a0a', accent: '#c9a84c' },
+  { id: 19, name: '新中式国潮', emoji: '🏮', cat: '东方美学', color: '#cc0000', accent: '#ffd700' },
+  { id: 28, name: '张艺谋色彩', emoji: '🔴', cat: '东方美学', color: '#8b0000', accent: '#ffd700' },
+  { id: 32, name: '中国水墨意境', emoji: '🖌️', cat: '东方美学', color: '#f5f0e8', accent: '#2d2d2d' },
+  { id: 43, name: '中国水墨动画', emoji: '🐼', cat: '东方美学', color: '#f5f0e0', accent: '#2d2d2d' },
+  { id: 47, name: '剪纸中国风', emoji: '✂️', cat: '东方美学', color: '#cc0000', accent: '#ffd700' },
+  { id: 16, name: '赛博佛学', emoji: '🧘', cat: '东方美学', color: '#1a0a2e', accent: '#ff6600' },
+  { id: 34, name: '赛博佛学朋克', emoji: '💻', cat: '东方美学', color: '#0a0a2e', accent: '#ff8800' },
+
+  { id: 4, name: '悬疑惊悚', emoji: '🔍', cat: '悬疑暗黑', color: '#0f0f0f', accent: '#c0392b' },
+  { id: 7, name: '废土末日', emoji: '🏚️', cat: '悬疑暗黑', color: '#3d3025', accent: '#e07020' },
+  { id: 20, name: '暗黑哥特', emoji: '🦇', cat: '悬疑暗黑', color: '#0a0a0a', accent: '#8b0000' },
+  { id: 26, name: 'Tim Burton 哥特', emoji: '🌙', cat: '悬疑暗黑', color: '#1a1a2e', accent: '#8b5cf6' },
+  { id: 29, name: '韩国犯罪美学', emoji: '🔪', cat: '悬疑暗黑', color: '#1a1a2e', accent: '#4a90d9' },
+  { id: 36, name: '废土末日生存', emoji: '☢️', cat: '悬疑暗黑', color: '#3d3025', accent: '#ff4400' },
+  { id: 39, name: '悬疑惊悚导演', emoji: '🎬', cat: '悬疑暗黑', color: '#0f0f0f', accent: '#c0392b' },
+  { id: 40, name: '心理迷宫', emoji: '🧩', cat: '悬疑暗黑', color: '#1a1a2e', accent: '#9b59b6' },
+
+  { id: 10, name: '童话绘本', emoji: '📖', cat: '动漫童话', color: '#f0f8e8', accent: '#7ec8a0' },
+  { id: 11, name: '二次元动漫', emoji: '🎌', cat: '动漫童话', color: '#fff0f5', accent: '#ff69b4' },
+  { id: 21, name: 'Disney Pixar 3D', emoji: '✨', cat: '动漫童话', color: '#1a3d5e', accent: '#ffcc00' },
+  { id: 22, name: 'Disney 2D 手绘', emoji: '🎨', cat: '动漫童话', color: '#faf0e6', accent: '#4169e1' },
+  { id: 23, name: 'Studio Ghibli', emoji: '🌿', cat: '动漫童话', color: '#e8f4e0', accent: '#5b8c5a' },
+  { id: 44, name: '像素复古游戏', emoji: '👾', cat: '动漫童话', color: '#0a2e0a', accent: '#00ff00' },
+  { id: 45, name: '黏土定格动画', emoji: '🧱', cat: '动漫童话', color: '#e8d5b7', accent: '#8b6914' },
+
+  { id: 5, name: '都市情绪', emoji: '🌆', cat: '文艺情绪', color: '#1a1a2e', accent: '#e858a0' },
+  { id: 6, name: '青春校园', emoji: '🌸', cat: '文艺情绪', color: '#fef9ef', accent: '#ff9aa2' },
+  { id: 27, name: '王家卫情绪', emoji: '💨', cat: '文艺情绪', color: '#0a1a1a', accent: '#ff0066' },
+  { id: 31, name: '欧洲艺术电影', emoji: '🎭', cat: '文艺情绪', color: '#2d2d2d', accent: '#8b7355' },
+  { id: 33, name: '新浪潮自由', emoji: '🎞️', cat: '文艺情绪', color: '#2d2d1a', accent: '#e07070' },
+  { id: 37, name: '都市情绪电影', emoji: '🌃', cat: '文艺情绪', color: '#0a0a2e', accent: '#e8a0a0' },
+  { id: 38, name: '青春校园物语', emoji: '📚', cat: '文艺情绪', color: '#f5f0e8', accent: '#88b8e8' },
+  { id: 41, name: '浪漫梦幻', emoji: '💕', cat: '文艺情绪', color: '#faf0f5', accent: '#ff69b4' },
+
+  { id: 12, name: '写实摄影', emoji: '📷', cat: '地域文化', color: '#2d2d2d', accent: '#888888' },
+  { id: 13, name: '复古胶片', emoji: '📽️', cat: '地域文化', color: '#3d2a1a', accent: '#d4a574' },
+  { id: 14, name: '北欧极简', emoji: '❄️', cat: '地域文化', color: '#f5f5f5', accent: '#88c0d0' },
+  { id: 15, name: '拉美魔幻', emoji: '🦋', cat: '地域文化', color: '#1a3d2e', accent: '#ff6b35' },
+  { id: 17, name: '中世纪史诗', emoji: '🏰', cat: '地域文化', color: '#2d2d1a', accent: '#8b7355' },
+  { id: 18, name: '非洲部落', emoji: '🥁', cat: '地域文化', color: '#3d2010', accent: '#e8a040' },
+  { id: 30, name: '印度宝莱坞', emoji: '🕺', cat: '地域文化', color: '#1a0a2e', accent: '#ff6600' },
+  { id: 48, name: '浮世绘日本', emoji: '🗾', cat: '地域文化', color: '#f5e6d3', accent: '#1a3d7e' },
+
+  { id: 25, name: 'Wes Anderson', emoji: '🎀', cat: '概念实验', color: '#f5e6d3', accent: '#e8a0c0' },
+  { id: 42, name: '音乐 MV', emoji: '🎵', cat: '概念实验', color: '#0a0a0a', accent: '#ff0066' },
+  { id: 46, name: '沙画叙事', emoji: '🏜️', cat: '概念实验', color: '#d4b896', accent: '#8b6914' },
+  { id: 49, name: '极简主义', emoji: '⬜', cat: '概念实验', color: '#ffffff', accent: '#2d2d2d' },
+  { id: 51, name: '超现实主义', emoji: '🫧', cat: '概念实验', color: '#1a0a2e', accent: '#ff8800' },
+  { id: 52, name: '广告大片质感', emoji: '💎', cat: '概念实验', color: '#0a0a0a', accent: '#ffd700' },
+  { id: 53, name: '粗粝 B 级片', emoji: '🧟', cat: '概念实验', color: '#2d1a0a', accent: '#ff4400' }
 ];
+
+const STYLE_CATEGORIES = ['东方美学', '动作科幻', '悬疑暗黑', '动漫童话', '文艺情绪', '地域文化', '概念实验'];
 
 // Full keyword→style mapping (from SKILL.md Step 2 推荐引擎)
 // Each entry: [keyword, styleId, formatLabel]
@@ -145,24 +153,33 @@ class MarketView {
     this._bindStoryInput();
     this.updateButtonState();
     // Sidebar renders independently via sidebar-tools.js
-    if (window.sidebarTools) window.sidebarTools.render();
+    if (typeof window.sidebarTools?.render === 'function') window.sidebarTools.render();
   }
 
-  // ---- Style Gallery ----
+  // ---- Style Gallery (by category) ----
   renderStyleGallery() {
     const gallery = document.getElementById('styleGallery');
     if (!gallery) return;
 
-    gallery.innerHTML = STYLES.map(s => `
-      <div class="style-card ${this.selectedStyle === s.id ? 'selected' : ''}"
-           data-style-id="${s.id}"
-           style="--card-bg:${s.color}; --card-accent:${s.accent}"
-           onclick="window.marketView.selectStyle(${s.id})">
-        <div class="style-card-emoji">${s.emoji}</div>
-        <div class="style-card-name">${s.name}</div>
-        <div class="style-card-tags">${s.tags.map(t => `<span>${t}</span>`).join('')}</div>
-      </div>
-    `).join('');
+    gallery.innerHTML = STYLE_CATEGORIES.map(cat => {
+      const styles = STYLES.filter(s => s.cat === cat);
+      if (styles.length === 0) return '';
+      return `
+        <div class="style-category">
+          <div class="style-cat-header">${cat} <span>${styles.length}</span></div>
+          <div class="style-cat-grid">
+            ${styles.map(s => `
+              <div class="style-card ${this.selectedStyle === s.id ? 'selected' : ''}"
+                   data-style-id="${s.id}"
+                   style="--card-bg:${s.color}; --card-accent:${s.accent}"
+                   onclick="window.marketView.selectStyle(${s.id})">
+                <div class="style-card-emoji">${s.emoji}</div>
+                <div class="style-card-name">${s.name}</div>
+              </div>
+            `).join('')}
+          </div>
+        </div>`;
+    }).join('');
   }
 
   selectStyle(id) {

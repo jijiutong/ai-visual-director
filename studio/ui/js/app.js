@@ -1,6 +1,13 @@
 // app.js — tool switching (IDE-style sidebar)
 let currentTool = 'storyboard';
 
+function setChatVisible(visible) {
+  const chatBar = document.getElementById('chatBarContainer');
+  const chatMessages = document.getElementById('chatMessages');
+  if (chatBar) chatBar.style.display = visible ? 'flex' : 'none';
+  if (chatMessages) chatMessages.style.display = visible ? 'flex' : 'none';
+}
+
 function switchTool(tool) {
   currentTool = tool;
 
@@ -9,7 +16,6 @@ function switchTool(tool) {
     item.classList.toggle('active', item.dataset.tool === tool);
   });
 
-  const chatBar = document.getElementById('chatBarContainer');
   const workspace = document.getElementById('workspace');
   if (!workspace) return;
 
@@ -37,7 +43,7 @@ function switchTool(tool) {
             </div>
             <div class="recommendations" id="aiRecommendations" style="display:none"></div>
             <div class="style-section">
-              <div class="section-header"><h2>🎨 风格画廊</h2><span class="section-hint">53种视觉风格可选</span></div>
+              <div class="section-header"><h2>🎨 风格画廊</h2><span class="section-hint">7大分类 · 53种风格</span></div>
               <div class="style-gallery" id="styleGallery"></div>
             </div>
             <div class="market-actions">
@@ -53,7 +59,7 @@ function switchTool(tool) {
           </div>
         </div>`;
       if (window.marketView) window.marketView.render();
-      if (chatBar) chatBar.style.display = 'none';
+      setChatVisible(false);
       break;
 
     case 'character':
@@ -65,7 +71,7 @@ function switchTool(tool) {
           <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('character-design')">▶ 生成角色</button>
           <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
         </div>`;
-      if (chatBar) chatBar.style.display = 'none';
+      setChatVisible(false);
       break;
 
     case 'scene':
@@ -77,7 +83,7 @@ function switchTool(tool) {
           <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('scene-card')">▶ 生成场景</button>
           <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
         </div>`;
-      if (chatBar) chatBar.style.display = 'none';
+      setChatVisible(false);
       break;
 
     case 'video':
@@ -89,7 +95,7 @@ function switchTool(tool) {
           <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('board-to-video')">▶ 生成视频Prompt</button>
           <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
         </div>`;
-      if (chatBar) chatBar.style.display = 'none';
+      setChatVisible(false);
       break;
 
     case 'poster':
@@ -101,7 +107,7 @@ function switchTool(tool) {
           <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('poster')">▶ 生成海报</button>
           <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
         </div>`;
-      if (chatBar) chatBar.style.display = 'none';
+      setChatVisible(false);
       break;
 
     case 'allinone':
@@ -113,7 +119,7 @@ function switchTool(tool) {
           <button class="btn btn-primary btn-lg" onclick="window.sidebarTools.runStandaloneTool('one-click-all')">▶ 一键生成</button>
           <div class="tool-output" id="toolOutput" style="display:none"><div class="output-grid" id="outputGrid"></div></div>
         </div>`;
-      if (chatBar) chatBar.style.display = 'none';
+      setChatVisible(false);
       break;
 
     case 'pro':
@@ -139,13 +145,13 @@ function switchTool(tool) {
         </div>`;
       workspace.classList.add('workspace-pro');
       if (window.proView) window.proView.render();
-      if (chatBar) chatBar.style.display = 'flex';
+      setChatVisible(true);
       break;
 
     case 'config':
       workspace.innerHTML = '<div id="configPanelContainer"></div>';
       if (window.configPanel) window.configPanel.render();
-      if (chatBar) chatBar.style.display = 'none';
+      setChatVisible(false);
       break;
   }
 }

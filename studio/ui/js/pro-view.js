@@ -17,8 +17,7 @@ class ProView {
     }
     renderNodeLibrary(library);
 
-    const chatBar = document.getElementById('chatBarContainer');
-    if (chatBar) chatBar.style.display = 'flex';
+    if (window.setChatVisible) window.setChatVisible(true);
 
     // Ensure chat message area exists
     this._ensureChatDisplay();
