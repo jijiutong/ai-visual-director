@@ -57,7 +57,47 @@ const imageUrl = result.data[0].url;
 
 ---
 
-## 二、Flux (via Replicate)
+---
+
+## 二、Nano Banana (Google Gemini Image)
+
+Google Gemini 图片生成，代号 Nano Banana。当前支持 v1 (Gemini 2.0 Flash) 和 v2 (Gemini 3.1 Flash)。
+
+```javascript
+const response = await fetch(
+  `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${process.env.GEMINI_API_KEY}`,
+  {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      contents: [{
+        parts: [{ text: `[中文 prompt，原生支持]` }]
+      }],
+      generationConfig: {
+        responseModalities: ["IMAGE", "TEXT"]
+      }
+    })
+  }
+);
+
+const result = await response.json();
+// 图片在 result.candidates[0].content.parts 中
+const imageData = result.candidates[0].content.parts
+  .find(p => p.inlineData)?.inlineData?.data;
+```
+
+**优势**：
+- 中文原生支持，文字渲染 94% 准确率
+- 支持 14 张参考图（角色一致性最强）
+- 免费额度可用，Pro $0.24/4K 图
+- 支持多轮对话编辑（说"把头发改短"直接改）
+- 4K 分辨率，9 种画幅比
+
+**适用场景**：角色一致性要求高的场景、多参考图输入、中文排版
+
+---
+
+## 三、Flux (via Replicate)
 
 **模型**：`black-forest-labs/flux-1.1-pro` / `flux-dev` / `flux-schnell`
 
@@ -91,7 +131,7 @@ const imageUrl = await pollPrediction(result.id);
 
 ---
 
-## 三、Ideogram
+## 四、Ideogram
 
 ```javascript
 const response = await fetch("https://api.ideogram.ai/generate", {
@@ -119,7 +159,7 @@ const imageUrl = result.data[0].url;
 
 ---
 
-## 四、通义万相 (Alibaba Cloud DashScope)
+## 五、通义万相 (Alibaba Cloud DashScope)
 
 ```javascript
 const response = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/text2image/image-synthesis", {
@@ -151,7 +191,7 @@ const imageUrl = taskResult.output.results[0].url;
 
 ---
 
-## 五、ComfyUI (本地)
+## 六、ComfyUI (本地)
 
 ```javascript
 // 1. 提交工作流
@@ -176,7 +216,7 @@ const imageUrl = `${COMFYUI_BASE_URL}/view?filename=${result.filename}`;
 
 ---
 
-## 六、Stable Diffusion XL/3 (Stability AI)
+## 七、Stable Diffusion XL/3 (Stability AI)
 
 ```javascript
 const response = await fetch("https://api.stability.ai/v2beta/stable-image/generate/sd3", {
@@ -199,7 +239,7 @@ const imageUrl = result.image;
 
 ---
 
-## 七、Midjourney（无官方 API）
+## 八、Midjourney（无官方 API）
 
 Midjourney 没有公开 REST API，只有 Discord Bot 方式。推荐替代：
 - **SDXL 替代** → 用 Stability AI API 或 ComfyUI 本地
@@ -210,7 +250,7 @@ Midjourney 没有公开 REST API，只有 Discord Bot 方式。推荐替代：
 
 ---
 
-## 八、Recraft
+## 九、Recraft
 
 ```javascript
 const response = await fetch("https://api.recraft.ai/v1/images/generations", {
@@ -253,6 +293,7 @@ AI 调用对应平台 API（用 node_repl MCP）
 
 | 需求 | 推荐平台 |
 |------|---------|
+| 中文原生、14 张参考图、角色一致性最强 | Nano Banana (Gemini) |
 | 中文 prompt、排版复杂（全案板/漫画/情绪板） | GPT Image (DALL-E 3) |
 | 高质量单图、角色卡 | Flux (Replicate) |
 | 文字排版海报 | Ideogram |
@@ -265,6 +306,7 @@ AI 调用对应平台 API（用 node_repl MCP）
 
 | 平台 | 单价 | 
 |------|------|
+| Nano Banana Pro (4K) | ~$0.24/张（免费额度可用） |
 | GPT Image (DALL-E 3 HD) | ~$0.08/张 |
 | Flux Pro (Replicate) | ~$0.05/张 |
 | Flux Schnell | ~$0.003/张 |

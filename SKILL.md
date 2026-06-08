@@ -422,6 +422,7 @@ HE3 中国古风 | TR1 快切 | SD: SE2雨声+FX15剑鸣
 
 【API 直接生成图片】（配置 API Key 后，直接调平台接口出图，无需手动复制 prompt）：
 → 回复"配置 API"查看配置方式（环境变量 + .env 模板）
+→ 回复"用 Nano Banana 生成 [格式]"→ 调 Google Gemini API 出图（中文原生，14张参考图，文字渲染强，免费额度）
 → 回复"用 GPT Image 生成 [格式]"→ 调 OpenAI DALL-E 3 API 出图
 → 回复"用 Flux 生成 [格式]"→ 调 Replicate API 出图
 → 回复"用 Ideogram 生成 [格式]"→ 调 Ideogram API 出图
