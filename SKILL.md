@@ -398,8 +398,11 @@ HE3 中国古风 | TR1 快切 | SD: SE2雨声+FX15剑鸣
   → 作用：AI 视频工具根据首尾帧插值中间帧，确保人物从起始姿势→结束姿势平滑过渡，服装/面容/体态不漂移
   → 适合：变装转场/长时间镜头/动作幅度大的片段
 
-▸ 辅助锚点 5：角色设定卡 — 防止角色跑偏
-  → 回复"生成角色卡"或"格式3"
+▸ 辅助锚点 5：角色设定卡 — 防止角色跑偏（8 种方法可选，详见 `references/character-consistency.md`）
+  → 回复"生成角色卡"（默认 6 模块角色设定卡）
+  → 进阶：回复"面部多角度"→ 5 角度面部特写 | "12表情"→ 表情范围图
+  → 最强：回复"14图参考"→ Nano Banana 14 张参考图 | "IP-Adapter"→ ComfyUI 本地
+  → 零成本：回复"角色 DNA"→ 20 字段文字锚定
   → 作用：确保视频中角色面部/体态不变形
 
 ▸ 辅助锚点 6：视频分镜图（3-4 张）— 防止画面跑偏
@@ -607,7 +610,8 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 | `references/one-click.md` | 一键输出工作流（生成/全平台/多版本/全来） |
 | `references/video-prompt.md` | AI 视频 Prompt 适配（Sora/Runway/可灵） |
 | `references/video-prompt-assembly.md` | 视频 Prompt 组装逻辑（故事板为主+角色卡锚点+分镜图锚点→完整视频 prompt） |
-| `references/scene-consistency.md` | 场景一致性方法大全（7 种方法：俯拍/4宫格/9宫格/全能参考/720全景/环绕截图/GPT镜头角度） |
+| `references/scene-consistency.md` | 场景一致性方法大全（7 种方法：俯拍/4宫格/9宫格/全能参考/720全景/环绕截图/文字场景锁定） |
+| `references/character-consistency.md` | 人物一致性方法大全（8 种方法：角色卡/三视图/面部多角度/表情范围/服装武器细节/14图参考/IP-Adapter/DNA文字） |
 | `references/api-integration.md` | 图片 API 集成（9 平台：GPT Image/Nano Banana/Flux/Ideogram/通义万相/ComfyUI/SD/Recraft） |
 | `references/video-api-integration.md` | 视频 API 集成（5 平台：Seedance/Runway/可灵/Luma/Pika） |
 | `references/single-shot-edit.md` | 精准单镜修改（只改指定镜，DNA 传播） |
@@ -671,6 +675,13 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 - **生成道具细节卡 / 道具锚点** → 武器+配饰+挂件多角度特写，红色标注不可变细节（纹路/比例/材质/颜色），锁死道具形制跨帧
 - **生成首尾帧 / 首尾帧** → 帧1起始+帧N结束对比图，锁定动作不漂移
 - **生成角色卡** → 输出 6 模块角色设定卡（三视图/面部多角度/表情范围/手部/武器/发型动态+不可变标注），AI 视频角色一致性必需
+- **三视图 / 角色三视图** → 正/侧/背三视图并排，最精简角色锚定
+- **面部多角度 / 5角度** → 正面/左右45°/左右侧面 5 角度面部特写，专攻面部一致性
+- **表情范围图 / 12表情** → 3×4 宫格 12 种表情，锁定情绪表达范围防变脸
+- **服装武器细节卡** → 服装+武器独立细节参考，红标不可变细节
+- **Nano Banana 角色锚定 / 14图参考** → 12-14 张角色参考图输入 Nano Banana，最强角色一致性
+- **IP-Adapter 角色锁定** → ComfyUI IP-Adapter 本地零成本无限生成，角色特征向量注入
+- **角色 DNA / DNA 锚定** → 20 字段角色文字描述，prompt 共用前缀，零成本保底
 - **切分各帧** → 将多帧合成故事板拆为逐帧独立 prompt，每帧 16:9 单独出图
 - **生成视频分镜图 / 合并帧** → 多帧故事板转视频时，按动作阶段合并相邻帧（如7帧压成3张），每张覆盖2-3帧，作为画面锚点防止跑偏
 - **出视频 prompt** → 默认压缩模式（≤1500字），整合故事板全序列+所有锚点约束，直喂 Seedance

@@ -6,7 +6,7 @@
 
 > 从故事到视觉，一条完整生产管线
 
-AI 视觉导演 — 将任意故事、小说、剧本转化为电影级视觉开发方案。45项核心能力，50个参考文件，覆盖从**输入→分析→生成→评分→检查→修改→导出→视频→行业格式**的完整制作流程。
+AI 视觉导演 — 将任意故事、小说、剧本转化为电影级视觉开发方案。45项核心能力，51个参考文件，覆盖从**输入→分析→生成→评分→检查→修改→导出→视频→行业格式**的完整制作流程。
 
 支持 GPT Image 2 / Midjourney v6 / Stable Diffusion XL / Sora / Runway / 可灵 / Seedance，以及 9 个图片 API + 5 个视频 API 直接调用生成。
 
@@ -298,6 +298,13 @@ AI：【GPT Image 2 版本】[中文完整描述]
 | `用 Luma 生成视频` | 调 Luma API 出片 |
 | `用 Pika 生成视频` | 调 fal.ai Pika 出片 |
 | `配置 API` | 查看 API Key 配置方式 |
+| `生成角色卡` | 6 模块角色设定卡 |
+| `三视图` | 正/侧/背角色三视图 |
+| `面部多角度` | 5 角度面部特写 |
+| `12表情` / `表情范围图` | 12 种表情锁定情绪范围 |
+| `14图参考` | Nano Banana 最强角色锚定 |
+| `IP-Adapter` | ComfyUI 本地角色锁定 |
+| `角色 DNA` | 20 字段文字锚定 |
 
 ---
 
@@ -315,7 +322,7 @@ ai-visual-director/
 │   ├── wong-ghibli-fusion.jpg        # 风格融合示例
 │   ├── multi-version-compare.jpg     # 多版本对比示例
 │   └── full-pipeline.jpg             # 全管线示例
-├── references/                       # 参考文件（50个）
+├── references/                       # 参考文件（51个）
 │   ├── styles.md                     # 50+种视觉风格详细说明
 │   ├── fusion.md                     # 风格融合引擎
 │   ├── formats.md                    # 10种输出格式说明
@@ -365,6 +372,7 @@ ai-visual-director/
 │   ├── api-integration.md             # 图片 API 集成（9 平台）
 │   ├── video-api-integration.md       # 视频 API 集成（5 平台）
 │   ├── scene-consistency.md           # 场景一致性方法（7 种）
+│   ├── character-consistency.md       # 人物一致性方法（8 种）
 │   └── batch-chapter.md              # 批量故事处理
 └── templates/                        # 模板文件（7个）
     ├── full-board.md                 # 全案板完整模板
