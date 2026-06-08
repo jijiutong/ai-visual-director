@@ -599,8 +599,12 @@ body {
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 14px;
-  text-align: center;
   transition: var(--transition);
+}
+
+.output-card.output-prompt {
+  grid-column: 1 / -1;
+  text-align: left;
 }
 
 .output-card.status-running { border-color: var(--blue); }
@@ -608,7 +612,33 @@ body {
 .output-card.status-failed { border-color: var(--red); }
 
 .output-status { font-size: 20px; margin-bottom: 4px; }
-.output-label { font-size: 12px; color: var(--text-dim); }
+.output-label { font-size: 12px; color: var(--text-dim); margin-bottom: 8px; }
+
+.output-body { margin-top: 6px; }
+
+.prompt-text {
+  background: var(--bg-deep);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 12px;
+  font-size: 12px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  color: var(--text);
+  white-space: pre-wrap;
+  word-break: break-word;
+  max-height: 200px;
+  overflow-y: auto;
+  line-height: 1.6;
+}
+
+.output-item { font-size: 12px; color: var(--text-muted); }
+.output-error { font-size: 12px; color: var(--red); }
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 11px;
+  margin-top: 6px;
+}
 
 /* Tool Sidebar */
 .tool-sidebar {

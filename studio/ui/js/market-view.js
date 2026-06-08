@@ -372,10 +372,11 @@ class MarketView {
     });
 
     try {
+      const styleName = STYLES.find(s => s.id === this.selectedStyle);
       const result = await api.startWorkflow({
         flowFile: 'storyboard-only',
         pastedStory: story,
-        style: `VS${this.selectedStyle}`,
+        style: styleName ? `${styleName.emoji} ${styleName.name}` : `VS${this.selectedStyle}`,
         shotCount: 7
       });
       this.workflowId = result.workflowId;
@@ -400,10 +401,11 @@ class MarketView {
     });
 
     try {
+      const styleName = STYLES.find(s => s.id === this.selectedStyle);
       const result = await api.startWorkflow({
         flowFile: 'one-click-all',
         pastedStory: story,
-        style: `VS${this.selectedStyle}`
+        style: styleName ? `${styleName.emoji} ${styleName.name}` : `VS${this.selectedStyle}`
       });
       this.workflowId = result.workflowId;
       if (result.plan) this._renderOutputSteps(result.plan);
@@ -421,22 +423,18 @@ class MarketView {
     const grid = document.getElementById('outputGrid');
     if (!grid) return;
 
-    grid.innerHTML = plan.map(phase => {
-      if (phase.parallel) {
-        return phase.nodes.map(n => `
-          <div class="output-card" id="out-${n.id}">
+    grid.innerHTML = plan.map(phase =>
+      (phase.nodes || []).map(n => {
+        const isGenerate = n.type && n.type.startsWith('generate_');
+        return `
+          <div class="output-card ${isGenerate ? 'output-prompt' : ''}" id="out-${n.id}">
             <div class="output-status">⏳</div>
             <div class="output-label">${n.label || n.id}</div>
+            <div class="output-body" id="body-${n.id}"></div>
           </div>
-        `).join('');
-      }
-      return phase.nodes.map(n => `
-        <div class="output-card" id="out-${n.id}">
-          <div class="output-status">⏳</div>
-          <div class="output-label">${n.label || n.id}</div>
-        </div>
-      `).join('');
-    }).join('');
+        `;
+      }).join('')
+    ).join('');
   }
 
   _updateOutput(data) {
@@ -448,6 +446,29 @@ class MarketView {
       statusEl.textContent = icons[data.status] || '⏳';
     }
     card.className = `output-card status-${data.status}`;
+
+    // Show prompt content when completed
+    const body = document.getElementById(`body-${data.nodeId}`);
+    if (body && data.status === 'completed' && data.result) {
+      if (data.result.prompt) {
+        body.innerHTML = `
+          <pre class="prompt-text">${this._escapeHtml(data.result.prompt.slice(0, 600))}${data.result.prompt.length > 600 ? '...' : ''}</pre>
+          <button class="btn btn-sm" onclick="navigator.clipboard.writeText(\`${this._escapeJs(data.result.prompt)}\`);this.textContent='✅ 已复制'">📋 复制 Prompt</button>
+        `;
+      } else if (data.result.label) {
+        body.innerHTML = `<span class="output-item">${data.result.label} · ${data.result.aspectRatio || ''} · ${data.result.shots || ''}镜</span>`;
+      }
+    }
+    if (body && data.status === 'failed') {
+      body.innerHTML = `<span class="output-error">${data.error || '失败'}</span>`;
+    }
+  }
+
+  _escapeHtml(s) {
+    return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+  }
+  _escapeJs(s) {
+    return s.replace(/\\/g,'\\\\').replace(/'/g,"\\'").replace(/"/g,'\\"').replace(/\n/g,'\\n');
   }
 
   _showOutputError(msg) {
