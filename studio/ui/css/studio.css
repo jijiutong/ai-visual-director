@@ -374,6 +374,19 @@ body {
 
 .section-hint { font-size: 12px; color: var(--text-dim); }
 
+.section-header.collapsible {
+  cursor: pointer;
+  user-select: none;
+}
+
+.section-header.collapsible:hover h2 { color: var(--accent); }
+
+.collapse-arrow {
+  font-size: 10px;
+  color: var(--text-dim);
+  transition: transform 0.2s;
+}
+
 /* Style Gallery */
 .style-gallery {
   display: flex;

@@ -43,8 +43,12 @@ function switchTool(tool) {
             </div>
             <div class="recommendations" id="aiRecommendations" style="display:none"></div>
             <div class="style-section">
-              <div class="section-header"><h2>🎨 风格画廊</h2><span class="section-hint">7大分类 · 53种风格</span></div>
-              <div class="style-gallery" id="styleGallery"></div>
+              <div class="section-header collapsible" onclick="window.marketView.toggleGallery()">
+                <h2>🎨 风格画廊</h2>
+                <span class="section-hint">7大分类 · 53种风格</span>
+                <span class="collapse-arrow" id="galleryArrow">▶</span>
+              </div>
+              <div class="style-gallery" id="styleGallery" style="display:none"></div>
             </div>
             <div class="market-actions">
               <button class="btn btn-primary btn-lg" id="btnGenerate" disabled onclick="window.marketView.generateStoryboard()">🎬 生成分镜</button>

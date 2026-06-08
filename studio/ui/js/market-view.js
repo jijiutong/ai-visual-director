@@ -148,7 +148,7 @@ class MarketView {
   }
 
   render() {
-    this.renderStyleGallery();
+    // Gallery renders lazily on toggle (hidden by default)
     this.renderRecommendations();
     this._bindStoryInput();
     this.updateButtonState();
@@ -157,6 +157,16 @@ class MarketView {
   }
 
   // ---- Style Gallery (by category) ----
+  toggleGallery() {
+    const gallery = document.getElementById('styleGallery');
+    const arrow = document.getElementById('galleryArrow');
+    if (!gallery) return;
+    const isHidden = gallery.style.display === 'none';
+    gallery.style.display = isHidden ? 'flex' : 'none';
+    if (arrow) arrow.textContent = isHidden ? '▼' : '▶';
+    if (isHidden && gallery.children.length === 0) this.renderStyleGallery();
+  }
+
   renderStyleGallery() {
     const gallery = document.getElementById('styleGallery');
     if (!gallery) return;
@@ -187,6 +197,13 @@ class MarketView {
       this.selectedStyle = null;
     } else {
       this.selectedStyle = id;
+    }
+    // Auto-open & render gallery when selecting
+    const gallery = document.getElementById('styleGallery');
+    if (gallery && gallery.style.display === 'none') {
+      gallery.style.display = 'flex';
+      const arrow = document.getElementById('galleryArrow');
+      if (arrow) arrow.textContent = '▼';
     }
     this.renderStyleGallery();
     this.updateButtonState();
