@@ -6,7 +6,7 @@
 
 > 从故事到视觉，一条完整生产管线
 
-AI 视觉导演 — 将任意故事、小说、剧本转化为电影级视觉开发方案。45项核心能力，49个参考文件，覆盖从**输入→分析→生成→评分→检查→修改→导出→视频→行业格式**的完整制作流程。
+AI 视觉导演 — 将任意故事、小说、剧本转化为电影级视觉开发方案。45项核心能力，50个参考文件，覆盖从**输入→分析→生成→评分→检查→修改→导出→视频→行业格式**的完整制作流程。
 
 支持 GPT Image 2 / Midjourney v6 / Stable Diffusion XL / Sora / Runway / 可灵 / Seedance，以及 9 个图片 API + 5 个视频 API 直接调用生成。
 
@@ -315,7 +315,7 @@ ai-visual-director/
 │   ├── wong-ghibli-fusion.jpg        # 风格融合示例
 │   ├── multi-version-compare.jpg     # 多版本对比示例
 │   └── full-pipeline.jpg             # 全管线示例
-├── references/                       # 参考文件（49个）
+├── references/                       # 参考文件（50个）
 │   ├── styles.md                     # 50+种视觉风格详细说明
 │   ├── fusion.md                     # 风格融合引擎
 │   ├── formats.md                    # 10种输出格式说明
@@ -364,6 +364,7 @@ ai-visual-director/
 │   ├── historical-eras.md            # 15种历史时代（先秦→太空科幻）
 │   ├── api-integration.md             # 图片 API 集成（9 平台）
 │   ├── video-api-integration.md       # 视频 API 集成（5 平台）
+│   ├── scene-consistency.md           # 场景一致性方法（7 种）
 │   └── batch-chapter.md              # 批量故事处理
 └── templates/                        # 模板文件（7个）
     ├── full-board.md                 # 全案板完整模板
