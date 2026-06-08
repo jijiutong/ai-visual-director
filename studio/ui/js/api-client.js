@@ -1,6 +1,4 @@
 // api-client.js — API + WebSocket client
-const API_BASE = 'http://localhost:9999/api';
-
 const API_BASE_URL = 'http://localhost:9999';
 const API_BASE = API_BASE_URL + '/api';
 
