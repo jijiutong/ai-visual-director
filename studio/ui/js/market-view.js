@@ -446,17 +446,6 @@ class MarketView {
     const area = document.getElementById('outputArea');
     if (!area) return;
     area.style.display = 'block';
-
-    // Prevent duplicate hint
-    if (!document.querySelector('.output-hint')) {
-      const grid = document.getElementById('outputGrid');
-      if (grid) {
-        const hint = document.createElement('div');
-        hint.className = 'output-hint';
-        hint.innerHTML = `<p>💡 风格和故事已选定。在对话中说「<code>帮我生成 ${this._getSelectedStyleName()} 风格的故事板</code>」获得完整 Prompt</p>`;
-        grid.parentNode.appendChild(hint);
-      }
-    }
   }
 
   _getSelectedStyleName() {
@@ -468,41 +457,107 @@ class MarketView {
   _renderOutputSteps(plan) {
     const grid = document.getElementById('outputGrid');
     if (!grid) return;
-
-    grid.innerHTML = plan.map(phase =>
-      (phase.nodes || []).map(n => {
-        const isGenerate = n.type && n.type.startsWith('generate_');
-        return `
-          <div class="output-card ${isGenerate ? 'output-prompt' : ''}" id="out-${n.id}">
-            <div class="output-status">⏳</div>
-            <div class="output-label">${n.label || n.id}</div>
-            <div class="output-body" id="body-${n.id}"></div>
-          </div>
-        `;
-      }).join('')
-    ).join('');
+    // Show progress step for a second, then switch to shot cards
+    grid.innerHTML = '<div class="output-card skeleton" style="grid-column:1/-1;text-align:center;padding:24px"><div class="output-status">🔄</div><div class="output-label">生成分镜中...</div></div>';
+    setTimeout(() => this._renderShotCards(), 800);
   }
 
   _updateOutput(data) {
-    const card = document.getElementById(`out-${data.nodeId}`);
-    if (!card) return;
-    const statusEl = card.querySelector('.output-status');
-    if (statusEl) {
-      const icons = { running: '🔄', completed: '✅', failed: '❌' };
-      statusEl.textContent = icons[data.status] || '⏳';
-    }
-    card.className = `output-card status-${data.status}`;
+    // Progress updates — just update the skeleton text
+    const grid = document.getElementById('outputGrid');
+    if (!grid) return;
+    const skeleton = grid.querySelector('.skeleton .output-status');
+    if (skeleton && data.status === 'running') skeleton.textContent = '🔄';
+    if (skeleton && data.status === 'completed') skeleton.textContent = '✅';
+  }
 
-    const body = document.getElementById(`body-${data.nodeId}`);
-    if (body && data.status === 'completed' && data.result) {
-      const r = data.result;
-      body.innerHTML = r.label
-        ? `<span class="output-item">${r.label} · ${r.style || ''} · ${r.shots || ''}镜 · ${r.aspectRatio || ''}</span>`
-        : `<span class="output-item">${r.note || '完成'}</span>`;
+  _renderShotCards() {
+    const grid = document.getElementById('outputGrid');
+    if (!grid) return;
+
+    const story = this.storyText || document.getElementById('storyInput')?.value?.trim() || '';
+    const style = STYLES.find(s => s.id === this.selectedStyle);
+    const shotCount = 7;
+
+    // Split story into shot groups
+    const sentences = story.split(/[。！？\n]+/).filter(Boolean);
+    const shotsPerSentence = Math.max(1, Math.floor(shotCount / Math.max(1, sentences.length)));
+    const shots = [];
+    let shotNum = 1;
+
+    for (const sentence of sentences) {
+      if (shotNum > shotCount) break;
+      const words = sentence.trim().split(/[，,、\s]+/).filter(Boolean);
+      const chunks = [];
+      for (let i = 0; i < words.length && shotNum <= shotCount; i += Math.ceil(words.length / Math.min(shotsPerSentence, shotCount - shotNum + 1))) {
+        chunks.push(words.slice(i, i + Math.ceil(words.length / shotsPerSentence)).join(''));
+      }
+      for (const chunk of chunks) {
+        if (shotNum > shotCount) break;
+        const st = this._detectShotType(chunk);
+        shots.push({
+          num: shotNum,
+          type: st.type,
+          camera: st.camera,
+          desc: chunk.slice(0, 80),
+          duration: 2 + Math.floor(chunk.length / 15)
+        });
+        shotNum++;
+      }
     }
-    if (body && data.status === 'failed') {
-      body.innerHTML = `<span class="output-error">${data.error || '失败'}</span>`;
+    // Pad if too few
+    while (shots.length < shotCount) {
+      shots.push({ num: shots.length + 1, type: '中景', camera: '固定', desc: '（续前镜）', duration: 2 });
     }
+
+    const styleName = style ? `${style.emoji} ${style.name}` : '未选风格';
+
+    grid.innerHTML = `
+      <div class="output-summary" style="grid-column:1/-1">
+        <div class="summary-row"><b>风格</b> ${styleName} &nbsp;|&nbsp; <b>分镜</b> ${shotCount}镜 &nbsp;|&nbsp; <b>画幅</b> 16:9</div>
+        <div class="summary-hint">💡 这是 Story Studio 生成的预览分镜。完整 AI Prompt 在 Claude Code 对话中获取。</div>
+      </div>
+      ${shots.map(s => `
+        <div class="shot-card" id="shot-${s.num}" onclick="window.marketView._previewShot(${s.num})">
+          <div class="shot-num">镜${s.num}</div>
+          <div class="shot-thumb"><span>🎬</span></div>
+          <div class="shot-meta"><span>${s.type}</span><span>${s.camera}</span></div>
+          <div class="shot-desc">${this._escapeHtml(s.desc)}</div>
+          <div class="shot-dur">${s.duration}s</div>
+        </div>
+      `).join('')}
+    `;
+  }
+
+  _detectShotType(text) {
+    const t = text.toLowerCase();
+    if (/全|远|俯瞰|鸟瞰|天地|山河|城市|战场|全景/.test(t)) return { type: '远景', camera: '俯拍' };
+    if (/对峙|面对|站|立|对峙/.test(t)) return { type: '中景', camera: '固定' };
+    if (/脸|眼|泪|表情|微笑|怒|惊|手|握/.test(t)) return { type: '特写', camera: '推镜' };
+    if (/跑|冲|飞|跃|翻|滚|战|打|挥|砍|刺/.test(t)) return { type: '中景', camera: '跟拍' };
+    if (/走|行|步|离|入|出/.test(t)) return { type: '全景', camera: '横移' };
+    if (/慢|静|默|思|想/.test(t)) return { type: '中景', camera: '慢推' };
+    return { type: '中景', camera: '固定' };
+  }
+
+  _previewShot(num) {
+    const card = document.getElementById(`shot-${num}`);
+    if (!card) return;
+    const desc = card.querySelector('.shot-desc')?.textContent || '';
+    const meta = card.querySelector('.shot-meta')?.textContent || '';
+    const overlay = document.getElementById('previewPanelContainer');
+    if (!overlay) return;
+    overlay.style.display = 'flex';
+    overlay.innerHTML = `
+      <div class="preview-content" onclick="event.stopPropagation()">
+        <div class="preview-label">镜${num} · ${meta}</div>
+        <div class="preview-shot-display">🎬</div>
+        <p class="preview-desc">${this._escapeHtml(desc)}</p>
+        <p class="preview-hint">完整 Prompt 在 Claude Code 中生成</p>
+        <button class="btn" onclick="document.getElementById('previewPanelContainer').style.display='none'">关闭</button>
+      </div>
+    `;
+    overlay.onclick = () => { overlay.style.display = 'none'; };
   }
 
   _showOutputError(msg) {

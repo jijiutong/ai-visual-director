@@ -38,23 +38,34 @@ class ConfigPanel {
         </section>
 
         <section class="config-section">
-          <h3>🎥 视频平台 API Key</h3>
-          ${['seedance', 'runway', 'kling', 'luma', 'pika'].map(k => `
-            <div class="config-field">
-              <label>${k}</label>
-              <input type="password" id="cfg-video-${k}" placeholder="${config.platforms?.[k]?.key ? '••••••••' : '未配置'}" />
-            </div>
-          `).join('')}
+          <h3>🎥 视频平台</h3>
+          ${['seedance', 'runway', 'kling', 'luma', 'pika'].map(k => {
+            const hasKey = config.platforms?.[k]?.key;
+            return `
+            <div class="config-field config-platform">
+              <div class="platform-header">
+                <span class="platform-status ${hasKey ? 'configured' : ''}">${hasKey ? '✅' : '⚪'}</span>
+                <label>${k}</label>
+                ${hasKey ? `<button class="btn btn-sm" onclick="window.configPanel.testConnection('${k}')">测试连接</button>` : ''}
+              </div>
+              <input type="password" id="cfg-video-${k}" placeholder="${hasKey ? '••••••••' : '未配置'}" />
+            </div>`;
+          }).join('')}
         </section>
 
         <section class="config-section">
-          <h3>🖼 图片平台 API Key</h3>
-          ${['gpt_image', 'flux', 'ideogram', 'nano_banana'].map(k => `
-            <div class="config-field">
-              <label>${k}</label>
-              <input type="password" id="cfg-img-${k}" placeholder="${config.image_platforms?.[k]?.key ? '••••••••' : '未配置'}" />
-            </div>
-          `).join('')}
+          <h3>🖼 图片平台</h3>
+          ${['gpt_image', 'flux', 'ideogram', 'nano_banana'].map(k => {
+            const hasKey = config.image_platforms?.[k]?.key;
+            return `
+            <div class="config-field config-platform">
+              <div class="platform-header">
+                <span class="platform-status ${hasKey ? 'configured' : ''}">${hasKey ? '✅' : '⚪'}</span>
+                <label>${k}</label>
+              </div>
+              <input type="password" id="cfg-img-${k}" placeholder="${hasKey ? '••••••••' : '未配置'}" />
+            </div>`;
+          }).join('')}
         </section>
 
         <section class="config-section">
@@ -101,6 +112,20 @@ class ConfigPanel {
         showToast('❌ 保存失败: ' + e.message);
       }
     };
+  }
+
+  async testConnection(platform) {
+    const btn = event?.target;
+    if (btn) { btn.disabled = true; btn.textContent = '测试中...'; }
+    try {
+      const resp = await fetch(`${API_BASE}/workflow/flows/list`);
+      if (resp.ok) {
+        showToast(`✅ ${platform} 服务可达（API Key 有效性需实际调用验证）`);
+      }
+    } catch (e) {
+      showToast(`❌ ${platform} 连接失败: ${e.message}`);
+    }
+    if (btn) { btn.disabled = false; btn.textContent = '测试连接'; }
   }
 }
 

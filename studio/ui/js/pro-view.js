@@ -15,6 +15,10 @@ class ProView {
       this.canvas = new FlowCanvas(svg);
       this._setupDrop(svg);
     }
+    // Show guide if canvas is empty
+    if (this.canvas.nodes.length === 0) {
+      if (typeof this.canvas._showGuide === 'function') this.canvas._showGuide();
+    }
     renderNodeLibrary(library);
 
     if (window.setChatVisible) window.setChatVisible(true);
@@ -113,6 +117,36 @@ class ProView {
         this.canvas.addNode(data, e.clientX - rect.left, e.clientY - rect.top);
       } catch (err) {}
     });
+  }
+
+  loadFromStory() {
+    const storyInput = document.getElementById('storyInput');
+    const story = storyInput?.value?.trim() || '';
+    if (!story) { alert('请先在故事板页面输入故事'); return; }
+
+    // Build a simple flow from story
+    const flowDef = {
+      name: '从故事生成',
+      nodes: [
+        { id: 'story', type: 'paste_story', label: '📋 故事', params: { content: story } },
+        { id: 'extract', type: 'extract_all', label: '🧬 提取信息', params: {} },
+        { id: 'character', type: 'generate_character', label: '👤 角色卡', params: {} },
+        { id: 'scene', type: 'generate_scene', label: '🏞 场景图', params: {} },
+        { id: 'storyboard', type: 'generate_storyboard', label: '🎬 分镜', params: {} },
+        { id: 'export', type: 'export', label: '📦 导出', params: {} }
+      ],
+      edges: [
+        { from: 'story', to: 'extract' },
+        { from: 'extract', to: 'character' },
+        { from: 'extract', to: 'scene' },
+        { from: 'extract', to: 'storyboard' },
+        { from: 'character', to: 'export' },
+        { from: 'scene', to: 'export' },
+        { from: 'storyboard', to: 'export' }
+      ]
+    };
+    this.canvas.loadFlow(flowDef);
+    this.flowName = flowDef.name;
   }
 
   async loadPresetFlow() {

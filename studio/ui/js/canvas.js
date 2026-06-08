@@ -121,6 +121,44 @@ class FlowCanvas {
       this.addNode(node, col * 200 + 40, row * 100 + 40);
     });
     flowDef.edges.forEach(e => this.addEdge(e.from, e.to));
+    this._hideGuide();
+  }
+
+  _showGuide() {
+    this._hideGuide();
+    const ns = 'http://www.w3.org/2000/svg';
+    const g = document.createElementNS(ns, 'g');
+    g.id = 'canvasGuide';
+    g.classList.add('canvas-guide');
+
+    const texts = [
+      { y: 100, t: '📋 加载预设流程 — 从 5 个内置流程开始' },
+      { y: 160, t: '📝 从当前故事生成流程' },
+      { y: 220, t: '🧩 从右侧拖入节点，自由编排' },
+    ];
+
+    texts.forEach(item => {
+      const text = document.createElementNS(ns, 'text');
+      text.setAttribute('x', '50%'); text.setAttribute('y', item.y);
+      text.setAttribute('text-anchor', 'middle');
+      text.textContent = item.t;
+      text.classList.add('canvas-guide-text');
+      g.appendChild(text);
+    });
+
+    this.svg.appendChild(g);
+  }
+
+  _hideGuide() {
+    const g = this.svg.querySelector('#canvasGuide');
+    if (g) g.remove();
+  }
+
+  clear() {
+    this.nodes = [];
+    this.edges = [];
+    this.svg.innerHTML = '';
+    this._showGuide();
   }
 
   exportFlow() {

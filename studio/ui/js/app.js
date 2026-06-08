@@ -115,6 +115,7 @@ function switchTool(tool) {
         </div>
         <div class="pro-toolbar">
           <button class="btn" onclick="window.proView.loadPresetFlow()">📋 加载预设流程</button>
+          <button class="btn" onclick="window.proView.loadFromStory()">📝 从故事生成</button>
           <button class="btn btn-primary" onclick="window.proView.runWorkflow()">▶ 运行</button>
           <button class="btn" onclick="window.proView.clearCanvas()">🗑 清空</button>
           <button class="btn" onclick="window.proView.saveAsCustom()">💾 保存流程</button>

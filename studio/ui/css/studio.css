@@ -835,6 +835,14 @@ body {
 .port-out:hover { cursor: pointer; }
 .port-in:hover { cursor: pointer; }
 
+/* Canvas Guide */
+.canvas-guide-text {
+  fill: var(--text-dim);
+  font-size: 14px;
+  opacity: 0.5;
+  pointer-events: none;
+}
+
 .edge-line {
   stroke: rgba(85, 230, 210, 0.58);
   stroke-width: 2;
@@ -987,6 +995,14 @@ body {
   border-color: var(--cyan);
   box-shadow: 0 0 0 3px rgba(85, 230, 210, 0.1);
 }
+
+/* Platform Status */
+.config-platform { margin-bottom: 14px; }
+.platform-header {
+  display: flex; align-items: center; gap: 8px; margin-bottom: 4px;
+}
+.platform-status { font-size: 12px; }
+.platform-status.configured { color: var(--green); }
 
 /* Theme Options */
 .theme-option {
@@ -1189,6 +1205,63 @@ body {
 /* ========== Button States ========== */
 .btn:disabled { opacity: 0.45; cursor: not-allowed; transform: none !important; }
 .btn-primary:disabled { background: var(--bg-card); border-color: var(--border); color: var(--text-dim); }
+
+/* ========== Shot Cards ========== */
+.output-summary {
+  background: linear-gradient(135deg, rgba(255,191,105,0.08), rgba(85,230,210,0.04));
+  border: 1px solid rgba(255,191,105,0.2);
+  border-radius: var(--radius);
+  padding: 14px 18px;
+  margin-bottom: 6px;
+}
+.summary-row { font-size: 13px; color: var(--text); margin-bottom: 6px; }
+.summary-hint { font-size: 11px; color: var(--text-dim); }
+
+.shot-card {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px;
+  cursor: pointer;
+  transition: var(--transition);
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 140px;
+}
+.shot-card:hover { border-color: var(--accent); transform: translateY(-1px); }
+.shot-num { font-size: 11px; color: var(--accent); font-weight: 700; }
+.shot-thumb {
+  flex: 1; min-height: 48px;
+  background: rgba(255,255,255,0.03);
+  border-radius: 6px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 28px;
+}
+.shot-meta { display: flex; gap: 8px; }
+.shot-meta span {
+  font-size: 10px; padding: 2px 8px; background: rgba(255,255,255,0.05);
+  border-radius: 10px; color: var(--text-muted);
+}
+.shot-desc { font-size: 11px; color: var(--text-dim); line-height: 1.4; }
+.shot-dur { font-size: 10px; color: var(--text-dim); text-align: right; }
+
+/* Preview Modal */
+.preview-overlay {
+  position: fixed; inset: 0; background: rgba(0,0,0,0.85); z-index: 1000;
+  display: flex; align-items: center; justify-content: center;
+}
+.preview-content {
+  background: var(--bg-panel); border: 1px solid var(--border);
+  border-radius: var(--radius); padding: 24px; max-width: 500px; width: 90%;
+  text-align: center; display: flex; flex-direction: column; gap: 12px;
+}
+.preview-shot-display {
+  font-size: 64px; padding: 24px;
+  background: rgba(255,255,255,0.03); border-radius: var(--radius);
+}
+.preview-desc { font-size: 14px; color: var(--text); line-height: 1.6; }
+.preview-hint { font-size: 11px; color: var(--text-dim); }
 
 /* ========== Skeleton Loading ========== */
 @keyframes skeleton-pulse {
