@@ -24,7 +24,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 → 回复"生成角色卡"（6 模块角色设定卡）
 → 回复"生成场景参考图"（全能参考模式，一张锁场景+角色+光照+道具）
 → 回复"生成道具细节卡"（如有特殊武器/配饰）
-出图量：2-3 张 | 费用：~$0.08-0.24 | 耗时：~1min
+出图量：2-3 张 | 费用：~USD0.08-0.24 | 耗时：~1min
 ```
 
 ### 第二步：全景图锁定全局空间（720° 全景图）
@@ -32,7 +32,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 ```
 → 回复"生成全景图"（推荐 6 面立方体拼接）
 → 覆盖所有拍摄角度，每镜从这个全景空间"取景"
-出图量：6 张 → 拼接为 1 张全景 | 费用：~$0.24-0.48 | 耗时：~90s
+出图量：6 张 → 拼接为 1 张全景 | 费用：~USD0.24-0.48 | 耗时：~90s
 ```
 
 ### 第三步：生成分镜图（3-4 张，覆盖 15s 全部镜头）
@@ -40,7 +40,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 ```
 → 回复"生成视频分镜图"或"合并帧"
 → 将故事板 N 帧按动作阶段合并为 3-4 张
-出图量：3-4 张 | 费用：~$0.12-0.32 | 耗时：~2min
+出图量：3-4 张 | 费用：~USD0.12-0.32 | 耗时：~2min
 ```
 
 ### 第四步：生成视频 prompt
@@ -54,10 +54,10 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 
 ```
 → Seedance：prompt + 角色卡 + 全景图 + 3-4 张分镜图（5-6 张参考图）
-→ 费用：~$0.50-1.0/条 | 耗时：1-3min
+→ 费用：~USD0.50-1.0/条 | 耗时：1-3min
 ```
 
-**总出图量：11-13 张 | 总费用：~$0.94-2.04 | 总耗时：~5-8min**
+**总出图量：11-13 张 | 总费用：~USD0.94-2.04 | 总耗时：~5-8min**
 
 ## 视频 Prompt 输出格式（压缩模式）
 
