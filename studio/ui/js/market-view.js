@@ -233,40 +233,75 @@ class MarketView {
   }
 
   // ---- Generate ----
-  generateStoryboard() {
+  async generateStoryboard() {
     if (!this.selectedStyle) { showToast('👆 请先选择风格'); return; }
     const story = document.getElementById('storyInput')?.value?.trim() || '';
     if (!story) { showToast('📝 请先粘贴故事'); return; }
-    this._showResult('storyboard');
+    const style = STYLES.find(s => s.id === this.selectedStyle);
+    await this._submitAndWait('generate', {
+      story,
+      style: { id: style.id, name: style.name, emoji: style.emoji },
+      shots: 7, aspect: '16:9'
+    });
   }
 
-  generateAll() {
+  async generateAll() {
     if (!this.selectedStyle) { showToast('👆 请先选择风格'); return; }
     const story = document.getElementById('storyInput')?.value?.trim() || '';
     if (!story) { showToast('📝 请先粘贴故事'); return; }
-    this._showResult('allinone');
+    const style = STYLES.find(s => s.id === this.selectedStyle);
+    await this._submitAndWait('generate', {
+      story,
+      style: { id: style.id, name: style.name, emoji: style.emoji },
+      mode: 'allinone', shots: 7, aspect: '16:9'
+    });
   }
 
-  _showResult(mode) {
+  async _submitAndWait(type, payload) {
     const area = document.getElementById('outputArea');
     const grid = document.getElementById('outputGrid');
     if (!area || !grid) return;
-
-    const style = STYLES.find(s => s.id === this.selectedStyle);
-    const story = document.getElementById('storyInput')?.value?.trim() || '';
-    const styleName = style ? `${style.emoji} ${style.name}` : '推荐风格';
     area.style.display = 'block';
+    grid.innerHTML = '<div class="result-card"><div class="result-body" style="text-align:center;padding:32px">⏳ 等待 AI 处理...</div></div>';
+
+    try {
+      const resp = await fetch(`${api.base}/api/chat/task`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ type, payload })
+      });
+      if (!resp.ok) throw new Error(await resp.text());
+      const { taskId } = await resp.json();
+
+      for (let i = 0; i < 60; i++) {
+        await new Promise(r => setTimeout(r, 1000));
+        const tr = await fetch(`${api.base}/api/chat/task/${taskId}`);
+        if (!tr.ok) continue;
+        const task = await tr.json();
+        if (task.status === 'done' && task.result) {
+          this._renderAIResult(task.result, payload);
+          return;
+        }
+      }
+      grid.innerHTML = '<div class="result-card"><div class="result-body" style="text-align:center;padding:32px">⏰ 等待超时，请对 CC 说「处理画布任务」</div></div>';
+    } catch (e) {
+      grid.innerHTML = `<div class="result-card"><div class="result-body" style="text-align:center;padding:32px">❌ ${e.message}</div></div>`;
+    }
+  }
+
+  _renderAIResult(result, payload) {
+    const grid = document.getElementById('outputGrid');
+    if (!grid) return;
+    const style = payload.style;
     grid.innerHTML = `
       <div class="result-card">
-        <div class="result-header">
-          <span class="result-icon">${mode === 'allinone' ? '⚡' : '🎬'}</span>
-          <span>${mode === 'allinone' ? '一键全来' : '故事板分镜'}</span>
-        </div>
+        <div class="result-header"><span class="result-icon">${style.emoji}</span>${style.name} · AI 生成结果</div>
         <div class="result-body">
-          <div class="result-row"><b>风格</b> ${styleName}</div>
-          <div class="result-row"><b>画幅</b> 16:9</div>
-          <div class="result-row"><b>分镜</b> 7镜</div>
-          <div class="result-story">${story}</div>
+          <div class="result-row"><b>风格</b> ${style.emoji} ${style.name}</div>
+          <div class="result-row"><b>画幅</b> ${payload.aspect}</div>
+          <div class="result-row"><b>分镜</b> ${payload.shots}镜</div>
+          ${result.prompt ? `<div class="result-story"><pre style="white-space:pre-wrap;font-family:inherit;font-size:13px">${result.prompt}</pre></div>` : ''}
+          ${result.storyboard ? `<div class="result-story"><pre style="white-space:pre-wrap;font-family:inherit;font-size:13px">${result.storyboard}</pre></div>` : ''}
         </div>
       </div>
     `;

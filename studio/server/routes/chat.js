@@ -1,9 +1,9 @@
 const express = require('express');
 const router = express.Router();
 
-// In-memory chat message queue (shared with Claude Code context)
 const chatHistory = [];
 const MAX_HISTORY = 200;
+const taskQueue = []; // { id, type, payload, status:'pending|processing|done', result:null, createdAt }
 
 // POST /api/chat/send — web UI sends a /skill command or chat message
 router.post('/send', (req, res) => {
@@ -152,5 +152,46 @@ function parseSkillCommand(message) {
   };
 }
 
+// POST /api/chat/task — web UI sends a task for CC to process
+router.post('/task', (req, res) => {
+  const { type, payload } = req.body;
+  if (!type) return res.status(400).json({ error: 'type required (recommend|generate)' });
+
+  const task = {
+    id: `task_${Date.now()}`,
+    type, payload,
+    status: 'pending', result: null,
+    createdAt: new Date().toISOString()
+  };
+  taskQueue.push(task);
+
+  console.log(`📨 New task: ${type} — ${task.id}`);
+  res.json({ taskId: task.id, status: 'pending' });
+});
+
+// GET /api/chat/pending — CC reads pending tasks
+router.get('/pending', (req, res) => {
+  res.json({ tasks: taskQueue.filter(t => t.status === 'pending') });
+});
+
+// POST /api/chat/complete — CC posts result back
+router.post('/complete', (req, res) => {
+  const { taskId, result } = req.body;
+  const task = taskQueue.find(t => t.id === taskId);
+  if (!task) return res.status(404).json({ error: 'task not found' });
+  task.status = 'done';
+  task.result = result;
+  console.log(`✅ Task completed: ${taskId}`);
+  res.json({ taskId, status: 'done' });
+});
+
+// GET /api/chat/task/:id — web UI polls for result
+router.get('/task/:id', (req, res) => {
+  const task = taskQueue.find(t => t.id === req.params.id);
+  if (!task) return res.status(404).json({ error: 'not found' });
+  res.json(task);
+});
+
 module.exports = router;
 module.exports.chatHistory = chatHistory;
+module.exports.taskQueue = taskQueue;
