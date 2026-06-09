@@ -48,14 +48,12 @@ description: Quick storyboard generation — paste a story, get smart recommenda
 
 ### Step 3: 用户确认 → 生成 Prompt
 
-用户回复编号或 "全来" / "一键生成" 后，按对应模板输出完整 prompt。
 
 ### 快捷指令
 
 | 指令 | 效果 |
 |------|------|
 | `一键生成` | 全流程自动，不展示选项 |
-| `全来` | 4 个最相关格式批量输出 |
 | `看全部` | 展示 53 种风格 + 10 种格式 |
 | `多版本` | A/B/C 三版本对比 |
 | `一键全平台` | GPT Image / Midjourney / SD 三平台输出 |

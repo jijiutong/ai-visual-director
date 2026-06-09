@@ -46,7 +46,6 @@ AI: [Smart Recommendation] Based on your story, here are the best matches...
      Recommend 1 (best match): Style X + Format Y — reason
      Recommend 2 (backup):     Style A + Format B — reason
      Recommend 3 (different):  Style C + Format D — reason
-You: 1          ← Reply with number to confirm, or say "全来" for 4 at once
 AI: [Full prompt]
 ```
 
@@ -57,7 +56,6 @@ AI: [Full prompt]
 | `一键生成` (one-click generate) | Full pipeline auto, no options shown |
 | `一键全平台` (one-click all platforms) | Full pipeline + GPT/MJ/SD outputs |
 | `一键多版本` (one-click multi-version) | Full pipeline + A/B/C comparison |
-| `全来` | 4 most relevant format prompts |
 
 ---
 
@@ -222,7 +220,6 @@ AI: [GPT Image 2 version] [Full Chinese description]
 ### Workflow (6)
 | Capability | Description |
 |------------|-------------|
-| **One-Click Workflow** | "一键生成/全平台/多版本/全来" full pipeline auto |
 | **Precise Single-Shot Edit** | Edit only specified shot, DNA propagation |
 | **Prompt Quality Scorer** | 0-100 auto-evaluation, 9 dimensions |
 | **Prompt Version Management** | Records edit history, rollback, comparison |
@@ -357,7 +354,6 @@ ai-visual-director/
 | `一键全平台` | Full pipeline + GPT/MJ/SD |
 | `一键多版本` | A/B/C three version comparison |
 | `看全部` | Show all 53 styles + 10 formats |
-| `全来` / `批量` | Output 4 most relevant formats |
 
 ### Scene Consistency
 
