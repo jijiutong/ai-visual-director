@@ -4,303 +4,105 @@
   <a href="./README.md">中文</a> · <a href="./README.en.md"><b>🇬🇧 English</b></a>
 </p>
 
-> A Claude Code Skill that turns a single story sentence into cinematic storyboards, character sheets, scene concepts, posters, and video prompts — automatically.
+> Turn a story into cinematic storyboards, character sheets, scene concepts, and video prompts.
+> Paste text → get production-ready prompts for AI image/video tools.
 
 ---
 
-## Who's It For
+## What It Is
 
-- **AI comic / short drama creators** — storyboards + video prompts in one flow
-- **Novel authors** — visualize scenes and characters instantly
-- **AI art & video enthusiasts** — GPT Image / Midjourney / SD / Seedance prompts, one click
-- **Content creators needing consistency** — character sheets, turnarounds, expression charts, scene references
+AI Visual Director is a Claude Code Skill. Paste a story → get a professional visual development plan.
 
----
+Core abilities:
 
-## Highlights
-
-- **Auto story breakdown**: from one sentence to full storyboard with camera, pacing, and emotion curve
-- **Character consistency**: sheets / turnarounds / 5-angle face / 12 expressions / costume-weapon detail / 20-field DNA
-- **Scene consistency**: all-in-one reference / 720° panorama / overhead shot / orbit capture / text scene lock
-- **53 visual styles**: Eastern Fantasy, Urban Mood, Ink Wash, Wong Kar-wai, Ghibli, Black-Gold Action…
-- **Video workflow**: storyboard → Seedance / Runway / Kling / Luma / Pika video prompt
-- **Multi-platform prompts**: GPT Image / Midjourney as primary; SD / DALL-E compatible
-
-Full capability matrix → [docs/capability-matrix.md](docs/capability-matrix.md)
+- 🎬 **Story to storyboard** — auto-extract characters/scenes/conflict → full board with lighting/camera/color
+- 👤 **Character design** — 6-module character sheets + DNA anchoring
+- 🏯 **Scene design** — all-in-one reference + director-annotated mode
+- 🎥 **Video prompts** — one complete prompt for Seedance / Runway / Kling
+- 🎨 **50+ visual styles** — Eastern Fantasy / Wong Kar-wai / Cyberpunk / Ink Wash / 3D Animation…
+- 📱 **Multi-platform** — GPT Image / Midjourney primary; SD / DALL-E compatible
 
 ---
 
-## Install
+## 30-Second Start
 
-### npx (recommended)
-
-```bash
-# Global — available in all projects
-npx skills add jijiutong/ai-visual-director -g -y
-
-# Project-level — current project only
-npx skills add jijiutong/ai-visual-director
+```text
+/storyboard 一键生成 Two swordsmen face off in a rainy temple. The master realizes his disciple has fallen to the dark side. 15s 7 shots
 ```
 
-Claude Code auto-discovers the skill. Just paste a story and go.
-
-### Manual install
-
-```bash
-git clone https://github.com/jijiutong/ai-visual-director.git
-```
-
-Copy `SKILL.md` + `references/` + `templates/` into `~/.claude/skills/ai-visual-director/` (global) or `<project>/.claude/skills/ai-visual-director/` (per-project).
-
-Individual sub-skill install: copy `sub-skills/<name>/SKILL.md` to `~/.claude/skills/<name>/SKILL.md`.
-
-### Zero install
-
-In Claude Code, just say:
-
-```
-Help me storyboard: [paste your story]
-```
+Output: title/genre → emotion curve → character anchors → scene anchors → full shot list → copyable prompt
 
 ---
 
-## Quick Start
+## Commands
 
-### Paste your story
+| Command | Use | Example |
+|---------|-----|---------|
+| `/storyboard` | Storyboard generation | `/storyboard one-click [story] 15s 7shots` |
+| `/character` | Character design | `/character Name description` |
+| `/scene` | Scene concept | `/scene Scene description` |
+| `/video` | Video prompt | `video prompt` |
+| `/style` | Style adjustment | `change to ink wash but keep characters` |
+| `/poster` | Poster generation | `/poster [story]` |
 
-```
-You: In a cultivation world, two sword cultivators duel at a sword tomb,
-     once master and apprentice
+## Common Actions
 
-AI: [Smart Recommendation]
-  Recommend 1: Eastern Fantasy + Full Board (master-apprentice bonus)
-  Recommend 2: Chinese Ink + Poster
-
-You: 1
-
-AI: ```[Full board prompt with master-apprentice composition bonus]```
-```
-
-### Quick Commands
-
-| Command | What it does | Example |
-|---------|-------------|---------|
-| `/storyboard` | Storyboard generation | `/storyboard Two swordsmen in a rainy temple` |
-| `/character` | Character design | `/character White-haired master, black robe` |
-| `/scene` | Scene concept | `/scene Ancient temple hall at night` |
-| `/poster` | Movie poster | `/poster Duel at Sword Tomb` |
-| `/video` | Video prompt pipeline | `/video 15s scene: one sword splits the sky` |
-| `/style` | Style browser / fusion | `/style Wong Kar-wai + Ghibli` |
-
-Quick mode (under `/storyboard`):
-
-| Command | Effect |
-|---------|--------|
-| `/storyboard 一键生成` | Full pipeline auto, no options |
-| `/storyboard 一键全平台` | Multi-platform prompt output |
-| `/storyboard 多版本` | A/B/C version comparison |
-| `/storyboard 看全部` | Show all styles + formats + workflows |
+| Command | Use |
+|---------|-----|
+| `一键生成` | Auto best plan, full storyboard output |
+| `多版本` | A/B/C version comparison |
+| `看全部` | Browse all styles & formats |
+| `Shot X...` | Precise single-shot edit |
+| `Change to X style but keep characters` | Style transfer |
+| `评分` | Prompt quality score + optimization |
+| `检查连续性` | Check character/scene/timeline continuity |
 
 ---
 
 ## Examples
 
-### Video Pipeline · "One Sword Splits the Sky"
-
-```
-You: 15-second scene — a Chinese warrior's single slash splits the heavens
-
-AI: [Recommend] Black-Gold Action + Full Board
-You: 1
-
-→ Character sheet → Scene reference → Storyboard frames → Video prompt → Seedance-ready
-```
-
-### Eastern Fantasy · Master vs. Apprentice
-
-```
-You: Two cultivators duel at a sword tomb, once master and apprentice
-AI: [Recommend 1] Eastern Fantasy + Full Board (relationship bonus)
-    [Recommend 2] Chinese Ink + Poster
-You: 1
-AI: ```[Full board prompt with master-apprentice framing/lighting/emotion]```
-```
-
-### Style Fusion · Wong Kar-wai × Ghibli
-
-```
-You: Transform the rainy night scene into Wong Kar-wai + Ghibli fusion
-
-AI: ```60% Wong Kar-wai neon + 40% Ghibli watercolor fusion prompt```
-```
-
-More examples → [docs/examples.md](docs/examples.md)
+| # | Genre | Story | Style | Sample |
+|---|-------|-------|-------|--------|
+| 01 | Wuxia | Master vs disciple in rainy temple | Eastern Fantasy | `examples/video/01-rainy-temple-action.md` |
+| 02 | Urban | Exes meet at late-night convenience store | Urban Mood | `examples/video/02-convenience-store-mood.md` |
+| 03 | Sci-fi | Android girl in derelict spaceport | Dark Sci-fi | `examples/video/03-spaceport-countdown.md` |
+| 04 | Cute | Blue desk pet delivers milk | 3D Animation | `examples/video/04-desk-pet-comedy.md` |
 
 ---
 
-## Video Workflow
+## Advanced Usage
 
-```
-Prep (character + scene refs) → Panorama lock → Storyboard frames → Prompt → Video
-```
-
-Supports Seedance / Runway / Kling / Luma / Pika.
-
-> API calls require you to configure your own platform API keys. Without API keys configured, the Skill still generates all prompts normally.
+| Topic | Document |
+|-------|----------|
+| All commands + API reference | [docs/commands.md](docs/commands.md) |
+| User guide | [docs/user-guide.md](docs/user-guide.md) |
+| Rules & constraints | [docs/rules.md](docs/rules.md) |
+| Full skill docs | [docs/SKILL.md](docs/SKILL.md) |
+| Video workflow | [docs/video-workflow.md](docs/video-workflow.md) |
+| Obsidian / batch / series | [docs/obsidian-workflow.md](docs/obsidian-workflow.md) |
+| Platform prompt formats | [docs/platform-prompts.md](docs/platform-prompts.md) |
+| More examples | [examples/](examples/) |
 
 ---
 
-## Supported Platforms
-
-> AI Visual Director is a **prompt workflow skill**, not a local image generation framework.
-> GPT Image and Midjourney are the primary targets. Other platforms receive template-level compatibility.
+## Platform Support
 
 | Platform | Status | Notes |
 |----------|--------|-------|
-| GPT Image | ✅ Primary | Best for long natural-language prompts, character sheets, scene cards, full storyboards |
-| Midjourney | ✅ Primary | Best for visual style art, posters, keyframes, scene concepts |
-| Stable Diffusion / SDXL | 📝 Template-compatible | Positive/negative prompts provided; local parameters need user adjustment |
-| SD3 / SD3.5 | 📝 Template-compatible | Basic prompt structure provided; not guaranteed identical across environments |
-| DALL-E 3 | 📝 Template-compatible | Compatible with natural-language image prompts |
-| ComfyUI / ControlNet / IP-Adapter | 🔧 Community extension | No built-in local deployment; PRs & Issues welcome |
+| GPT Image | ✅ Primary | Long natural-language prompts, character sheets, full boards |
+| Midjourney | ✅ Primary | Visual style art, posters, keyframes |
+| SD / SDXL / SD3 | 📝 Template-compatible | Pos/neg prompts provided; local params user-adjusted |
+| DALL-E 3 | 📝 Template-compatible | Natural-language image prompts |
+| ComfyUI / IP-Adapter | 🔧 Community extension | No built-in local deployment; PRs welcome |
 
-If you encounter prompt incompatibility, invalid parameters, or output deviation on any platform, please [open an Issue](https://github.com/jijiutong/ai-visual-director/issues).
-
----
-
-## Video Platforms
-
-| Platform | Notes |
-|----------|-------|
-| Seedance | Multi-image input, native Chinese, audio output |
-| Runway Gen-4 | Most mature SDK, image-to-video / text-to-video |
-| Kling | 4K output, character ID reuse |
-| Luma Dream Machine | First/last frame interpolation, smooth transitions |
-| Pika | Social short video, quick iteration |
-
-> Video API calls require your own platform API keys. Without keys configured, the Skill still generates all prompts normally.
+> This is a Prompt Workflow Skill, not a local image generation framework.
+> Platform issues → [Open an Issue](https://github.com/jijiutong/ai-visual-director/issues)
 
 ---
 
-## Command Priority
+## Tests
 
-The system recognizes input in this order:
-
-```
-1. /skill commands (/storyboard /character /scene /poster /video /style)
-2. Obsidian read commands
-3. API generation commands
-4. Global adjustment (mood/style/compress/score…)
-5. Story text (direct paste)
-6. Continue / modify / rollback
-```
-
----
-
-## Default Output Strategy
-
-| User type | Strategy |
-|-----------|----------|
-| New user | Fewer options, auto-generate default |
-| Experienced | Extra parameters supported |
-| Advanced | Say "看全部" to see full capabilities |
-| Batch user | Obsidian read → one-click batch |
-| Commercial user | One-click all-platform output |
-
-> 6 commands up front. 50+ styles, 10+ formats all auto-orchestrated. Don't make users remember features — let them state their goal.
-
----
-
-## Platform Comparison
-
-| Feature | GPT Image | Midjourney | Stable Diffusion |
-|---------|-----------|------------|------------------|
-| Chinese input | ✅ Native | ⚠️ Needs translation | ❌ Not supported |
-| Layout | ⭐⭐ Strong | ⭐ Single image focused | ⭐ Needs ControlNet (community) |
-| Character consistency | ⭐⭐ Medium | ⭐⭐⭐ --cref | ⭐⭐⭐ IP-Adapter (community) |
-| Best for | Full board / manga / mood board | Poster / character / scene | Local batch (community extension) |
-
----
-
-<details>
-<summary>View full file structure</summary>
-
-```
-ai-visual-director/
-├── SKILL.md                         # Main entry: workflow + capability matrix + rules
-├── README.md                        # Project docs (Chinese)
-├── README.en.md                     # Project docs (English)
-├── api-config.template.env          # API Key config template (14 platforms)
-├── sub-skills/                      # Sub-skills (6 independent /xxx commands)
-│   ├── storyboard/SKILL.md          # /storyboard
-│   ├── character/SKILL.md           # /character
-│   ├── scene/SKILL.md               # /scene
-│   ├── poster/SKILL.md              # /poster
-│   ├── video/SKILL.md               # /video
-│   └── style/SKILL.md               # /style
-├── references/                      # Reference files (51)
-│   ├── styles.md                    # 50+ visual styles
-│   ├── fusion.md                    # Style fusion engine
-│   ├── formats.md                   # 10 output formats
-│   ├── relationships.md             # 30+ character relationships
-│   ├── character-dna.md             # 20-field character DNA
-│   ├── character-consistency.md     # Character consistency (8 methods)
-│   ├── scene-consistency.md         # Scene consistency (7 methods)
-│   ├── camera.md                    # 140+ camera techniques
-│   ├── lighting.md                  # 40+ lighting schemes
-│   ├── emotion-curve.md             # 12 emotion curve models
-│   ├── color-narrative.md           # 60+ color narrative schemes
-│   ├── mood-slider.md               # Mood slider (24 dimensions)
-│   ├── act-structure.md             # 12 narrative structures
-│   ├── pacing.md                    # Storyboard pacing engine
-│   ├── composition.md               # 35+ composition rules
-│   ├── cultural-accuracy.md         # Cultural accuracy
-│   ├── micro-expressions.md         # 43 micro-expressions
-│   ├── dialogue-rhythm.md           # Dialogue rhythm notation
-│   ├── negative-prompt.md           # Auto negative prompts
-│   ├── multi-version.md             # Multi-version A/B/C
-│   ├── multi-aspect.md              # Multi-aspect adaptation
-│   ├── single-shot-edit.md          # Precise single-shot editing
-│   ├── prompt-scorer.md             # Prompt quality scorer
-│   ├── continuity-check.md          # Continuity checking
-│   ├── version-control.md           # Prompt version management
-│   ├── style-migration.md           # Style migration
-│   ├── prompt-compression.md        # Prompt compression
-│   ├── series.md                    # Sequel/series support
-│   ├── batch-chapter.md             # Batch chapter processing
-│   ├── video-prompt.md              # AI video prompt
-│   ├── video-prompt-assembly.md     # Video prompt assembly
-│   ├── video-api-integration.md     # Video API integration
-│   ├── api-integration.md           # Image API integration
-│   ├── thumbnail-board.md           # Thumbnail storyboard
-│   ├── director-notes.md            # Director notes
-│   ├── audio-reference.md           # Music & SFX reference
-│   ├── industry-export.md           # Industry format export
-│   ├── platform.md                  # Multi-platform adaptation
-│   ├── platform-advanced.md         # Platform deep optimization
-│   ├── creatures.md                 # 36 creature designs
-│   ├── environments.md              # 36 environment designs
-│   ├── props.md                     # 46 props & weapons
-│   ├── weather.md                   # 26 weather & atmosphere
-│   ├── body-language.md             # 46 body language types
-│   ├── materials.md                 # 36 material textures
-│   ├── animals.md                   # 36 animal designs
-│   ├── historical-eras.md           # 15 historical eras
-│   ├── transitions.md               # Transitions & montage
-│   └── sound-design.md              # Sound design
-├── templates/                       # Template files (7)
-│   ├── full-board.md                # Full board template
-│   ├── quick-board.md               # Quick storyboard
-│   ├── character-sheet.md           # Character sheet
-│   ├── scene-card.md                # Scene concept card
-│   ├── poster.md                    # Poster template
-│   ├── manga-page.md                # Manga panel
-│   └── mood-board.md                # Mood board
-└── docs/
-    ├── capability-matrix.md         # Full capability matrix
-    └── examples.md                  # More examples
-```
-</details>
+90 regression tests, all passing. See [CHANGELOG.md](CHANGELOG.md).
 
 ---
 
