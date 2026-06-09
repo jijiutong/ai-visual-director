@@ -1,6 +1,6 @@
 # AI Visual Director Skill 正式文档
 
-> 版本：v0.4.0 · 14 条核心规则 · 6 个主命令
+> 版本：v0.5.0 · 14 条核心规则 · 6 个主命令
 > AI 故事板/角色/场景/视频 Prompt 生成技能
 
 ---
@@ -144,8 +144,8 @@ Seedance / Runway / 可灵 / Luma / Pika
 ```
 no watermark, no logo, no random large text, no garbled Chinese,
 no broken faces, no duplicated limbs, no messy panels,
-no low-quality collage, no text overlay, no speech bubbles,
-no flat illustration, no marketing poster style
+no low-quality collage, no text overlay, no speech bubbles (unless manga format),
+no cartoon style (unless specified), no flat illustration, no marketing poster style
 ```
 
 ---
@@ -187,6 +187,6 @@ R04：蓝色桌面宠物送牛奶（治愈/3D动画电影风）
 
 ## 13. 版本
 
-当前：v0.4.0
+当前：v0.5.0
 CHANGELOG：`/CHANGELOG.md`
 规则补丁：`rules/skill-patches.md`
