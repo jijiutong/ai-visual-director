@@ -1,5 +1,5 @@
 ---
-name: ai-story-board
+name: ai-visual-director
 description: Generate cinematic storyboards, character sheets, scene cards, posters, and video prompts from any story or script. Supports 50+ styles, 10 output formats, multi-platform (GPT Image/MJ/SD), AI video workflow for Seedance/Runway/可灵. Triggers on requests like storyboard, 分镜, 故事板, 角色卡, 转视频, Seedance.
 ---
 
