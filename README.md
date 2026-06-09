@@ -142,7 +142,6 @@ AI：```[完整 prompt]```
 | `一键生成` | 全流程自动完成，不展示选项 |
 | `一键全平台` | 全流程 + GPT/MJ/SD 三平台输出 |
 | `一键多版本` | 全流程 + A/B/C 三版本对比 |
-| `一键全来` | 3风格×4格式×3平台=36个prompt |
 | `全来` | 4个最相关格式 prompt |
 
 ---
@@ -294,7 +293,6 @@ AI：【GPT Image 2 版本】[中文完整描述]
 | `一键生成` | 全流程自动，不展示选项 |
 | `一键全平台` | 全流程 + GPT/MJ/SD |
 | `一键多版本` | A/B/C 三版本对比 |
-| `一键全来` | 36个prompt（3风格×4格式×3平台） |
 | `看全部` | 展示 53 种风格 + 10 种格式 |
 | `全来` / `批量` | 输出 4 个最相关格式 |
 
@@ -435,7 +433,6 @@ ai-visual-director/
 │   ├── quality.md                    # 100+AI错误库+质量约束
 │   ├── platform.md                   # 多平台格式适配（GPT2-3/MJv6-7/SDXL-3/DALL-E3）
 │   ├── platform-advanced.md          # 平台深度优化
-│   ├── one-click.md                  # 一键输出工作流
 │   ├── video-prompt.md               # AI视频Prompt（Sora/Runway/可灵/Luma/Pika）
 │   ├── video-prompt-assembly.md      # 视频Prompt组装（故事板为主+角色卡+分镜图锚点）
 │   ├── single-shot-edit.md           # 精准单镜修改

@@ -159,7 +159,7 @@ target_platform: Seedance
 输入故事 → AI 提取信息 → AI 智能推荐 2-3 个最佳组合 → 用户确认/改选 → 输出 prompt
 ```
 
-**快捷模式**：用户说"一键生成"→全流程自动完成；"一键全平台"→全流程+三平台输出；"一键多版本"→A/B/C对比；"一键全来"→3风格×4格式×3平台=36个prompt。
+**快捷模式**：用户说"一键生成"→全流程自动完成；"一键全平台"→全流程+三平台输出；"一键多版本"→A/B/C对比。
 
 ### Step 1: 提取故事信息
 
@@ -288,7 +288,6 @@ target_platform: Seedance
 
 **用户说"一键多版本"** → 全流程 + A/B/C 三版本对比
 
-**用户说"一键全来"** → 全流程 + 3风格×4格式×3平台（36个prompt，分段输出）
 
 ### Step 2（备选）：手动选择
 
@@ -876,7 +875,6 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 | `references/quality.md` | 质量约束/通用负面提示词 |
 | `references/platform.md` | 多平台格式适配（GPT Image 2 / MJ / SD） |
 | `references/platform-advanced.md` | 平台深度优化（MJ --cref / SD ControlNet / GPT排版） |
-| `references/one-click.md` | 一键输出工作流（生成/全平台/多版本/全来） |
 | `references/video-prompt.md` | AI 视频 Prompt 适配（Sora/Runway/可灵） |
 | `references/video-prompt-assembly.md` | 视频 Prompt 组装逻辑（故事板为主+角色卡锚点+分镜图锚点→完整视频 prompt） |
 | `references/scene-consistency.md` | 场景一致性方法大全（7 种方法：俯拍/4宫格/9宫格/全能参考/720全景/环绕截图/文字场景锁定） |
@@ -923,7 +921,6 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 - **用户说"一键生成"** → 全流程自动完成，不展示选项
 - **用户说"一键全平台"** → 全流程 + GPT/MJ/SD 三平台输出
 - **用户说"多版本"/"A/B/C"** → 生成 3 种不同视觉诠释对比
-- **用户说"一键全来"** → 3风格×4格式×3平台=36个prompt（分段输出）
 - **用户说"第X集"/"继续"** → 触发续集模式，延续DNA/色彩/场景
 - **关系加成** → 自动识别角色关系，追加构图/灯光/风格加成/氛围描述
 - **情绪驱动** → 根据情绪曲线动态调整景别/运镜/灯光/色彩

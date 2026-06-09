@@ -57,7 +57,6 @@ AI: [Full prompt]
 | `一键生成` (one-click generate) | Full pipeline auto, no options shown |
 | `一键全平台` (one-click all platforms) | Full pipeline + GPT/MJ/SD outputs |
 | `一键多版本` (one-click multi-version) | Full pipeline + A/B/C comparison |
-| `一键全来` (one-click everything) | 3 styles × 4 formats × 3 platforms = 36 prompts |
 | `全来` | 4 most relevant format prompts |
 
 ---
@@ -357,7 +356,6 @@ ai-visual-director/
 | `一键生成` | Full pipeline auto, no options shown |
 | `一键全平台` | Full pipeline + GPT/MJ/SD |
 | `一键多版本` | A/B/C three version comparison |
-| `一键全来` | 36 prompts (3 styles × 4 formats × 3 platforms) |
 | `看全部` | Show all 53 styles + 10 formats |
 | `全来` / `批量` | Output 4 most relevant formats |
 
