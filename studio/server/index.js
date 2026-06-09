@@ -46,7 +46,7 @@ const agentPool = new AgentPool({
 // Share services with routes
 Object.assign(app.locals, {
   vaultReader, configManager, apiProxy, workflowEngine, agentPool, skillBridge,
-  vaultPath, flowsDir: path.join(__dirname, '..', 'workflows')
+  vaultPath, flowsDir: path.join(__dirname, '..', 'workflows'), wss
 });
 
 // Middleware

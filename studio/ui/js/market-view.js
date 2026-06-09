@@ -273,17 +273,25 @@ class MarketView {
       if (!resp.ok) throw new Error(await resp.text());
       const { taskId } = await resp.json();
 
-      for (let i = 0; i < 60; i++) {
-        await new Promise(r => setTimeout(r, 1000));
+      // Listen for WebSocket push instead of polling
+      const unsub = onProgress((data) => {
+        if (data.type === 'task-done' && data.taskId === taskId) {
+          this._renderAIResult(data.result, payload);
+          unsub();
+        }
+      });
+
+      // Fallback: poll after 8 seconds if WS didn't deliver
+      setTimeout(async () => {
         const tr = await fetch(`${api.base}/api/chat/task/${taskId}`);
-        if (!tr.ok) continue;
+        if (!tr.ok) return;
         const task = await tr.json();
         if (task.status === 'done' && task.result) {
           this._renderAIResult(task.result, payload);
-          return;
+          unsub();
         }
-      }
-      grid.innerHTML = '<div class="result-card"><div class="result-body" style="text-align:center;padding:32px">⏰ 等待超时，请对 CC 说「处理画布任务」</div></div>';
+      }, 8000);
+
     } catch (e) {
       grid.innerHTML = `<div class="result-card"><div class="result-body" style="text-align:center;padding:32px">❌ ${e.message}</div></div>`;
     }

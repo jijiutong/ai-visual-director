@@ -174,7 +174,7 @@ router.get('/pending', (req, res) => {
   res.json({ tasks: taskQueue.filter(t => t.status === 'pending') });
 });
 
-// POST /api/chat/complete — CC posts result back
+// POST /api/chat/complete — CC posts result back, broadcasts via WS
 router.post('/complete', (req, res) => {
   const { taskId, result } = req.body;
   const task = taskQueue.find(t => t.id === taskId);
@@ -182,6 +182,14 @@ router.post('/complete', (req, res) => {
   task.status = 'done';
   task.result = result;
   console.log(`✅ Task completed: ${taskId}`);
+
+  // Broadcast via WebSocket if available
+  const wss = req.app.locals.wss;
+  if (wss) {
+    const msg = JSON.stringify({ type: 'task-done', taskId, result });
+    wss.clients.forEach(c => { if (c.readyState === 1) c.send(msg); });
+  }
+
   res.json({ taskId, status: 'done' });
 });
 
