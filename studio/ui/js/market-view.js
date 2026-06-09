@@ -457,107 +457,45 @@ class MarketView {
   _renderOutputSteps(plan) {
     const grid = document.getElementById('outputGrid');
     if (!grid) return;
-    // Show progress step for a second, then switch to shot cards
-    grid.innerHTML = '<div class="output-card skeleton" style="grid-column:1/-1;text-align:center;padding:24px"><div class="output-status">🔄</div><div class="output-label">生成分镜中...</div></div>';
-    setTimeout(() => this._renderShotCards(), 800);
-  }
 
-  _updateOutput(data) {
-    // Progress updates — just update the skeleton text
-    const grid = document.getElementById('outputGrid');
-    if (!grid) return;
-    const skeleton = grid.querySelector('.skeleton .output-status');
-    if (skeleton && data.status === 'running') skeleton.textContent = '🔄';
-    if (skeleton && data.status === 'completed') skeleton.textContent = '✅';
-  }
-
-  _renderShotCards() {
-    const grid = document.getElementById('outputGrid');
-    if (!grid) return;
-
-    const story = this.storyText || document.getElementById('storyInput')?.value?.trim() || '';
-    const style = STYLES.find(s => s.id === this.selectedStyle);
-    const shotCount = 7;
-
-    // Split story into shot groups
-    const sentences = story.split(/[。！？\n]+/).filter(Boolean);
-    const shotsPerSentence = Math.max(1, Math.floor(shotCount / Math.max(1, sentences.length)));
-    const shots = [];
-    let shotNum = 1;
-
-    for (const sentence of sentences) {
-      if (shotNum > shotCount) break;
-      const words = sentence.trim().split(/[，,、\s]+/).filter(Boolean);
-      const chunks = [];
-      for (let i = 0; i < words.length && shotNum <= shotCount; i += Math.ceil(words.length / Math.min(shotsPerSentence, shotCount - shotNum + 1))) {
-        chunks.push(words.slice(i, i + Math.ceil(words.length / shotsPerSentence)).join(''));
-      }
-      for (const chunk of chunks) {
-        if (shotNum > shotCount) break;
-        const st = this._detectShotType(chunk);
-        shots.push({
-          num: shotNum,
-          type: st.type,
-          camera: st.camera,
-          desc: chunk.slice(0, 80),
-          duration: 2 + Math.floor(chunk.length / 15)
-        });
-        shotNum++;
-      }
-    }
-    // Pad if too few
-    while (shots.length < shotCount) {
-      shots.push({ num: shots.length + 1, type: '中景', camera: '固定', desc: '（续前镜）', duration: 2 });
-    }
-
-    const styleName = style ? `${style.emoji} ${style.name}` : '未选风格';
+    const styleName = this._getSelectedStyleName();
+    const story = document.getElementById('storyInput')?.value?.trim() || this.storyText || '';
 
     grid.innerHTML = `
       <div class="output-summary" style="grid-column:1/-1">
-        <div class="summary-row"><b>风格</b> ${styleName} &nbsp;|&nbsp; <b>分镜</b> ${shotCount}镜 &nbsp;|&nbsp; <b>画幅</b> 16:9</div>
-        <div class="summary-hint">💡 这是 Story Studio 生成的预览分镜。完整 AI Prompt 在 Claude Code 对话中获取。</div>
-      </div>
-      ${shots.map(s => `
-        <div class="shot-card" id="shot-${s.num}" onclick="window.marketView._previewShot(${s.num})">
-          <div class="shot-num">镜${s.num}</div>
-          <div class="shot-thumb"><span>🎬</span></div>
-          <div class="shot-meta"><span>${s.type}</span><span>${s.camera}</span></div>
-          <div class="shot-desc">${this._escapeHtml(s.desc)}</div>
-          <div class="shot-dur">${s.duration}s</div>
+        <div class="summary-row">
+          <b>故事</b> ${story.slice(0, 50)}${story.length > 50 ? '...' : ''}
+          &nbsp;|&nbsp; <b>风格</b> ${styleName}
+          &nbsp;|&nbsp; <b>画幅</b> 16:9
         </div>
-      `).join('')}
-    `;
-  }
-
-  _detectShotType(text) {
-    const t = text.toLowerCase();
-    if (/全|远|俯瞰|鸟瞰|天地|山河|城市|战场|全景/.test(t)) return { type: '远景', camera: '俯拍' };
-    if (/对峙|面对|站|立|对峙/.test(t)) return { type: '中景', camera: '固定' };
-    if (/脸|眼|泪|表情|微笑|怒|惊|手|握/.test(t)) return { type: '特写', camera: '推镜' };
-    if (/跑|冲|飞|跃|翻|滚|战|打|挥|砍|刺/.test(t)) return { type: '中景', camera: '跟拍' };
-    if (/走|行|步|离|入|出/.test(t)) return { type: '全景', camera: '横移' };
-    if (/慢|静|默|思|想/.test(t)) return { type: '中景', camera: '慢推' };
-    return { type: '中景', camera: '固定' };
-  }
-
-  _previewShot(num) {
-    const card = document.getElementById(`shot-${num}`);
-    if (!card) return;
-    const desc = card.querySelector('.shot-desc')?.textContent || '';
-    const meta = card.querySelector('.shot-meta')?.textContent || '';
-    const overlay = document.getElementById('previewPanelContainer');
-    if (!overlay) return;
-    overlay.style.display = 'flex';
-    overlay.innerHTML = `
-      <div class="preview-content" onclick="event.stopPropagation()">
-        <div class="preview-label">镜${num} · ${meta}</div>
-        <div class="preview-shot-display">🎬</div>
-        <p class="preview-desc">${this._escapeHtml(desc)}</p>
-        <p class="preview-hint">完整 Prompt 在 Claude Code 中生成</p>
-        <button class="btn" onclick="document.getElementById('previewPanelContainer').style.display='none'">关闭</button>
+      </div>
+      ${plan.map(phase =>
+        (phase.nodes || []).map(n => `
+          <div class="output-card" id="out-${n.id}" style="text-align:center">
+            <div class="output-status">⏳</div>
+            <div class="output-label">${n.label || n.id}</div>
+          </div>
+        `).join('')
+      ).join('')}
+      <div class="output-summary" style="grid-column:1/-1;margin-top:8px;text-align:center">
+        <p style="font-size:13px;color:var(--text);margin-bottom:6px">✅ 编排完成</p>
+        <p style="font-size:12px;color:var(--text-dim)">在 Claude Code 对话中说：</p>
+        <code style="display:inline-block;padding:8px 16px;background:var(--bg-deep);border-radius:6px;font-size:13px;margin:6px 0;color:var(--accent)">帮我生成「${styleName}」风格的故事板，${story.slice(0, 30)}...</code>
+        <br/>
+        <button class="btn btn-sm" style="margin-top:8px" onclick="navigator.clipboard.writeText('帮我生成「${styleName.replace(/'/g, "\\'")}」风格的故事板，${story.slice(0, 50).replace(/'/g, "\\'")}...').then(()=>showToast('✅ 已复制'))">📋 复制指令</button>
       </div>
     `;
-    overlay.onclick = () => { overlay.style.display = 'none'; };
+  }
+
+  _updateOutput(data) {
+    const card = document.getElementById(`out-${data.nodeId}`);
+    if (!card) return;
+    const statusEl = card.querySelector('.output-status');
+    if (statusEl) {
+      const icons = { running: '🔄', completed: '✅', failed: '❌' };
+      statusEl.textContent = icons[data.status] || '⏳';
+    }
+    card.className = `output-card status-${data.status}`;
   }
 
   _showOutputError(msg) {
