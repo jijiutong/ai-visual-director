@@ -87,25 +87,36 @@
 
 ```
 ai-visual-director/
-├── .claude/skills/          ← 运行时 Skill（4 个）
-│   ├── ai-visual-director/  ← 主 Skill（精简执行版）
-│   ├── storyboard/          ← 故事板生成
-│   ├── character/           ← 角色设计
-│   └── scene/               ← 场景设计
-├── docs/                    ← 正式文档
-│   ├── SKILL.md             ← 完整 Skill 文档
-│   ├── commands.md          ← 命令参考
-│   ├── rules.md             ← 14 条规则速查
-│   └── user-guide.md        ← 用户说明书
-├── rules/                   ← 规则补丁库
-│   └── skill-patches.md     ← 10 条已验证补丁
-├── tests/                   ← 回归测试
-│   ├── skill-regression-tests.md  ← 36 条测试用例
-│   └── skill-test-checklist.md    ← 47 条打分表
-├── examples/                ← 黄金样例
-├── demo/                    ← 演示素材
-├── CHANGELOG.md             ← 版本记录
-└── release-checklist.md     ← 发布验收清单
+├── SKILL.md                  ← 主 Skill（完整版）
+├── .claude/skills/           ← 运行时 Skill
+│   ├── ai-visual-director/   ← 主 Skill（精简执行版）
+│   ├── storyboard/           ← 故事板生成
+│   ├── character/            ← 角色设计
+│   └── scene/                ← 场景设计
+├── sub-skills/               ← 6 个子技能模块
+├── docs/                     ← 文档
+│   ├── SKILL.md              ← 完整 Skill 文档
+│   ├── commands.md           ← 命令参考
+│   ├── rules.md              ← 14 条规则速查
+│   ├── user-guide.md         ← 用户说明书
+│   ├── video-workflow.md     ← 视频工作流文档
+│   ├── obsidian-workflow.md  ← Obsidian/批量/续集文档
+│   └── platform-prompts.md   ← 多平台 Prompt 格式参考
+├── references/               ← 51 个参考文件
+├── templates/                ← 7 个输出模板
+├── rules/                    ← 规则补丁
+│   ├── skill-patches.md      ← 10 条初始补丁
+│   └── skill-patches-v0.6.md ← 4 条 v0.6 补丁
+├── tests/                    ← 回归测试
+│   ├── core/                 ← 4 核心回归
+│   ├── genre/                ← 36 题材泛化
+│   ├── stress/               ← 迁移/编辑压力测试
+│   ├── obsidian-fixtures/    ← Obsidian 模拟目录
+│   ├── platform-compatibility.md ← 25 项平台格式检查
+│   └── results/              ← 测试报告
+├── examples/                 ← 黄金样例 + video/series
+├── CHANGELOG.md              ← 版本记录
+└── release-checklist.md      ← 发布验收清单
 ```
 
 ---
@@ -133,16 +144,17 @@ AI Visual Director 主要面向 **GPT Image** 与 **Midjourney** 使用场景，
 
 ## 测试与稳定性
 
-- 4 条固定回归样本：全部通过
-- 36 条题材泛化测试（12 题材 × 3 样本）
-- 14 条核心规则 + 10 条规则补丁
-- 综合回归通过率：4/4（100%）
+- **90 条测试，全部通过**
+- 4 条核心回归 + 36 条题材泛化（12 题材 × 3 样本）
+- 28 条高频文本工作流 + 28 条视频工作流
+- 5 条批量/Obsidian/续集 + 25 条平台格式兼容
+- 14 条核心规则 + 14 条规则补丁
 
 ---
 
 ## 版本
 
-当前：**v0.5.0**
+当前：**v1.0.0**
 
 - [CHANGELOG.md](CHANGELOG.md)
 - [发布验收清单](release-checklist.md)

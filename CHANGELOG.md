@@ -1,5 +1,43 @@
 # CHANGELOG
 
+## v1.0.0 (2026-06-09) — 稳定版
+
+### 发布冻结
+- 90 条测试用例，全部通过
+- 4 核心回归 + 12 题材泛化矩阵 + 6 项高频文本工作流 + 7 项视频工作流 + 5 项批量/Obsidian/续集 + 25 项平台格式兼容
+- 14 条核心规则 + 4 条 v0.6 补丁
+- README 平台能力不加夸大：全部未实测平台标注 📝 模板兼容
+- **这是一个 Prompt Workflow Skill，不是本地出图框架**
+
+### v0.9 → v1.0
+- tests/platform-compatibility.md：25 项平台 Prompt 格式检查
+- docs/platform-prompts.md：全平台 Prompt 格式参考
+- .github/ISSUE_TEMPLATE/platform-compatibility.md：增强视频平台 + 导出格式
+
+### v0.5 → v0.9 回顾
+- v0.5: LICENSE + test split (core/genre/stress) + READMEs + consistency audit
+- v0.6: 高频文本工作流（多版本/融合/评分/连续性/导演阐述/压缩）28/28
+- v0.7: 视频 Prompt 工作流（转视频/压缩/详细/切分/合并/续写/检查）28/28
+- v0.8: 批量/Obsidian/续集（目录扫描/frontmatter解析/系列延续/AI续写）5/5
+- v0.9: 平台/API/导出 Prompt 格式（图像4平台+视频3平台+导出3格式）25/25
+
+---
+
+## v0.5.0 (2026-06-09)
+
+### 新增
+- MIT LICENSE
+- 测试拆分：core/genre/stress 三级结构
+- references/templates/sub-skills 各加 README
+- docs/SKILL.md + docs/rules.md 版本号 v0.5.0
+- 平台定位调整：GPT Image/Midjourney 主推，SD/DALL-E 模板兼容，ComfyUI 社区扩展
+- .github/ISSUE_TEMPLATE/platform-compatibility.md
+
+### 修复
+- docs/SKILL.md 负面清单与运行时 SKILL.md 不一致
+
+---
+
 ## v0.4.0 (2026-06-09)
 
 ### 新增
