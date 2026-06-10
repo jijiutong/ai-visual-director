@@ -2,6 +2,8 @@
 
 这个 skill 采用 Markdown 驱动的规则引擎结构。根目录 `SKILL.md` 是总控入口，其余目录按职责分层。
 
+除非单个文件另有说明，文档里的内部路径都按仓库根目录解析。发布或安装时不要只复制 `SKILL.md`，必须同时包含 `engines/`、`knowledge/`、`rules/`、`templates/`、`platforms/`、`sub-skills/` 等源目录；`.agents/` 与 `.claude/` 只属于本机安装副本/缓存。
+
 ## 分层
 
 | 层 | 目录 | 作用 |

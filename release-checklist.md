@@ -22,11 +22,14 @@
 
 ## 2. 运行时稳定性
 
-- [x] `.claude/skills/ai-visual-director/SKILL.md` 精简版存在
-- [x] `.claude/skills/storyboard/SKILL.md` 最新
-- [x] `.claude/skills/character/SKILL.md` 最新
-- [x] `.claude/skills/scene/SKILL.md` 最新
+- [x] 根目录 `SKILL.md` 存在，作为唯一总控入口
+- [x] `engines/` 决策引擎目录存在（VS/LS/情绪/节奏/评分/压缩）
+- [x] `knowledge/` 素材知识库目录存在（角色/场景/镜头/材质/声音/时代）
+- [x] `rules/` 规则目录存在（一致性/质量/文化准确性/负面词/补丁）
+- [x] `platforms/` 平台适配目录存在（图像/视频平台和 API）
+- [x] `templates/` 输出模板目录存在
 - [x] `sub-skills/` 6 个子技能（storyboard/character/scene/video/style/poster）
+- [x] `.agents/` 与 `.claude/` 是本机安装副本，已加入 `.gitignore`，不得随发布包跟踪
 
 ---
 

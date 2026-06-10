@@ -1007,7 +1007,7 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 - **风格迁移** → "换成X风格但保持角色" 跨风格迁移只改变视觉语言（色彩/光影/构图/运镜/节奏/表演方式），绝对不改变剧情事实（剧情事件/人物关系/冲突结果/镜头数量/总时长/关键动作）
 - **Prompt 压缩** → "压缩到MJ/SD" 自动精简到平台最佳长度
 - **批量处理** → "处理这一章" 整章小说自动拆场景批量生成
-详细设计见 `docs/superpowers/specs/2026-06-09-ai-story-studio-design.md`
+详细设计见 `docs/system-architecture.md`
 
 ## 负面清单（所有输出必须包含，专属负面词见 `rules/negative-prompt.md`）
 
