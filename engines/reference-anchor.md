@@ -116,9 +116,11 @@
 
 ## 联动
 
+← 读取 `state/platform-config.md`（平台限制 + 默认平台 + 拆分→参考图按段分配数量）
 ← 接收 `asset-plan` 的资产列表
 → 按平台过滤和重新分配
 → **写入 `state/asset-map.md`**（动态生成 @图编号→用途映射表，供 video-prompt-assembly 读取）
 → **更新 `state/variable-registry.md`**（project.word_count 平台校验后更新）
 → 校验发现问题 → `auto-repair`
 → 通过 → `motion-physics`
+→ **平台限制从此文件读取，不硬编码**。修改 `state/platform-config.md` 即全局生效。
