@@ -80,6 +80,16 @@
 □ 场景引用图片与 asset-map 中 type=scene_reference 的 @编号一致？
 ```
 
+### 9. 模板合规（新增）
+
+```
+□ 角色卡 prompt 是否由 /character 子路由 + templates/character-sheet.md 生成？（禁止 video-prompt-assembly 手写角色 prompt）
+□ 场景图 prompt 是否由 /scene 子路由 + templates/scene-card.md 生成？
+□ 分镜图 prompt 是否由 /storyboard 子路由 + templates/full-board.md 生成？
+□ 输出中是否包含正确的编号引用（VS/EC/CN/EV/WT/MT/CP/ME/BL/HE/SD/PR/CR/DR）？
+□ 全案板是否按段独立（每15s/段一张，非一张塞全部镜）？
+```
+
 ---
 
 ## 质检结果
@@ -113,7 +123,7 @@
 
 | 结论 | 条件 | 操作 |
 |------|------|------|
-| 通过 | 全部8项 ✅ | 放行，输出 render-package |
+| 通过 | 全部9项 ✅ | 放行，输出 render-package |
 | 有条件通过 | 1-2项 ⚠（非致命） | 标记问题+建议，放行 |
 | 不通过 | 任何 ❌（致命）或 ≥3项 ⚠ | 触发 auto-repair 修复后重新质检 |
 

@@ -29,7 +29,12 @@ motion-physics（运动物理：运动预算+兼容性检查）→ 补充 state/
   ↓
 project-graph（依赖图：构建双向索引 → 写入 state/project-graph）
   ↓
-video-prompt-assembly（Prompt组装：4层结构+平台适配+完整prompt文本）← 读取 state/
+【子路由调用】（/create 内部自动触发，生成角色卡/场景图/分镜图 prompt）
+	  ├── /character  → templates/character-sheet.md → 写入 asset-map
+	  ├── /scene     → templates/scene-card.md       → 写入 asset-map
+	  └── /storyboard→ templates/full-board.md        → 写入 asset-map
+	  ↓
+	video-prompt-assembly（只组装视频 prompt，确认子路由已产出角色/场景/分镜 prompt）← 读取 state/
   ↓
 consistency-engine（一致性评估：5维度 RM 评分+阻断项检测+知识库建议）
   ↓

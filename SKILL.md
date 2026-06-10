@@ -42,7 +42,7 @@ task-router（意图识别+路由分发）
   -> engines/consistency-engine.md    → 5 维度 RM 评估（Character/Scene/Style/Story/Video）
   -> engines/prompt-scorer.md
   -> engines/auto-repair.md           → 修复后更新 state/（调用 knowledge-retrieval + incremental-update 限定重评）
-  -> rules/final-video-qc.md          ← 读取 state/（8项质检含引用一致性）
+  -> rules/final-video-qc.md          ← 读取 state/（9项质检含引用一致性+模板合规）
   -> engines/render-package.md
 ```
 

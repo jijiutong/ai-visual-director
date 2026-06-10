@@ -4,6 +4,21 @@
 
 ---
 
+## 职责边界（新增）
+
+**本引擎只负责视频 prompt 的组装。角色卡、场景图、分镜图的 prompt 不由本引擎生成。**
+
+| 产出类型 | 由谁生成 | 读取模板 |
+|---------|---------|---------|
+| 角色卡 prompt | `/character` 子路由 | `templates/character-sheet.md` |
+| 场景图 prompt | `/scene` 子路由 | `templates/scene-card.md` |
+| 分镜图 prompt | `/storyboard` 子路由 | `templates/full-board.md` 或 `quick-board.md` |
+| 视频 prompt | **本引擎** | 本文档（4层结构） |
+
+> ⚠ `/create` 主链运行到 video-prompt-assembly 时，必须确认角色卡/场景图/分镜图 prompt 已由对应子路由生成完毕。如未生成 → 先调用子路由补全，再继续组装视频 prompt。
+
+---
+
 ## 核心原则
 
 **故事板是主参考** — 视频的运镜/节奏/时间线/转场全部以故事板为准。
