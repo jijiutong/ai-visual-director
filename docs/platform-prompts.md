@@ -236,8 +236,8 @@ Duration: [秒]s
 
 | 文件 | 内容 |
 |------|------|
-| `references/platform.md` | 图像平台适配详情 |
-| `references/platform-advanced.md` | 平台深度优化（MJ --cref / SD ControlNet） |
-| `references/video-prompt.md` | 视频平台适配详情 |
-| `references/industry-export.md` | 行业格式导出 |
+| `platforms/platform.md` | 图像平台适配详情 |
+| `platforms/platform-advanced.md` | 平台深度优化（MJ --cref / SD ControlNet） |
+| `platforms/video-prompt.md` | 视频平台适配详情 |
+| `knowledge/industry-export.md` | 行业格式导出 |
 | `tests/platform-compatibility.md` | 平台格式测试矩阵 |

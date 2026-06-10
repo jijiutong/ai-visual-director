@@ -20,6 +20,7 @@ Core abilities:
 - 🏯 **Scene design** — all-in-one reference + director-annotated mode
 - 🎥 **Video prompts** — one complete prompt for Seedance / Runway / Kling
 - 🎨 **50+ visual styles** — Eastern Fantasy / Wong Kar-wai / Cyberpunk / Ink Wash / 3D Animation…
+- 🧩 **40 layout styles** — all-in-one boards / character boards / scene boards / storyboard boards
 - 📱 **Multi-platform** — GPT Image / Midjourney primary; SD / DALL-E compatible
 
 ---
@@ -78,6 +79,7 @@ Output: title/genre → emotion curve → character anchors → scene anchors �
 | User guide | [docs/user-guide.md](docs/user-guide.md) |
 | Rules & constraints | [docs/rules.md](docs/rules.md) |
 | Full skill docs | [docs/SKILL.md](docs/SKILL.md) |
+| System architecture | [docs/system-architecture.md](docs/system-architecture.md) |
 | Video workflow | [docs/video-workflow.md](docs/video-workflow.md) |
 | Obsidian / batch / series | [docs/obsidian-workflow.md](docs/obsidian-workflow.md) |
 | Platform prompt formats | [docs/platform-prompts.md](docs/platform-prompts.md) |

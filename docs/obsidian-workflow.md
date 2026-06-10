@@ -139,7 +139,7 @@ structure: 三幕
 
 | 文件 | 内容 |
 |------|------|
-| `references/batch-chapter.md` | 批量拆分规则 |
-| `references/series.md` | 系列/续集规则 |
+| `engines/batch-chapter.md` | 批量拆分规则 |
+| `engines/series.md` | 系列/续集规则 |
 | `tests/obsidian-fixtures/novel/` | 模拟目录（3章+角色+场景） |
 | `tests/v0.8-batch-obsidian-tests.md` | 测试定义 |

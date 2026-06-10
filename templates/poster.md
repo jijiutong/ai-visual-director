@@ -63,11 +63,11 @@ high contrast, layered composition, ultra-detailed, 8K, sharp focus。
 |------|---------|---------|
 | 片名 | — | Step 1 提取，2-8 字短标题 |
 | 标语 | — | 由核心冲突提炼，≤12 字 |
-| VS编号 | `references/styles.md` | 用户选择或智能推荐 |
-| CN编号 | `references/color-narrative.md` | 按情绪曲线匹配 |
-| CP编号 | `references/composition.md` | 海报通常 CP1(对峙)/CP2(对称)/CP13(中心) |
-| BL编号 | `references/body-language.md` | 按角色状态匹配 |
-| ME编号 | `references/micro-expressions.md` | 按角色情绪匹配 |
-| EV编号 | `references/environments.md` | 按故事场景匹配 |
-| PR编号 | `references/props.md` | 按角色武器/道具匹配 |
+| VS编号 | `engines/styles.md` | 用户选择或智能推荐 |
+| CN编号 | `engines/color-narrative.md` | 按情绪曲线匹配 |
+| CP编号 | `knowledge/composition.md` | 海报通常 CP1(对峙)/CP2(对称)/CP13(中心) |
+| BL编号 | `knowledge/body-language.md` | 按角色状态匹配 |
+| ME编号 | `knowledge/micro-expressions.md` | 按角色情绪匹配 |
+| EV编号 | `knowledge/environments.md` | 按故事场景匹配 |
+| PR编号 | `knowledge/props.md` | 按角色武器/道具匹配 |
 | 画幅 | — | 默认 2:3，用户可指定 |

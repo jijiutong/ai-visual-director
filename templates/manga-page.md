@@ -64,13 +64,13 @@
 
 | 变量 | 参考文件 | 填充方式 |
 |------|---------|---------|
-| VS编号 | `references/styles.md` | 用户选择或智能推荐 |
-| CN编号 | `references/color-narrative.md` | 按情绪匹配：暧昧→CN12, 燃→CN5, 虐→CN15 |
-| EV编号 | `references/environments.md` | 按故事场景匹配 |
-| HE编号 | `references/historical-eras.md` | 按故事时代匹配 |
-| BL编号 | `references/body-language.md` | 按角色动作匹配每格 |
-| ME编号 | `references/micro-expressions.md` | 按每格情绪变化匹配 |
-| DR编号 | `references/dialogue-rhythm.md` | 按台词情绪标注节奏 |
-| SD编号 | `references/sound-design.md` | 按每格环境匹配音效 |
-| CP编号 | `references/composition.md` | 漫画常用 CP3(三分法)/CP14(放射线) |
+| VS编号 | `engines/styles.md` | 用户选择或智能推荐 |
+| CN编号 | `engines/color-narrative.md` | 按情绪匹配：暧昧→CN12, 燃→CN5, 虐→CN15 |
+| EV编号 | `knowledge/environments.md` | 按故事场景匹配 |
+| HE编号 | `knowledge/historical-eras.md` | 按故事时代匹配 |
+| BL编号 | `knowledge/body-language.md` | 按角色动作匹配每格 |
+| ME编号 | `knowledge/micro-expressions.md` | 按每格情绪变化匹配 |
+| DR编号 | `knowledge/dialogue-rhythm.md` | 按台词情绪标注节奏 |
+| SD编号 | `knowledge/sound-design.md` | 按每格环境匹配音效 |
+| CP编号 | `knowledge/composition.md` | 漫画常用 CP3(三分法)/CP14(放射线) |
 | 格数 | — | 短故事 5-7 格，复杂 7-9 格 |

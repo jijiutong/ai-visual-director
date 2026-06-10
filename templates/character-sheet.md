@@ -9,7 +9,7 @@
 ## 模式 A：标准角色设定卡（格式 3）
 
 ```text
-电影级角色设定卡，主题《[片名]》，[主角/反派]：[角色姓名]。[画幅比例，默认16:9] 横版，专业角色设计参考板，用于 AI 视频角色一致性。画面分为 6 个模块：
+电影级角色设定卡，主题《[片名]》，[主角/反派]：[角色姓名]。[画幅比例，默认16:9] 横版，专业角色设计参考板，用于 AI 视频角色一致性。版式样式：[LS编号. 版式名称]（见 engines/layout-styles.md）；默认 LS11 干净角色一致性卡，武侠/玄幻/黑金动作导演展示优先 LS12，科幻/机甲/神使优先 LS13。画面分为 6 个模块：
 
 模块1—三视图（占画面左侧40%）：正面全身像、侧面全身像、背面全身像，三个视图严格对齐同一水平线，相同比例。[服装分层描述：底层/外层/配饰]。
 
@@ -28,6 +28,39 @@
 服装层次标注：[底层]→[外层]→[配饰]→[鞋靴]，分件标注。
 
 整体风格：[风格编号.风格名称]，[氛围关键词]，配色[主色1]+[主色2]+[点缀色]，色彩方案[CN编号]。character reference sheet for AI video consistency, multiple face angles (front/3-quarter/side/up), expression range variations (4 emotions), hand close-up for prop interaction, hair/costume state transitions, weapon turn-around, layer-by-layer costume breakdown, DO NOT CHANGE markers on critical features, ultra-detailed, 8K, sharp focus, no watermark, no garbled text, no broken faces, no extra limbs, consistent style throughout。
+```
+
+## 角色版式预设
+
+### LS11 干净角色一致性卡（默认）
+
+适合喂给 AI 视频模型。白色/浅灰摄影棚背景，6 模块清晰分区，不出现红色标注线、箭头、文字、编号、方框、引线。所有不可变细节通过光影、对焦、构图和局部放大传达。角色服装/发色/五官/体型跨模块 100% 一致。
+
+### LS12 黑金武侠角色圣经
+
+```text
+黑金武侠角色圣经设定卡，主题《[片名]》，角色：[角色姓名]。16:9 横版，纯黑/暗岩背景，暗金细线框，高密度导演标注，红色仅用于“不可变特征”和箭头。
+
+版式必须包含：
+1 左侧大三视图：正面、侧面、背面全身，7.5 头身比例或按角色设定，站在同一地面基准线上。
+2 左边窄栏不可变特征：疤痕位置、双眼间距、鼻梁形状、发际线、肩宽比例、身高比例等局部特写，标注 DO NOT CHANGE。
+3 右上面部多角度：正面 close-up、左 3/4、右 3/4、仰视或战斗角度。
+4 右中表情范围：愤怒、决绝、平静、神圣/震撼等 4 种表情，每格保持同一五官。
+5 右侧服装层次分解：底层、外层、肩甲/胸甲/臂甲、腰带、脚靴，使用竖向分解和箭头。
+6 底部武器/道具特写：正面、侧面、剑鞘/握柄/纹路/尺寸材质。
+7 底部右侧手部握持与发型动态：握剑正面/侧面/双手姿态，束发→散开→披肩状态。
+
+角色描述：[年龄/身份/体型/面部/发型/服装/武器/配饰/情绪底色]。整体风格：[风格编号. 风格名称]，暗金、冷灰、血红点缀，强逆光，金属和布料材质真实。禁止浅灰棚拍、可爱卡通、文字遮挡角色主体、跨模块换脸、武器比例变化。
+```
+
+### LS13 科幻神使角色系统卡
+
+```text
+科幻神使角色系统卡，主题《[片名]》，角色：[角色姓名]。16:9 横版，深空黑背景，银蓝金属，高级 HUD 细线，全息投影感。
+
+版式必须包含：角色正面全身、背面全身、侧面全身；盔甲/机械服材质特写；面部核心 close-up（额头核心/义眼/神经接口等不可变特征）；机械翼/外骨骼/能量结构展开图；能力 HUD 或全息交互界面；手部触控或武器接口特写；底部色卡、材质、发光元件、能源核心说明。
+
+角色描述：[年龄/身份/面部/发型/眼睛/盔甲结构/发光核心/机械翼/武器/能力]。要求同一张脸跨模块一致，金属片结构清楚，发光核心位置不变，机械翼展开逻辑合理。禁止古风布料、武侠刀剑抢主设定、水墨纸纹、暖色宫廷感。
 ```
 
 ## 模式 B：三视图设定卡（格式 9）
@@ -95,12 +128,12 @@ ultra-detailed, 8K, sharp focus。
 | 变量 | 参考文件 | 填充方式 |
 |------|---------|---------|
 | 角色姓名/身份/年龄 | Step 1 提取 | 缺则起电影感名字 |
-| 面部/体型/皮肤描述 | Step 1 提取 + `references/character-dna.md` | DNA 20字段补全 |
+| 面部/体型/皮肤描述 | Step 1 提取 + `knowledge/character-dna.md` | DNA 20字段补全 |
 | 服装/配饰描述 | Step 1 提取 | 缺则按时代/身份推断 |
-| ME编号 | `references/micro-expressions.md` | 按角色情绪底色匹配 4 种 |
-| PR编号 | `references/props.md` | 按武器/道具匹配 |
-| BL编号 | `references/body-language.md` | 按角色姿态匹配 |
-| MT编号 | `references/materials.md` | 服装材质→MT18/MT19/MT20 |
-| CN编号 | `references/color-narrative.md` | 按情绪匹配 |
-| VS编号 | `references/styles.md` | 用户选择或智能推荐 |
+| ME编号 | `knowledge/micro-expressions.md` | 按角色情绪底色匹配 4 种 |
+| PR编号 | `knowledge/props.md` | 按武器/道具匹配 |
+| BL编号 | `knowledge/body-language.md` | 按角色姿态匹配 |
+| MT编号 | `knowledge/materials.md` | 服装材质→MT18/MT19/MT20 |
+| CN编号 | `engines/color-narrative.md` | 按情绪匹配 |
+| VS编号 | `engines/styles.md` | 用户选择或智能推荐 |
 | 不可变特征 | — | AI 按角色描述推断 3-5 个关键特征 |

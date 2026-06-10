@@ -248,7 +248,7 @@ no text garbling, no watermark, no logo, no subtitles mismatch
 | 文件 | 内容 |
 |------|------|
 | `sub-skills/video/SKILL.md` | 视频子技能完整规则 |
-| `references/video-prompt.md` | 视频 Prompt 适配器（平台/运动/转场） |
-| `references/video-prompt-assembly.md` | 视频 Prompt 组装逻辑（4层结构） |
-| `references/video-api-integration.md` | 视频 API 集成（5 平台） |
+| `platforms/video-prompt.md` | 视频 Prompt 适配器（平台/运动/转场） |
+| `engines/video-prompt-assembly.md` | 视频 Prompt 组装逻辑（4层结构） |
+| `platforms/video-api-integration.md` | 视频 API 集成（5 平台） |
 | `tests/v0.7-video-workflow-tests.md` | 视频工作流测试定义 |

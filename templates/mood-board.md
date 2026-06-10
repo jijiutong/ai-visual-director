@@ -63,11 +63,11 @@ professional mood board, cohesive visual theme, cinematic color grading, ultra-d
 
 | 变量 | 参考文件 | 填充方式 |
 |------|---------|---------|
-| EC编号 | `references/emotion-curve.md` | 按故事类型匹配 |
-| CN编号 | `references/color-narrative.md` | EC自动推导CN |
-| VS编号 | `references/styles.md` | 用户选择或智能推荐 |
-| MT编号 | `references/materials.md` | 按场景主体材质匹配 4-6 种 |
-| EV编号 | `references/environments.md` | 按故事场景匹配 |
-| WT编号 | `references/weather.md` | 按故事天气匹配 |
-| BL编号 | `references/body-language.md` | 按角色状态匹配 2 种 |
-| 灯光方案 | `references/lighting.md` | 按场景情绪匹配 3-4 种 |
+| EC编号 | `engines/emotion-curve.md` | 按故事类型匹配 |
+| CN编号 | `engines/color-narrative.md` | EC自动推导CN |
+| VS编号 | `engines/styles.md` | 用户选择或智能推荐 |
+| MT编号 | `knowledge/materials.md` | 按场景主体材质匹配 4-6 种 |
+| EV编号 | `knowledge/environments.md` | 按故事场景匹配 |
+| WT编号 | `knowledge/weather.md` | 按故事天气匹配 |
+| BL编号 | `knowledge/body-language.md` | 按角色状态匹配 2 种 |
+| 灯光方案 | `knowledge/lighting.md` | 按场景情绪匹配 3-4 种 |
