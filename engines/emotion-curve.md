@@ -8,7 +8,7 @@
 
 ### 步骤1：识别情绪曲线类型
 
-从 SKILL.md Step 1 提取的故事类型，匹配曲线编号：
+从 `state/variable-registry.md` 读取 `project.genre`（由 story-intake 写入），匹配曲线编号：
 
 | 故事类型 | 曲线编号 |
 |---------|----------|

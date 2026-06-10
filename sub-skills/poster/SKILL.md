@@ -1,6 +1,6 @@
 ---
 name: poster
-description: Movie poster generation — cinematic posters in any style, portrait or landscape. Use /poster or say "海报", "电影海报", "封面".
+description: Movie poster generation — cinematic posters in any style, portrait or landscape. Reads project/style from state/variable-registry. Use /poster or say "海报", "电影海报", "封面".
 ---
 
 # Poster — 电影海报

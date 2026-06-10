@@ -16,6 +16,7 @@
 - [x] `docs/video-workflow.md` — 视频工作流完整文档
 - [x] `docs/obsidian-workflow.md` — Obsidian/批量/续集文档
 - [x] `docs/platform-prompts.md` — 全平台 Prompt 格式参考
+- [x] `docs/system-architecture.md` — 系统架构（12 引擎主链 + state/ 层 + 基础能力子路由）
 - [x] `CHANGELOG.md` — v0.1.0 → v1.0.0 完整版本记录
 
 ---
@@ -24,6 +25,7 @@
 
 - [x] 根目录 `SKILL.md` 存在，作为唯一总控入口
 - [x] `engines/` 决策引擎目录存在（VS/LS/情绪/节奏/评分/压缩）
+- [x] `state/` 状态注册中心目录存在（变量注册/资产映射/镜头状态/台词映射/模板契约）
 - [x] `knowledge/` 素材知识库目录存在（角色/场景/镜头/材质/声音/时代）
 - [x] `rules/` 规则目录存在（一致性/质量/文化准确性/负面词/补丁）
 - [x] `platforms/` 平台适配目录存在（图像/视频平台和 API）

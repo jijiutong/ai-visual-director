@@ -125,11 +125,13 @@ ultra-detailed, 8K, sharp focus。
 
 ## 变量说明
 
+> 运行时从 `state/variable-registry.md` 读取最终值。参考文件列为原始数据来源。
+
 | 变量 | 参考文件 | 填充方式 |
 |------|---------|---------|
-| 角色姓名/身份/年龄 | Step 1 提取 | 缺则起电影感名字 |
-| 面部/体型/皮肤描述 | Step 1 提取 + `knowledge/character-dna.md` | DNA 20字段补全 |
-| 服装/配饰描述 | Step 1 提取 | 缺则按时代/身份推断 |
+| 角色姓名/身份/年龄 | `state/variable-registry.md` | `characters.*.name`，缺则自动起名 |
+| 面部/体型/皮肤描述 | `state/variable-registry.md` + `knowledge/character-dna.md` | `characters.*.immutable_features`，DNA 20字段补全 |
+| 服装/配饰描述 | `state/variable-registry.md` | `characters.*.immutable_features`，缺则按时代/身份推断 |
 | ME编号 | `knowledge/micro-expressions.md` | 按角色情绪底色匹配 4 种 |
 | PR编号 | `knowledge/props.md` | 按武器/道具匹配 |
 | BL编号 | `knowledge/body-language.md` | 按角色姿态匹配 |

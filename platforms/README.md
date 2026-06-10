@@ -8,6 +8,8 @@
 - 处理画幅、参数、长度、参考图、首尾帧、负面词位置
 - 记录 API 集成、平台限制和推荐调用方式
 
+> 目标平台从 `state/variable-registry.md` 的 `project.target_platform` 读取，由 `engines/reference-anchor.md` 写入。
+
 ## 当前文件
 
 | 文件 | 职责 |

@@ -1,26 +1,42 @@
 # Engines
 
-`engines/` 放“会做决策和编排”的 Markdown 规则。它们不是最终 prompt 模板，而是负责判断用什么风格、版式、节奏、结构、平台压缩方案。
+`engines/` 放"会做决策和编排"的 Markdown 规则。分为两类：自动决策链引擎（新）和辅助决策引擎（旧）。
 
-## 设计标准
+---
 
-每个引擎文件尽量包含：
+## 自动决策链（一键视频主链路）
 
-```md
-## 输入
-用户关键词 / 故事字段 / 输出目标
+按顺序执行，从前到后自动流转。每个引擎产出写入 `state/` 注册中心，下游引擎和模板从 `state/` 统一读取。
 
-## 决策规则
-如果...则选择...
-
-## 输出
-返回编号 / 组合 / 参数 / 下一步模板
-
-## 禁止
-不能出现的错误选择
+```
+task-router → sources/ → story-intake → shot-budget → video-director
+→ asset-plan → reference-anchor → motion-physics → video-prompt-assembly
+→ prompt-scorer → auto-repair → rules/final-video-qc → render-package
+                              ↑ 写入 state/                    ↑ 读取 state/
 ```
 
-## 当前引擎
+| 文件 | 职责 | 输入 ← | 输出 → |
+|------|------|--------|--------|
+| `task-router.md` | 意图识别+路由分发（总入口） | 用户输入 | 第一个目标引擎 |
+| `story-intake.md` | 故事摄入：提取字段+角色+场景+冲突 | sources/ | shot-budget |
+| `shot-budget.md` | 镜头预算：定时长/镜数/拆段/压缩 | story-intake | video-director |
+| `video-director.md` | 导演决策：节奏/高潮/情绪曲线/参考图 | shot-budget | asset-plan |
+| `asset-plan.md` | 资产规划：角色卡/场景图/最低校验 | video-director + story-intake | reference-anchor |
+| `reference-anchor.md` | 平台锚点：参考图策略+平台限制校验 → 写入 state/asset-map | asset-plan | motion-physics + state/asset-map |
+| `motion-physics.md` | 运动物理：运动预算+兼容性检查 | reference-anchor | video-prompt-assembly |
+| `video-prompt-assembly.md` | Prompt组装：4层结构+平台适配 ← 读 state/asset-map, shot-state, dialogue-map | motion-physics + state/ | prompt-scorer |
+| `prompt-scorer.md` | 自动评分：6维度评分+阈值判断 | video-prompt-assembly | auto-repair 或 final-video-qc |
+| `auto-repair.md` | 自动修复：低于阈值→按策略修复（最多3轮） | prompt-scorer | rules/final-video-qc |
+| `render-package.md` | 打包输出：资产+Prompt+平台参数+执行清单 | rules/final-video-qc | 用户 |
+
+**工具引擎**（被上述引擎调用，不在主链路上）：
+| `prompt-compression.md` | Prompt压缩：超限时自动精简 | reference-anchor / auto-repair |
+
+---
+
+## 辅助决策引擎
+
+风格/版式/叙事/情绪等独立决策，按需被主链路或模板调用：
 
 | 文件 | 职责 |
 |------|------|
@@ -36,9 +52,29 @@
 | `multi-version.md` | 多版本 A/B/C |
 | `series.md` | 系列和续集延续 |
 | `style-migration.md` | 风格迁移 |
-| `prompt-compression.md` | Prompt 压缩 |
-| `prompt-scorer.md` | Prompt 评分 |
-| `one-click.md` | 一键生成 |
 | `batch-chapter.md` | 批量章节处理 |
 | `single-shot-edit.md` | 单镜修改 |
-| `video-prompt-assembly.md` | 视频 Prompt 组装 |
+
+---
+
+## 相关规则（rules/）
+
+| 文件 | 职责 |
+|------|------|
+| `one-click-defaults.md` | 一键生成硬默认+软默认+最快路径 |
+| `final-video-qc.md` | 8项最终质检+致命项判定（含引用一致性检查） |
+| `continuity-check.md` | 5维度连续性检查+自动修复表 |
+
+## 相关状态（state/）
+
+引擎写入 state/，模板从 state/ 读取。详见 `state/README.md`。
+
+| 文件 | 职责 |
+|------|------|
+| `variable-registry.md` | **总变量注册中心** — 所有全局变量汇聚点（project/style/characters/scene） |
+| `asset-map.md` | **@图动态映射** — @编号→类型→用途，由 reference-anchor 写入，video-prompt-assembly 读取 |
+| `shot-state.md` | **每镜状态** — 镜号/时间/景别/运镜/色彩/灯光/转场/end_state |
+| `dialogue-map.md` | **台词映射** — shot_id/speaker/text/delivery/subtitle |
+| `prompt-contract.md` | **模板契约** — 每个模板读什么变量、产出什么 |
+| `continuity-state.md` | 8字段状态定义+继承规则（跨镜连续性） |
+| `continuity-snapshot.md` | 跨段快照+衔接技法选择 |

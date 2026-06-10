@@ -4,18 +4,20 @@
   <a href="./README.md">中文</a> · <a href="./README.en.md"><b>🇬🇧 English</b></a>
 </p>
 
-> Turn a story into cinematic storyboards, character sheets, scene concepts, and video prompts.
-> Paste text → get production-ready prompts for AI image/video tools.
+> Turn a story into character sheets, scene references, storyboard boards, video prompts, and an executable video generation package.
+> Paste text / Markdown / Obsidian projects → get production-ready prompts for AI image/video tools.
 
 ---
 
 ## What It Is
 
-AI Visual Director is a Claude Code Skill. Paste a story → get a professional visual development plan.
+AI Visual Director is a Claude Code Skill. Paste a story → get a professional visual development plan. Read an Obsidian or Markdown project → batch-generate chapter video packages.
 
 Core abilities:
 
-- 🎬 **Story to storyboard** — auto-extract characters/scenes/conflict → full board with lighting/camera/color
+- 🎬 **One-click story to video** — auto-intake story → plan assets → output a complete video package
+- 🧭 **Source routing** — direct paste / Markdown / Obsidian / frontmatter / batch chapters
+- 🎞️ **Story to storyboard** — auto-extract characters/scenes/conflict → full board with lighting/camera/color
 - 👤 **Character design** — 6-module character sheets + DNA anchoring
 - 🏯 **Scene design** — all-in-one reference + director-annotated mode
 - 🎥 **Video prompts** — one complete prompt for Seedance / Runway / Kling
@@ -28,33 +30,38 @@ Core abilities:
 ## 30-Second Start
 
 ```text
-/storyboard 一键生成 Two swordsmen face off in a rainy temple. The master realizes his disciple has fallen to the dark side. 15s 7 shots
+/create one-click Two swordsmen face off in a rainy temple. The master realizes his disciple has fallen to the dark side. 15s 7 shots
 ```
 
-Output: title/genre → emotion curve → character anchors → scene anchors → full shot list → copyable prompt
+Output: story intake → shot budget → character anchors → scene anchors → storyboard → video prompt → execution package
 
 ---
 
-## Commands
+## 6 Core Commands
 
 | Command | Use | Example |
 |---------|-----|---------|
-| `/storyboard` | Storyboard generation | `/storyboard one-click [story] 15s 7shots` |
-| `/character` | Character design | `/character Name description` |
-| `/scene` | Scene concept | `/scene Scene description` |
-| `/video` | Video prompt | `video prompt` |
-| `/style` | Style adjustment | `change to ink wash but keep characters` |
-| `/poster` | Poster generation | `/poster [story]` |
+| `/create` | One-click orchestration | `/create one-click [story] 15s 7shots` |
+| `/source` | Obsidian / Markdown project intake | `/source read Obsidian [project]` |
+| `/storyboard` | Core asset: storyboard board | `/storyboard [story]` |
+| `/character` | Core asset: character sheet | `/character Name description` |
+| `/scene` | Core asset: scene reference | `/scene Scene description` |
+| `/video` | Video prompt / execution package | `/video prompt` |
+
+`/style` and `/poster` remain available as compatibility entries for style actions and poster outputs.
+
+Core asset relationship: character sheets lock **who**, scene references lock **where**, storyboards lock **how to shoot**, and `/create` orchestrates them into a complete video execution package.
 
 ## Common Actions
 
 | Command | Use |
 |---------|-----|
-| `一键生成` | Auto best plan, full storyboard output |
+| `一键生成` | Auto best plan, full video execution package |
 | `多版本` | A/B/C version comparison |
 | `看全部` | Browse all styles & formats |
 | `Shot X...` | Precise single-shot edit |
 | `Change to X style but keep characters` | Style transfer |
+| `Read from Obsidian` | Load project/chapters and enter batch workflow |
 | `评分` | Prompt quality score + optimization |
 | `检查连续性` | Check character/scene/timeline continuity |
 

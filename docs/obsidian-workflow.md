@@ -65,7 +65,7 @@ structure: 三幕
 ---
 ```
 
-→ 字段直接映射到 Step 1（故事信息提取），无需重复输入。
+→ 字段直接映射到 `state/variable-registry.md`（项目/角色/场景变量），story-intake 跳过这些字段的提问。
 
 ---
 
@@ -74,9 +74,9 @@ structure: 三幕
 逐章生成 15s × 7镜 故事板：
 
 ```
-章1 → 角色卡+场景图 → 分镜图 → Prompt
-章2 → 跨章衔接（章1尾帧=章2首帧） → 分镜图 → Prompt
-章3 → 跨章衔接（章2尾帧=章3首帧） → 分镜图 → Prompt
+章1 → 角色卡+场景图（→ state/variable-registry + asset-map） → 分镜图（→ state/shot-state） → Prompt
+章2 → 跨章衔接（章1尾帧=章2首帧 ← state/shot-state end_state） → 分镜图 → Prompt
+章3 → 跨章衔接（章2尾帧=章3首帧 ← state/shot-state end_state） → 分镜图 → Prompt
 ```
 
 ---

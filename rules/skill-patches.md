@@ -19,7 +19,7 @@
 **禁止**：不得在无机甲关键词时推荐科幻机甲。不得在仿生人故事里自动加入巨型机器人。
 
 **发现于**：T03-A 废弃太空港仿生少女
-**修复文件**：storyboard/SKILL.md、ai-visual-director/SKILL.md（推荐引擎表拆分）
+**修复文件**：sub-skills/sub-skills/storyboard/SKILL.md、SKILL.md（推荐引擎表拆分）
 
 ---
 
@@ -36,7 +36,7 @@
 **核心原则**：霓虹感 = 调色模拟 ≠ 真的有灯
 
 **发现于**：TM01 东方玄幻→王家卫风格迁移
-**修复文件**：ai-visual-director/SKILL.md（执行规则 + 冲突检测表）
+**修复文件**：SKILL.md（执行规则 + 冲突检测表）
 
 ---
 
@@ -62,7 +62,7 @@
 - 出现一次扣 2 分，扫描不通过不输出
 
 **发现于**：R04 蓝色桌面宠物（帧6 提交成功）
-**修复文件**：storyboard/SKILL.md、ai-visual-director/SKILL.md
+**修复文件**：sub-skills/storyboard/SKILL.md、SKILL.md
 
 ---
 
@@ -77,7 +77,7 @@
 - 导演标注版（仅当用户说「导演标注版」「标注」时）：允许红色标注/编号/文字说明
 
 **发现于**：/character 墨渊角色卡
-**修复文件**：character/SKILL.md（拆分为出图模式 + 导演标注版）、ai-visual-director/SKILL.md
+**修复文件**：sub-skills/character/SKILL.md（拆分为出图模式 + 导演标注版）、SKILL.md
 
 ---
 
@@ -96,7 +96,7 @@
 - 浅景深变焦
 
 **发现于**：R02 深夜便利店（帧5 极慢旋转推进）
-**修复文件**：storyboard/SKILL.md、ai-visual-director/SKILL.md
+**修复文件**：sub-skills/storyboard/SKILL.md、SKILL.md
 
 ---
 
@@ -113,7 +113,7 @@
 - 品牌名仅在用户说「看全部」或明确指定时展示
 
 **发现于**：R04 蓝色桌面宠物
-**修复文件**：storyboard/SKILL.md、ai-visual-director/SKILL.md（风格名规范）
+**修复文件**：sub-skills/storyboard/SKILL.md、SKILL.md（风格名规范）
 
 ---
 
@@ -128,7 +128,7 @@
 **触发词**：`第一剑修` `宗师` `剑尊` `掌门` `前辈` `老祖` `第一` `天下第一` `绝世` `天尊` `剑圣` `武帝`
 
 **发现于**：/character 墨渊
-**修复文件**：character/SKILL.md、ai-visual-director/SKILL.md
+**修复文件**：sub-skills/character/SKILL.md、SKILL.md
 
 ---
 
@@ -141,7 +141,7 @@
 **正确行为**：一键生成默认使用单一最匹配主风格。只有用户明确说「融合」「多版本」「A+B」时才触发融合。
 
 **发现于**：R01 雨夜古寺（早期版本自动融合了王家卫）
-**修复文件**：storyboard/SKILL.md、ai-visual-director/SKILL.md
+**修复文件**：sub-skills/storyboard/SKILL.md、SKILL.md
 
 ---
 
@@ -158,7 +158,7 @@
 ```
 
 **发现于**：TM01 东方玄幻→王家卫
-**修复文件**：ai-visual-director/SKILL.md
+**修复文件**：SKILL.md
 
 ---
 
@@ -175,7 +175,7 @@
 - 输出连续性提示说明影响范围
 
 **发现于**：第5镜雨改雪（早期版本未处理过渡）
-**修复文件**：ai-visual-director/SKILL.md
+**修复文件**：SKILL.md
 
 ---
 

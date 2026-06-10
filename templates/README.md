@@ -42,3 +42,5 @@
 ## 使用方式
 
 模板由 AI Visual Director Skill 在生成 prompt 时自动选择，用户无需手动操作。
+
+> 模板从 `state/variable-registry.md` 读取变量值，契约定义见 `state/prompt-contract.md`。

@@ -1,6 +1,6 @@
 ---
 name: character
-description: Character design card generation — 8 consistency methods, from quick sketch to full 6-module sheet. Use /character or say "角色卡", "人物设计".
+description: Character design card generation — 8 consistency methods. Route: story-intake → state/variable-registry → character-sheet → state/asset-map → QC. Use /character or "角色卡", "人物设计".
 ---
 
 # Character — 角色设计

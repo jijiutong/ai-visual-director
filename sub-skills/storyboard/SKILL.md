@@ -1,6 +1,6 @@
 ---
 name: storyboard
-description: Quick storyboard generation — paste a story, get smart recommendations, output ready-to-use prompts. Supports 50+ styles, 10 formats. Use /storyboard or say "故事板", "分镜".
+description: Storyboard generation — 50+ styles, 10 formats. Route: story-intake → shot-budget → video-director → state/shot-state → full-board/quick-board → state/asset-map → QC. Use /storyboard or "故事板", "分镜".
 ---
 
 # Storyboard — 快速故事板
@@ -44,9 +44,11 @@ description: Quick storyboard generation — paste a story, get smart recommenda
 
 **场景边界识别**：按地点切换 / 时间跳跃（≥1小时）/ 角色进出 / 情绪转折 自动切分。换场景 = 新一场。
 
-### 一键生成入口（总路由）
+### 一键生成入口（分镜专用）
 
-`一键生成` 是 Pipeline 唯一入口。自动判断时长 + 自动选最匹配主风格，路由到对应变体：
+`/storyboard 一键生成` 只负责分镜/全案板链路。完整故事到视频执行包的默认主入口是 `/create`。
+
+分镜链路会自动判断时长 + 自动选最匹配主风格，路由到对应变体：
 
 ```
 一键生成

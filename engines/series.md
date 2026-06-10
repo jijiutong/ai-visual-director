@@ -35,18 +35,17 @@
 
 ## 系列状态存储格式
 
+> 角色/场景/风格变量从 `state/variable-registry.md` 读取。以下格式为系列级别的增量记录（跨集变化）。
+
 ```
 【系列：[片名]】
 集数：当前第 X 集
-风格：[风格编号. 风格名称]
-色彩基调：[主色1] + [主色2] + [点缀色]
-角色 DNA：
-  - [角色1名]DNA: [完整DNA]
-  - [角色2名]DNA: [完整DNA]
-场景记录：
-  - 场景1：[地点] [时间] [天气] [材质]
-  - 场景2：...
-情绪曲线：[类型]
+风格：[从 variable-registry 读取 style.visual_style]
+色彩基调：[从 variable-registry 读取 style.color_narrative]
+角色 DNA：[从 variable-registry 读取 characters.*.immutable_features]
+场景记录：[从 variable-registry 读取 scene.primary.*]
+情绪曲线：[从 variable-registry 读取 style.emotion_curve]
+本集变化：[角色状态/场景/情绪变化（增量）]
 ```
 
 ## 角色状态变化

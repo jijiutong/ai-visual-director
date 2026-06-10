@@ -1,6 +1,6 @@
 ---
 name: scene
-description: Scene concept art — 7 scene consistency methods to lock environment, lighting, and props. Use /scene or say "场景", "场景设计", "环境设计".
+description: Scene concept art — 7 consistency methods. Route: story-intake → state/variable-registry → scene-card → state/asset-map → QC. Use /scene or "场景", "场景设计", "环境设计".
 ---
 
 # Scene — 场景设计

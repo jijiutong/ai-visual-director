@@ -1,11 +1,50 @@
 ---
 name: ai-visual-director
-description: Generate cinematic storyboards, character sheets, scene cards, posters, and video prompts from any story or script. Supports 50+ styles, 10 output formats, multi-platform (GPT Image/MJ/SD), AI video workflow for Seedance/Runway/可灵. Triggers on requests like storyboard, 分镜, 故事板, 角色卡, 转视频, Seedance.
+description: One-click AI visual director system. Turn any story into a complete video generation package. Unified state registry (variable-registry + asset-map + shot-state + dialogue-map), standardized routing (/create /source /storyboard /character /scene /video), 8-item QC with reference consistency check. Legacy compatible: /style, /poster.
 ---
 
-# AI Story Board Skill
+# AI Visual Director Skill
 
-AI 电视剧 / 漫剧 / 短剧 / 电影故事板生成技能。将任意故事内容转化为 GPT Image 2 / Midjourney / SD 可直接使用的专业提示词。
+AI 电视剧 / 漫剧 / 短剧 / 电影视觉导演系统。将任意故事内容转化为角色卡、场景图、分镜图、视频 Prompt 和可执行视频生成包。
+
+## 6 个核心入口
+
+| 入口 | 定位 | 何时使用 |
+|------|------|----------|
+| `/create` | 一键总编排 | 用户给一个故事，想同时规划角色卡、场景图、分镜图和视频执行包 |
+| `/source` | 输入源/项目读取 | Obsidian、Markdown、frontmatter、章节批量 |
+| `/storyboard` | 核心资产：故事板/分镜图 | 全案板、分镜表、镜头设计、分镜图 Prompt |
+| `/character` | 核心资产：角色卡 | 角色卡、三视图、表情、服装武器、角色 DNA |
+| `/scene` | 核心资产：场景图 | 场景参考图、全景、空间关系、光照材质 |
+| `/video` | 视频执行包 | 已有故事板/资产后，输出平台视频 Prompt 和执行清单 |
+
+**兼容入口**：`/style` 和 `/poster` 继续可用，但定位为高级动作/输出格式，不再是主流程入口。
+
+## 默认总路由
+
+普通故事输入默认走 `/create` 编排链路。`/create` 不替代 `/storyboard`、`/character`、`/scene`，而是调用它们产出三大核心资产：
+
+```text
+角色卡（谁） + 场景图（在哪） + 分镜图（怎么拍） -> 视频 Prompt / 执行包
+```
+
+```text
+task-router（意图识别+路由分发）
+  -> sources/（输入源处理：粘贴/Obsidian/frontmatter）
+  -> engines/story-intake.md          → 写入 state/variable-registry
+  -> engines/shot-budget.md           → 写入 state/variable-registry
+  -> engines/video-director.md        → 写入 state/variable-registry + shot-state + dialogue-map
+  -> engines/asset-plan.md            → 写入 state/variable-registry
+  -> engines/reference-anchor.md      → 写入 state/asset-map
+  -> engines/motion-physics.md        → 补充 state/shot-state
+  -> engines/video-prompt-assembly.md ← 读取 state/
+  -> engines/prompt-scorer.md
+  -> engines/auto-repair.md           → 修复后更新 state/
+  -> rules/final-video-qc.md          ← 读取 state/（8项质检含引用一致性）
+  -> engines/render-package.md
+```
+
+**基础能力子路由**：`/character` `/scene` `/storyboard` 三条标准子链，全部接 state/ + asset-map + QC。详见 `engines/task-router.md` → 基础能力子路由。
 
 ## 核心能力
 
@@ -156,10 +195,10 @@ target_platform: Seedance
 ## 工作流
 
 ```
-输入故事 → AI 提取信息 → AI 智能推荐 2-3 个最佳组合 → 用户确认/改选 → 输出 prompt
+输入故事 → 自动路由 → 输入源处理 → 故事摄入 → 镜头预算 → 视频导演 → 资产规划 → 锚点分配 → 运动检查 → 平台适配 → 最终质检 → 修复 → 执行包
 ```
 
-**快捷模式**：使用 /storyboard 快捷指令（一键生成/多版本/一键全平台）。
+**快捷模式**：使用 `/create` 或自然语言 `一键生成`。`/storyboard` 仅作为分镜专用入口。
 
 ### Step 1: 提取故事信息
 
@@ -756,12 +795,13 @@ HE3 中国古风 | TR1 快切 | SD: SE2雨声+FX15剑鸣
 - 运镜/焦段/角度：从故事板技术参数栏逐帧读取，用 `|` 分隔
 - 色彩/灯光：从故事板技术参数栏逐帧读取，用 `|` 分隔
 - 转场/时长：从故事板技术参数栏逐帧读取，用 `|` 分隔
-- 场景一致性：引用全景图 @图0（720°全景或全能参考图，覆盖所有拍摄方向，背景/天空/空间布局跨帧不变）
-- 角色一致性：引用角色卡 @图1（面部5角度/表情范围/三视图/服装武器细节，面部/体态/服装不变形）
-- 画面锚点：引用视频分镜图 @图2-5（按动作阶段合并，3-4张，防视觉偏离，每张覆盖2-3帧）
-- （可选）光照材质一致性：额外光照材质参考图 @图6（主光方向/阴影软硬/色温/材质反光率跨帧不变）
-- （可选）道具一致性：额外道具细节卡 @图7（武器形制/配饰纹路/挂件比例/颜色跨帧不变）
-- （可选）人物动作一致性：额外首尾帧 @图8（帧1起始→帧N结束平滑过渡，长镜头/动作大片建议加）
+- 场景一致性：引用场景参考图（全景图或全能参考图，覆盖所有拍摄方向，背景/天空/空间布局跨帧不变）
+- 角色一致性：引用角色卡（面部5角度/表情范围/三视图/服装武器细节，面部/体态/服装不变形）
+- 画面锚点：引用视频分镜图（按动作阶段合并，3-4张，防视觉偏离，每张覆盖2-3帧）
+- （可选）光照材质一致性：额外光照材质参考图（主光方向/阴影软硬/色温/材质反光率跨帧不变）
+- （可选）道具一致性：额外道具细节卡（武器形制/配饰纹路/挂件比例/颜色跨帧不变）
+- （可选）人物动作一致性：额外首尾帧（帧1起始→帧N结束平滑过渡，长镜头/动作大片建议加）
+- ⚠️ 具体 @编号→用途 映射由 `state/asset-map.md` 动态决定（按平台策略：Seedance 5-6张、Runway 3张、可灵 3张、Luma/Pika 2张），禁止硬编码 @图N=某用途
 - 台词处理：如故事板帧含台词，帧描述中简写「台词「[内容]」[表演要求]」；约束层写「台词：帧 N 口型同步「[内容]」[表演要求]。字幕：帧 N 底部中央「[内容]」」
 - 过渡衔接：每帧末尾指定过渡方式（渐切/慢动作过渡/叠化/淡出/淡入），禁止硬切闪跳；开头声明「整体一条连续镜头，帧与帧之间平滑过渡，不生硬跳转」；英文尾加 `continuous single shot, smooth transitions between frames no hard cuts`
 - 每帧压缩为单行，技术参数用 `|` 分隔

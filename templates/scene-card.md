@@ -77,6 +77,8 @@ ultra-detailed, 8K, sharp focus。
 
 ## 变量说明
 
+> 运行时从 `state/variable-registry.md` 读取最终值。参考文件列为原始数据来源。
+
 | 变量 | 参考文件 | 填充方式 |
 |------|---------|---------|
 | EV编号 | `knowledge/environments.md` | 按场景地点自动匹配 |

@@ -74,9 +74,11 @@ ultra-detailed, 8K, clean industrial layout, coherent character design。
 
 ## 变量说明
 
+> 运行时从 `state/variable-registry.md` 读取最终值。参考文件列为原始数据来源。
+
 | 变量 | 参考文件 | 填充方式 |
 |------|---------|---------|
-| 片名 | — | Step 1 提取，2-8 字 |
+| 片名 | `state/variable-registry.md` | `project.title`，2-8 字 |
 | EC编号 | `engines/emotion-curve.md` | 按故事类型匹配 |
 | CN编号 | `engines/color-narrative.md` | EC自动推导CN |
 | EV编号 | `knowledge/environments.md` | 按故事场景匹配 |

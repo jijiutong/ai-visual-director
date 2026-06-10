@@ -1,6 +1,6 @@
 ---
 name: video
-description: AI video full workflow — 5-step recommended pipeline from storyboard to final video. Supports Seedance, Runway, Kling, Luma, Pika. Use /video or say "转视频", "视频工作流".
+description: AI video full workflow — 5-step recommended pipeline from storyboard to final video. Route: state/asset-map → video-prompt-assembly → final-video-qc. Supports Seedance, Runway, Kling, Luma, Pika. Use /video or say "转视频", "视频工作流".
 ---
 
 # Video — AI 视频全流程
@@ -39,6 +39,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 → 回复"生成场景参考图"（全能参考模式，一张锁场景+角色+光照+道具）
 → 回复"生成道具细节卡"（如有特殊武器/配饰）
 出图量：2-3 张 | 费用：~USD0.08-0.24 | 耗时：~1min
+→ 写入 state/variable-registry（characters + scene）+ state/asset-map
 ```
 
 ### 第二步：全景图锁定全局空间（720° 全景图）
@@ -55,6 +56,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 → 回复"生成视频分镜图"或"合并帧"
 → 将故事板 N 帧按动作阶段合并为 3-4 张
 出图量：3-4 张 | 费用：~USD0.12-0.32 | 耗时：~2min
+→ 写入 state/shot-state + state/asset-map（storyboard_board）
 ```
 
 ### 第四步：生成视频 prompt
@@ -78,9 +80,9 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 ```
 【画面内容】逐帧提取核心视觉信息（≤15字）+ 运镜 + 色彩/灯光 + 转场
 
-- 场景一致性：引用全景图 @图0
-- 角色一致性：引用角色卡 @图1
-- 画面锚点：引用视频分镜图 @图2-5
+- 场景一致性：引用场景参考图（@编号→用途见 state/asset-map.md）
+- 角色一致性：引用角色卡（@编号→用途见 state/asset-map.md）
+- 画面锚点：引用视频分镜图（@编号→用途见 state/asset-map.md）
 
 过渡衔接声明：continuous single shot, smooth transitions no hard cuts
 总字数 ≤1500 字

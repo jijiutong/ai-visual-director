@@ -4,18 +4,20 @@
   <a href="./README.md"><b>中文</b></a> · <a href="./README.en.md">English</a>
 </p>
 
-> 把一段故事变成电影级分镜、角色设定、场景概念和视频 Prompt。
-> 输入文字 → 输出可直接喂 AI 绘图/视频工具的专业方案。
+> 把一段故事变成电影级角色卡、场景图、分镜图、视频 Prompt 和执行包。
+> 输入文字 / Markdown / Obsidian 项目 → 输出可直接喂 AI 绘图/视频工具的专业方案。
 
 ---
 
 ## 这是什么
 
-AI Visual Director 是一个 Claude Code Skill。粘贴故事 → 自动生成专业视觉开发方案。
+AI Visual Director 是一个 Claude Code Skill。粘贴故事 → 自动生成专业视觉开发方案；读取 Obsidian / Markdown 项目 → 批量生成章节视频包。
 
 主要能力：
 
-- 🎬 **故事转分镜** — 自动提取角色/场景/冲突 → 完整故事板 + 灯光/运镜/色彩
+- 🎬 **一键故事转视频** — 自动提取故事 → 规划资产 → 输出完整视频执行包
+- 🧭 **输入源路由** — 支持直接粘贴 / Markdown / Obsidian / frontmatter / 批量章节
+- 🎞️ **故事转分镜** — 自动提取角色/场景/冲突 → 完整故事板 + 灯光/运镜/色彩
 - 👤 **角色设计** — 6 模块角色设定卡 + DNA 锚定
 - 🏯 **场景设计** — 全能参考图 + 导演标注版
 - 🎥 **视频 Prompt** — 一条完整 Prompt 直喂 Seedance / Runway / 可灵
@@ -33,43 +35,48 @@ git clone https://github.com/jijiutong/ai-visual-director.git
 
 # 2. 复制 skill 文件到 Claude Code skills 目录
 mkdir -p ~/.claude/skills/ai-visual-director
-cp -r ai-visual-director/engines ai-visual-director/knowledge ai-visual-director/rules ai-visual-director/platforms ai-visual-director/templates ai-visual-director/SKILL.md ~/.claude/skills/ai-visual-director/
+cp -r ai-visual-director/sources ai-visual-director/engines ai-visual-director/knowledge ai-visual-director/rules ai-visual-director/platforms ai-visual-director/templates ai-visual-director/state ai-visual-director/sub-skills ai-visual-director/SKILL.md ~/.claude/skills/ai-visual-director/
 ```
 
-安装后重启 Claude Code，输入 `/storyboard` 即可使用。
+安装后重启 Claude Code，输入 `/create` 即可使用。
 
 ---
 
 ## 30 秒上手
 
 ```text
-/storyboard 一键生成 雨夜古寺，两名剑客在佛像前对峙，师父发现徒弟已经入魔，二人拔剑相向。15s 7镜
+/create 一键生成 雨夜古寺，两名剑客在佛像前对峙，师父发现徒弟已经入魔，二人拔剑相向。15s 7镜
 ```
 
-输出：片名/类型 → 情绪曲线 → 角色锚点 → 场景锚点 → 完整分镜表 → 可复制 Prompt
+输出：故事摄入 → 镜头预算 → 角色锚点 → 场景锚点 → 分镜图 Prompt → 视频 Prompt → 执行清单
 
 ---
 
-## 常用命令
+## 6 个核心入口
 
 | 命令 | 用途 | 示例 |
 |------|------|------|
-| `/storyboard` | 故事板 / 分镜生成 | `/storyboard 一键生成 [故事] 15s 7镜` |
-| `/character` | 角色设定 | `/character 角色名 描述` |
-| `/scene` | 场景概念 | `/scene 场景描述` |
-| `/video` | 视频 Prompt | `出视频 prompt` |
-| `/style` | 风格调整 | `换成水墨风但保持角色` |
-| `/poster` | 海报生成 | `/poster [故事]` |
+| `/create` | 一键总编排 | `/create 一键生成 [故事] 15s 7镜` |
+| `/source` | Obsidian / Markdown 项目读取 | `/source 从 Obsidian 读取 剑道独尊` |
+| `/storyboard` | 核心资产：故事板 / 分镜图 | `/storyboard [故事]` |
+| `/character` | 核心资产：角色卡 | `/character 角色名 描述` |
+| `/scene` | 核心资产：场景图 | `/scene 场景描述` |
+| `/video` | 视频 Prompt / 执行包 | `/video 出视频 prompt` |
+
+`/style` 和 `/poster` 仍可用，作为风格动作和海报输出格式保留。
+
+核心资产关系：`角色卡` 锁定“谁”，`场景图` 锁定“在哪”，`分镜图/故事板` 锁定“怎么拍”，`/create` 负责把三者编排成完整视频执行包。
 
 ## 常用动作
 
 | 指令 | 用途 |
 |------|------|
-| `一键生成` | 自动选择最佳方案，直接出故事板 |
+| `一键生成` | 自动选择最佳方案，直接出视频执行包 |
 | `多版本` | 输出 A/B/C 三版对比 |
 | `看全部` | 浏览全部风格与格式 |
 | `第X镜...` | 精准修改指定镜头 |
 | `换成X风格但保持角色` | 风格迁移 |
+| `从 Obsidian 读取` | 读取项目/章节并进入批量链路 |
 | `评分` | Prompt 质量打分 + 优化建议 |
 | `检查连续性` | 检查角色、场景、时间线是否断裂 |
 | `压缩到MJ` / `压缩到SD` | 适配平台长度限制 |
@@ -107,14 +114,15 @@ cp -r ai-visual-director/engines ai-visual-director/knowledge ai-visual-director
 
 | 目录 | 职责 |
 |------|------|
-| `engines/` | 风格、版式、情绪、节奏、评分、压缩等决策引擎 |
+| `sources/` | 直接粘贴、Obsidian、Markdown、frontmatter 等输入源处理 |
+| `engines/` | 路由、故事摄入、镜头预算、视频导演、资产规划、评分、压缩等决策引擎 |
 | `knowledge/` | 角色、场景、镜头、材质、声音、时代等知识库 |
 | `rules/` | 一致性、质量、文化准确性、负面词、规则补丁 |
 | `templates/` | 全案板、角色卡、场景卡、分镜页等最终 Prompt 模板 |
 | `platforms/` | GPT Image / Midjourney / SD / 视频平台适配 |
-| `sub-skills/` | `/storyboard`、`/character`、`/scene` 等子入口 |
+| `sub-skills/` | `/create`、`/source`、`/storyboard`、`/character`、`/scene`、`/video` 等子入口 |
 
-> 发布 / 安装时必须包含 `SKILL.md`、`engines/`、`knowledge/`、`rules/`、`templates/`、`platforms/`、`sub-skills/`、`docs/`、`examples/`。
+> 发布 / 安装时必须包含 `SKILL.md`、`sources/`、`engines/`、`knowledge/`、`rules/`、`templates/`、`platforms/`、`sub-skills/`、`docs/`、`examples/`。
 > `.agents/` 和 `.claude/` 是本机安装副本/缓存目录，不应进入发布包。
 
 ---

@@ -103,12 +103,12 @@ no watermark, no text overlay.
 
 ```
 生成 15s 电影级视频，主题《[片名]》。
-参考图片：@图0（场景参考图）@图1（角色设定卡）@图2-4（视频分镜图）。
+参考图片：按 state/asset-map.md 动态映射（场景参考图 + 角色设定卡 + 视频分镜图）。
 
 帧1 [阶段][时间]：[画面描述≤15字]。[景别]|[运镜]|[色彩]|[灯光]|[转场]。
 ...
 
-约束：场景@图0锁死。角色@图1不变形。画面锚点@图2-4不偏离。
+约束：场景参考图锁死空间。角色卡不变形。画面锚点（分镜图）不偏离。@编号→用途见 state/asset-map.md。
 
 continuous single shot, smooth transitions no hard cuts, 8K,
 no flickering, no morphing, no floating, [视频负面词22条...]

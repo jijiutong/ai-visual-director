@@ -8,7 +8,7 @@
 
 ### 步骤1：识别故事类型
 
-从 SKILL.md Step 1 提取的故事类型，匹配风格编号：
+从 `state/variable-registry.md` 读取 `project.genre`（由 story-intake 写入），匹配风格编号：
 
 | 故事关键词 | 推荐风格编号 |
 |-----------|-------------|

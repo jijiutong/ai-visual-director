@@ -1,0 +1,253 @@
+# 任务路由引擎（总入口）
+
+接收用户输入，识别意图，分发到正确的处理链。这是整个系统的最前端入口。
+
+---
+
+## 一键视频主链路
+
+```
+用户输入
+  ↓
+task-router（意图识别+路由分发）
+  ↓
+sources/（输入源处理：粘贴/Obsidian/frontmatter）
+  ↓
+story-intake（故事摄入：提取字段+角色+场景+冲突）→ 写入 state/variable-registry
+  ↓
+shot-budget（镜头预算：定时长/镜数/是否拆段/压缩）→ 写入 state/variable-registry
+  ↓
+video-director（导演决策：节奏/高潮定位/情绪曲线/参考图）→ 写入 state/variable-registry + shot-state + dialogue-map
+  ↓
+asset-plan（资产规划：角色卡/场景图/关键帧/最低校验）→ 写入 state/variable-registry
+  ↓
+reference-anchor（平台锚点：参考图策略+平台限制校验）→ 写入 state/asset-map
+  ↓
+motion-physics（运动物理：运动预算+兼容性检查）→ 补充 state/shot-state
+  ↓
+video-prompt-assembly（Prompt组装：4层结构+平台适配+完整prompt文本）← 读取 state/
+  ↓
+prompt-scorer（自动评分：6维度评分+阈值判断）
+  ↓
+auto-repair（自动修复：低于阈值→按策略修复，最多3轮）
+  ↓
+final-video-qc（最终质检：8项清单含引用一致性检查+致命项判定）← 读取 state/
+  ↓
+render-package（打包输出：资产+Prompt+平台参数+执行清单）
+```
+
+---
+
+## 基础能力子路由（标准契约）
+
+基础能力（角色卡/场景图/分镜图）走统一子链，与主链路共享 state/ + asset-map + QC 体系。
+
+### /character — 角色卡子链
+
+```
+用户："生成角色卡" / "出角色卡"
+  ↓
+story-intake（快速提取角色字段：姓名/身份/外观/DNA）
+  ↓
+state/variable-registry ← 写入 characters.protagonist.{name, immutable_features}
+  ↓
+templates/character-sheet ← 读取 registry → 生成角色卡 prompt
+  ↓
+state/asset-map ← 写入 character_sheet @图X
+  ↓
+final-video-qc ← 角色一致性检查（第2项 + 第8项引用一致性）
+  ↓
+输出：角色卡 prompt + 资产映射
+```
+
+### /scene — 场景图子链
+
+```
+用户："生成场景图" / "出场景图"
+  ↓
+story-intake（快速提取场景字段：地点/时间/天气/氛围）
+  ↓
+state/variable-registry ← 写入 scene.primary.{name, time_of_day, weather, fixed_elements}
+  ↓
+templates/scene-card ← 读取 registry → 生成场景卡 prompt
+  ↓
+state/asset-map ← 写入 scene_reference @图X
+  ↓
+final-video-qc ← 场景一致性检查（第3项 + 第8项引用一致性）
+  ↓
+输出：场景卡 prompt + 资产映射
+```
+
+### /storyboard — 分镜图子链
+
+```
+用户："生成分镜图" / "出故事板"
+  ↓
+story-intake（提取字段）
+  ↓
+shot-budget（判断镜数/时长/是否拆段）
+  ↓
+video-director（镜号/阶段/景别/运镜/灯光/色彩/转场）
+  ↓
+state/variable-registry ← 写入 style.* + scene.*
+state/shot-state ← 写入全部镜头（shot_id/phase/shot_size/camera/lighting/color/transition/end_state）
+  ↓
+templates/full-board 或 quick-board ← 读取 registry + shot-state → 生成分镜图 prompt
+  ↓
+state/asset-map ← 写入 storyboard_board @图X
+  ↓
+final-video-qc ← 镜头/连续性检查（第4项动作 + 第6项连续性 + 第8项引用一致性）
+  ↓
+输出：分镜图 prompt + 镜头状态表 + 资产映射
+```
+
+### 子链与主链的关系
+
+| | /character | /scene | /storyboard | /create（全链） |
+|---|-----------|--------|-------------|----------------|
+| story-intake | ✅ 快速 | ✅ 快速 | ✅ 完整 | ✅ 完整 |
+| shot-budget | — | — | ✅ | ✅ |
+| video-director | — | — | ✅ | ✅ |
+| asset-plan | — | — | — | ✅ |
+| reference-anchor | — | — | — | ✅ |
+| motion-physics | — | — | — | ✅ |
+| video-prompt-assembly | — | — | — | ✅ |
+| template 输出 | character-sheet | scene-card | full-board / quick-board | 全部 |
+| state/ 写入 | characters + asset-map | scene + asset-map | style + shots + asset-map | 全部 |
+| final-video-qc | 角色一致性 | 场景一致性 | 镜头/连续性 | 8项全量 |
+
+> **原则**：无论走哪条子链，都必须写入 state/ 和 asset-map，确保后续 /create 主链可以读取已有的角色/场景/分镜数据，避免重复生成。
+
+---
+
+## 意图识别
+
+| 用户输入特征 | 意图 | 路由到 |
+|-------------|------|--------|
+| 简短句子（≤100字），无格式 | 一句话故事 → 一键生成 | sources/paste-input → story-intake → shot-budget → ... → 全链 |
+| 粘贴的完整故事段落 | 单段故事 | sources/paste-input → story-intake → shot-budget → ... → 全链 |
+| "从 Obsidian 读取" | Obsidian 输入 | sources/obsidian-ingest → story-intake → ... |
+| "生成角色卡" / "出角色卡" | 单独生成角色卡 | **/character 子链**：story-intake → state/variable-registry → character-sheet → state/asset-map → final-video-qc |
+| "生成场景图" / "出场景图" | 单独生成场景图 | **/scene 子链**：story-intake → state/variable-registry → scene-card → state/asset-map → final-video-qc |
+| "生成分镜图" / "出故事板" | 单独生成分镜图 | **/storyboard 子链**：story-intake → shot-budget → video-director → state/shot-state → full-board/quick-board → state/asset-map → final-video-qc |
+| "出视频 prompt" | 仅输出 prompt | render-package（跳过生成图片阶段） |
+| "继续下一段" / "续写" | 续写 | state/continuity-snapshot → story-intake → shot-budget → ... → 全链 |
+| "改第N镜" | 精准修改 | engines/single-shot-edit → 重新QC |
+| "多版本" / "A/B/C" | 多版本对比 | story-intake → shot-budget → video-director × 3（不同风格，同一批次产出，state/ 数据随版本标注 A/B/C 区分） |
+| 含 frontmatter 的 .md 内容 | 结构化输入 | sources/frontmatter-parser → story-intake（跳过部分提取） |
+| "批处理" / "全部章节" | 批量 | sources/obsidian-ingest → 循环：每章 → 全链 |
+| "一键全平台" | 多平台输出 | 全链到 asset-plan 为止共用 → 从 reference-anchor 开始每平台独立跑（reference-anchor → motion-physics → video-prompt-assembly → ...），每平台产出独立的 asset-map，最终 render-package 合并所有平台输出 |
+
+**多平台处理**：story-intake → asset-plan 只跑一次（内容/艺术决策相同），从 reference-anchor 开始每个平台独立跑（平台参数/字数/参考图策略/语言不同）。每平台生成独立的 asset-map，最终 render-package 合并所有平台的输出。state/ 共享部分（variable-registry）一次写入，平台特定部分（asset-map）每平台独立生成。
+
+---
+
+## 最快路径（一键生成）
+
+用户输入一句话故事 → 不追问 → 自动补全 → 直接输出：
+
+```
+用户："雨夜古寺，两名剑客在佛像前对峙"
+  ↓
+paste-input（检测：短句模式）
+  ↓
+story-intake（自动补全：片名/类型/角色名/冲突）— 不追问
+  ↓
+shot-budget（判断：1场景2角色1动作 → 10s / 5镜 / 不拆段）
+  ↓
+video-director（自动匹配：风格/节奏/情绪曲线/高潮定位）
+  ↓
+[用户确认或跳过]
+  ↓
+asset-plan → reference-anchor → motion-physics → video-prompt-assembly → prompt-scorer
+  ↓
+（评分 ≥ 85 跳过 auto-repair → final-video-qc → render-package）
+（评分 < 85 → auto-repair 修复 → 重评 → final-video-qc → render-package）
+  ↓
+角色卡 + 场景卡 + 分镜图 + Prompt → 输出
+```
+
+**触发条件**：用户输入 ≤ 100 字且无特殊指令 → 默认走最快路径。
+
+---
+
+## 路由决策树
+
+```
+用户输入
+  ├─ 含 "Obsidian" 或 "读取" → obsidian-ingest
+  │   ├─ 含 "全部" → 批量模式
+  │   └─ 单章 → 单章模式
+  │
+  ├─ 含 YAML frontmatter → frontmatter-parser → story-intake
+  │
+  ├─ 含 "继续"/"续写"/"下一段" → continuity-snapshot → story-intake
+  │
+  ├─ 含 "改第N镜"/"修改" → 精准修改模式
+  │
+  ├─ 含 "多版本"/"A/B" → 多版本对比模式（同批次产出，state/ 按版本标注）
+  │
+  ├─ 含 "角色卡"/"出角色卡" → /character 子链
+  ├─ 含 "场景图"/"出场景图" → /scene 子链
+  ├─ 含 "分镜图"/"故事板" → /storyboard 子链
+  ├─ 含 "prompt"（单独指令）→ 仅输出 prompt
+  │
+  ├─ 短句 ≤100字 → 一键生成最快路径
+  │
+  ├─ 段落 100-2000字 → 单段故事路径
+  │
+  └─ 超长 >2000字 → 问用户：压缩成一段还是拆段？
+      ├─ 拆段 → shot-budget 判断拆几段
+      └─ 压缩 → shot-budget
+```
+
+---
+
+## 确认策略
+
+| 意图 | 确认级别 |
+|------|---------|
+| 角色卡/场景图/分镜图（单独） | **零确认**，直接出结果 |
+| 一键生成（≤100字） | **零确认**，直接出结果 |
+| 一键生成（>100字或有歧义） | 最多 1 次确认（风格+时长） |
+| 单段故事 | 最多 1 次确认（风格+时长+格式） |
+| Obsidian 单章 | 1 次确认（章节+时长+镜数） |
+| Obsidian 批量 | 1 次确认（章节范围+每章参数） |
+| 续写 | 无确认（自动继承上段状态） |
+| 精准修改 | 无确认（直接修改指定镜） |
+| 多版本 | 1 次确认（选哪几个风格对比） |
+
+**规则**：任何路径，确认最多 1 次。不轮流追问。
+
+---
+
+## 自动化程度
+
+```
+高自动化（不问用户）：
+  - 角色名 → 自动起名
+  - 场景细节 → 自动补全
+  - 灯光方案 → 按类型自动匹配
+  - 色彩方案 → 按情绪自动匹配
+  - 转场类型 → 按节奏自动匹配
+  - 编号填充 → 全部自动（VS/EC/CN/CP/ME/BL/EV/WT/MT/CR/PR/HE/TR/SD/DR）
+  - 负面提示词 → 自动生成
+  - Prompt 格式 → 自动适配平台
+
+中自动化（问1次）：
+  - 风格+时长+格式（合并为1个问题）
+  - 或：确认一键生成的默认值
+
+低自动化（必须用户决策）：
+  - 拆段 vs 压缩（长篇）
+  - 批量范围（Obsidian 多章）
+  - 平台选择（如果没指定）
+```
+
+---
+
+## 输出
+
+路由引擎不输出内容——它只负责识别意图并调用正确的第一个引擎。
+
+路由完成后，控制权交给目标引擎。

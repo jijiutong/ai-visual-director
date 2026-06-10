@@ -59,9 +59,11 @@ high contrast, layered composition, ultra-detailed, 8K, sharp focus。
 
 ## 变量说明
 
+> 运行时从 `state/variable-registry.md` 读取最终值。参考文件列为原始数据来源。
+
 | 变量 | 参考文件 | 填充方式 |
 |------|---------|---------|
-| 片名 | — | Step 1 提取，2-8 字短标题 |
+| 片名 | `state/variable-registry.md` | `project.title`，2-8 字短标题 |
 | 标语 | — | 由核心冲突提炼，≤12 字 |
 | VS编号 | `engines/styles.md` | 用户选择或智能推荐 |
 | CN编号 | `engines/color-narrative.md` | 按情绪曲线匹配 |

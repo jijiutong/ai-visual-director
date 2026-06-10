@@ -1,6 +1,6 @@
 ---
 name: style
-description: Style explorer — browse 53 visual styles, fuse any two styles, or migrate styles while preserving character DNA. Use /style or say "风格", "换风格", "风格融合".
+description: Style explorer — browse 53 visual styles, fuse any two styles, or migrate styles while preserving character DNA. Reads style from state/variable-registry. Use /style or say "风格", "换风格", "风格融合".
 ---
 
 # Style — 风格浏览器

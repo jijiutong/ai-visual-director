@@ -2,6 +2,8 @@
 
 自动检查镜头间的连贯性（时间线/空间逻辑/角色位置/服装一致性），标出断裂点。
 
+> 数据来源：读取 `state/shot-state.md` 的 end_state 8 字段（character_position / action_ending / gaze_direction / light_direction / visual_tone / prop_state / emotion / spatial_relation），逐镜对比继承关系。由 `engines/prompt-scorer.md` 调用，断裂由 `engines/auto-repair.md` 修复。
+
 ## 检查维度
 
 ### 1. 时间线连续性
