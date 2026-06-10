@@ -158,21 +158,22 @@
 
 ## 资产变更传播
 
-当角色卡或场景图重新生成（immutable_features / fixed_elements 变更）时，**必须**向下游传播：
+当角色卡或场景图重新生成（immutable_features / fixed_elements 变更）时，**必须**通过 project-graph 向下游传播：
 
 ```
 资产变更（variable-registry 中的 immutable_features 或 fixed_elements 更新）
   ↓
-1. 扫描 state/shot-state.md 所有镜头
-2. 标记引用了该角色/场景的镜头：
-   └─ shot-state.characters 包含角色ID → 标记
-   └─ shot-state.scene_id 匹配 → 标记
-3. 更新各镜 action/lighting/color 描述：
-   ├─ 角色变更 → 更新 action 中的外观描述
-   ├─ 场景变更 → 更新 lighting/color 中的空间约束
-   └─ 同步更新 video-prompt-assembly 已生成的 prompt 文本
-4. 重新触发 consistency-engine（检查变更是否引入不一致）
-5. 输出变更影响报告
+1. 调用 engines/incremental-update.md：
+   ├─ entity_type = character（角色卡变更）或 scene（场景图变更）
+   ├─ 查询 state/project-graph.md → affected_shots / affected_assets
+   └─ 获得精确的影响范围（不再手动扫描全部 shot-state）
+2. 更新受影响镜头：
+   ├─ 角色变更 → 更新各镜 action 中的外观描述
+   ├─ 场景变更 → 更新各镜 lighting/color 中的空间约束
+   └─ 同步标记 asset-map 中需要重新生成的 @图
+3. 触发 consistency-engine（增量模式）：
+   └─ 只评估受影响的 RM 维度
+4. 输出变更影响报告
 ```
 
 ### 示例
@@ -182,13 +183,18 @@
   旧：黑衣/长发/暗金护腕
   新：黑衣/长发/暗金护腕/左脸疤痕/「断念」剑身裂纹
 
+project-graph 查询：
+  affected_shots("character", "C1") → [SH01, SH03, SH05, SH07]
+  affected_assets("character", "C1") → [@图1]
+
 传播：
   → SH1 action 追加 "left cheek scar visible"
   → SH3 action "剑身细密裂纹泛青光"
   → SH5 action "疤痕在闪电下格外醒目"
   → SH7 尾帧 "裂纹沿剑身蔓延至剑尖"
+  → @图1 标记「⚠ 待重新生成」
 
-受影响: 4镜（SH1/3/5/7）| 检查: consistency-engine Character RM
+受影响: 4镜（SH1/3/5/7）| 跳过: 3镜（SH2/4/6）| 重评: 仅 Character RM
 ```
 
 ---
@@ -200,4 +206,4 @@
 → 不满足最低资产 → `auto-repair` 触发修复
 → 满足 → 放行到 `reference-anchor`
 → **写入 `state/variable-registry.md`**（style.layout_*, characters.*.immutable_features, scene.primary.fixed_elements）
-→ **资产变更时触发传播**：扫描 shot-state → 更新关联镜头 → 重跑 consistency-engine
+→ **资产变更时触发传播**：调用 `engines/incremental-update.md` → 查询 `state/project-graph.md` → 更新关联镜头 → 增量重评 consistency-engine

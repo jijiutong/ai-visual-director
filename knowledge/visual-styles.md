@@ -2,6 +2,8 @@
 
 50+ 种视觉风格定义。每种包含：风格编号、风格名称、适用题材、配色方案、氛围关键词、环境特效、灯光方案、镜头语言、禁止方向。
 
+> **导演/工作室风格参考**：详见 `imitation/` 目录。当需要特定导演的精确模仿（而非通用风格编号）时，读取对应的导演文件获取 composition/camera/lighting/color/rhythm/blocking/prompt-patterns/negatives 完整分解。
+
 ---
 
 ## 动作/商业类
@@ -23,6 +25,7 @@
 - **灯光**：霓虹主光 + 全息补光 + 屏幕反射光 + 电弧闪烁
 - **镜头语言**：wide establishing shot、tracking through city、crane up reveal、lens flare
 - **禁止**：自然光、田园场景、复古元素、柔和色调
+- **参考导演**：Denis Villeneuve（宏大科幻场景处理，详见 `imitation/villeneuve.md`）
 
 ### VS3. 好莱坞商业大片
 - **适用**：超级英雄、灾难、冒险、科幻、动作、史诗
@@ -32,6 +35,7 @@
 - **灯光**：高动态范围、逆光英雄光、爆炸光、全局填充光
 - **镜头语言**：epic wide shot、hero low angle、360 orbit、crane up
 - **禁止**：小场景、低预算感、平面化、单一光源
+- **参考导演**：Christopher Nolan（IMAX 级写实视效 + 胶片质感 + 交叉叙事视觉化，详见 `imitation/nolan.md`）
 
 ### VS4. 韩国犯罪冷峻
 - **适用**：犯罪、黑帮、社会现实、复仇、心理惊悚
@@ -41,6 +45,7 @@
 - **灯光**：冷色散射 + 局部强光 + 大面积暗部
 - **镜头语言**：handheld documentary feel、tight close-up violence、dutch angle
 - **禁止**：明亮色调、喜剧感、卡通化、好莱坞式英雄光
+- **参考导演**：Wong Kar-wai（霓虹美学 + 孤独氛围，详见 `imitation/wong-kar-wai.md`）
 
 ### VS5. 暴力美学
 - **适用**：武侠极致、枪战美学、复仇高潮、动作艺术化
@@ -50,6 +55,7 @@
 - **灯光**：强对比 + 逆光剪影 + 局部暖光点缀
 - **镜头语言**：slow motion impact、crash zoom to detail、aesthetic composition
 - **禁止**：写实血腥恶心、卡通暴力、无美感暴力
+- **参考导演**：Zhang Yimou（色彩极致主义 + 仪式化动作美学，详见 `imitation/zhang-yimou.md`）
 
 ### VS6. 极限运动张力
 - **适用**：跑酷、滑板、赛车、极限挑战、竞技热血
@@ -72,6 +78,7 @@
 - **灯光**：自然天光 + 灵气自发光 + 月华 + 法器光芒
 - **镜头语言**：wide aerial shot、slow push to character、god's eye view
 - **禁止**：现代元素、科技感、西方魔幻、机甲
+- **参考导演**：Zhang Yimou（东方美学 + 自然场景处理，详见 `imitation/zhang-yimou.md`）；Studio Ghibli（自然魔法现实主义，详见 `imitation/ghibli.md`）
 
 ### VS8. 宫廷权谋华服
 - **适用**：宫斗、古装权谋、帝王将相、后宫、朝堂博弈
@@ -81,6 +88,7 @@
 - **灯光**：烛光源 + 天窗散射 + 灯笼暖光 + 金银反光
 - **镜头语言**：wide palace hall、medium court intrigue、close-up subtle expression
 - **禁止**：现代元素、休闲服装、平民场景、科技感
+- **参考导演**：Zhang Yimou（色彩极致主义 + 仪式化宫廷美学，详见 `imitation/zhang-yimou.md`）
 
 ### VS9. 新中式国潮
 - **适用**：国潮品牌、现代国风、非遗传承、文化碰撞、潮流中国

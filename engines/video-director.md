@@ -8,6 +8,9 @@
 
 ```
 shot-budget → video-director（本引擎）
+                  ├── 检查 style_memory.locked（风格记忆）
+                  │     ├─ 已锁定 → 跳过风格决策，继承记忆值
+                  │     └─ 未锁定 → 正常决策 → 写入记忆并锁定
                   ├── 镜数已确定（来自 shot-budget）
                   ├── 节奏决策（联动 pacing.md）
                   ├── 高潮镜定位
@@ -15,6 +18,47 @@ shot-budget → video-director（本引擎）
                   ├── 情绪曲线选择（联动 emotion-curve.md）
                   └── 输出「视频结构蓝图」
 ```
+
+### 风格记忆检查（新增）
+
+每次运行 video-director 时，在风格决策之前先检查：
+
+```
+1. 读取 state/variable-registry.md → style_memory.locked
+2. 如果 locked = true：
+   ├─ 跳过四、五节的风格决策（visual_style / emotion_curve / color_narrative / pacing）
+   ├─ 先检查 style_memory.chapter_styles 是否有当前章节的覆盖：
+   │   ├─ 如有匹配（chapter = 当前章）→ 使用覆盖值（vs_id / color_override）
+   │   └─ 无匹配 → 使用全局 style_memory 值
+   ├─ 直接使用 style_memory 中的值：
+   │   style.visual_style = style_memory.vs_id（或被 chapter_styles 覆盖）
+   │   style.emotion_curve = style_memory.director_reference 对应的默认 EC
+   │   style.color_narrative = style_memory.color_palette 对应的 CN 编号（或被 chapter_styles.color_override 覆盖）
+   │   style.pacing = style_memory.camera_language 对应的默认 P 编号
+   ├─ 传递 style_memory 辅助字段给下游：
+   │   → shot-state 各镜 lighting 字段参考 style_memory.lighting_setup
+   │   → video-prompt-assembly 负面约束层追加 style_memory.negative_constraints
+   │   → asset-plan 质感描述参考 style_memory.texture（film grain / clean digital / vintage）
+   ├─ 输出：「🎨 风格记忆已锁定，继承项目风格：[VS编号]（[director_reference] 风格）」或「📖 第[N]章风格覆盖：[覆盖VS]（原因：[notes]）」
+   └─ 继续后续决策（镜数/高潮镜/参考图/镜头列表）
+3. 如果 locked = false 或不存在：
+   ├─ 正常执行四、五节的风格决策
+   ├─ 决策完成后写入 style_memory.*：
+   │   style_memory.locked = true
+   │   style_memory.director_reference = 从 VS 定义提取的参考导演
+   │   style_memory.vs_id = style.visual_style
+   │   style_memory.color_palette = 从 knowledge/visual-styles.md 当前 VS 的配色项提取
+   │   style_memory.camera_language = 从 VS 定义的镜头语言项提取
+   │   style_memory.lighting_setup = 从 VS 定义的灯光项提取
+   │   style_memory.texture = 从 VS 定义的氛围/特效推断
+   │   style_memory.negative_constraints = 从 VS 定义的禁止项提取
+   └─ 输出：「🎨 项目风格已锁定：[VS编号]，后续章节将自动继承」
+```
+
+**解锁触发**：
+- 用户说"换风格" / "改风格"（通用指令，无指定目标风格）
+- → `style_memory.locked = false` → 清空 `style_memory.*` → 重新决策并重新锁定
+- ⚠ 如果用户指定了目标风格（如"换成王家卫风格"），由 `style-migration` 处理：读取 `imitation/` → 迁移 → 更新 `style_memory.*` → 重新锁定
 
 ---
 
@@ -126,6 +170,9 @@ shot-budget → video-director（本引擎）
 ← 接收 `shot-budget` 的时长+镜数+拆段决策 + `story-intake` 的类型+角色+场景
 → 输出给 `asset-plan` 做资产规划
 → 联动 `engines/pacing.md`（节奏）+ `engines/emotion-curve.md`（情绪曲线）+ `engines/styles.md`（风格关键词→VS编号）
-→ **写入 `state/variable-registry.md`**（style.visual_style/emotion_curve/color_narrative/pacing, characters.dna_id, scene.scene_id/time_of_day/weather）
+→ 导演风格参考：读取 `imitation/` 目录（如用户指定导演风格：Villeneuve / Wong-Kar-Wai / Nolan / Ghibli / Pixar / Zhang-Yimou，从中提取详细参数辅助 VS 选择）
+→ **写入 `state/variable-registry.md`**（style.visual_style/emotion_curve/color_narrative/pacing, style_memory.*, characters.dna_id, scene.scene_id/time_of_day/weather）
 → **写入 `state/shot-state.md`**（shot_id/time/phase/scene_id/characters/shot_size/camera/focal_length/action/lighting/color/transition/end_state/climax_shot）
+  └─ lighting 字段参考 style_memory.lighting_setup；质感描述参考 style_memory.texture
+→ video-prompt-assembly 负面约束层追加 style_memory.negative_constraints（项目级禁止方向）
 → **写入 `state/dialogue-map.md`**（如有台词：dialogue_id/shot_id/speaker/text/delivery/subtitle.{enabled/position/duration}/lip_sync）

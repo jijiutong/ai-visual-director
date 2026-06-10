@@ -57,8 +57,8 @@ paste-input（自动补全角色/场景/冲突）
 story-intake → shot-budget → video-director → asset-plan
   │               ↑ 写入 state/variable-registry
   ↓
-reference-anchor → motion-physics → video-prompt-assembly
-  │                 ↑ 写入 asset-map  ↑ 补充 shot-state    ↑ 读取 state/
+reference-anchor → motion-physics → project-graph → video-prompt-assembly
+  │                 ↑ 写入 asset-map  ↑ 补充 shot-state ↑ 构建依赖图    ↑ 读取 state/
   ↓
 consistency-engine（5 维度 RM 评估 + 知识库建议）
   ↓

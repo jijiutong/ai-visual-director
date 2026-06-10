@@ -36,6 +36,42 @@
 | `style.color_narrative` | — | `video-director`（CN编号） |
 | `style.pacing` | — | `video-director`（P编号） |
 
+## 风格记忆（项目级持久化）
+
+> 首次生成时由 `video-director` 写入并锁定。后续章节/会话自动继承，无需重新指定风格。风格迁移时由 `style-migration` 更新。
+
+| 变量 | 值 | 写入方 |
+|------|-----|--------|
+| `style_memory.locked` | — | `video-director`（首次设定后标记 true，用户说"换风格"时解锁） |
+| `style_memory.director_reference` | — | `video-director`（导演风格参考：Villeneuve / Wong-Kar-Wai / Nolan / Ghibli / Pixar / Zhang-Yimou） |
+| `style_memory.vs_id` | — | `video-director`（VS编号.名称，如 VS7.东方玄幻修仙） |
+| `style_memory.color_palette` | — | `video-director`（主配色方案：hex色值列表，从 VS 定义提取） |
+| `style_memory.camera_language` | — | `video-director`（运镜偏好描述） |
+| `style_memory.lighting_setup` | — | `video-director`（灯光方案偏好描述） |
+| `style_memory.texture` | — | `video-director`（质感偏好：film grain / clean digital / vintage / etc） |
+| `style_memory.negative_constraints` | — | `video-director`（项目级禁止方向列表） |
+| `style_memory.chapter_styles` | — | `batch-chapter`（各章风格变体记录：[{chapter, vs_id, color_override, notes}]） |
+
+### 风格记忆使用规则
+
+```
+video-director 启动时：
+  1. 检查 style_memory.locked 是否为 true
+  2. 如果是 → 跳过风格决策（style.visual_style / emotion_curve / color_narrative / pacing）
+             直接使用 style_memory 中的值填充 style.* 变量
+  3. 如果否 → 正常执行风格决策 → 写入 style.* → 同时写入 style_memory.* 并锁定
+
+用户说"换风格"时：
+  1. 解锁 style_memory.locked = false
+  2. 清空 style_memory.* 的值
+  3. video-director 重新决策 → 重新写入 + 重新锁定
+
+跨章节继承（batch-chapter）：
+  1. 第1章：正常锁定 style_memory
+  2. 第2章起：自动继承，除非章节需要风格变体（写入 chapter_styles）
+  3. 项目保存/加载：style_memory 随 variable-registry 持久化到 projects/<id>/state/
+```
+
 ## 角色变量
 
 | 变量 | 值 | 写入方 |
@@ -78,6 +114,7 @@ shot-budget 写入
       ↓
 video-director 写入
   ├─ style.visual_style / emotion_curve / color_narrative / pacing
+  ├─ style_memory.*（首次锁定；后续继承——检查 locked 后跳过决策）
   ├─ characters.*.dna_id
   ├─ scene.primary.scene_id / time_of_day / weather
   └─ 高潮镜定位 → 写入 `shot-state.md`
@@ -90,6 +127,6 @@ asset-plan 写入
 
 ## 联动
 
-- **写入**：`story-intake` → `shot-budget` → `video-director` → `asset-plan`（按主链阶段逐步填充）
-- **读取**：所有 `templates/`、`video-prompt-assembly`、`final-video-qc`（prompt-scorer 通过 video-prompt-assembly 间接消费，不直接读）
+- **写入**：`project-manager`（project.id/state_dir/created_at/saved_at）→ `story-intake` → `shot-budget` → `video-director`（含 style_memory.*）→ `asset-plan` → `style-migration`（style_memory.* 更新）→ `batch-chapter`（style_memory.chapter_styles）
+- **读取**：所有 `templates/`、`video-prompt-assembly`、`consistency-engine`（5 维度评估全量变量）、`project-graph`（实体 ID 列表 + style.*）、`incremental-update`（实体确认 + 字段值）、`final-video-qc`、`batch-chapter`（style_memory.locked）、`series`（style_memory.*）
 - **校验**：`prompt-contract.md` 交叉验证每个模板的 reads 是否在此文件有对应变量

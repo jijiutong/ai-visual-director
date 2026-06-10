@@ -107,6 +107,7 @@
 ## 联动
 
 - **写入**：`reference-anchor`（平台校验后，按策略生成映射表）
-- **读取**：`video-prompt-assembly`（组装时读取 @编号→用途对应关系）
+- **标记更新**：`incremental-update`（变更传播时标记受影响 @图 为「待重新生成」）、`asset-plan`（资产变更时标记对应 @图）
+- **读取**：`video-prompt-assembly`（组装时读取 @编号→用途对应关系）、`project-graph`（构建 asset↔entity 映射）、`consistency-engine`（Video RM 验证 @图 引用完整性）
 - **校验**：`final-video-qc`（检查视频 prompt 中的 @引用是否与 asset-map 一致、数量是否匹配）
 - **基础数据来源**：`asset-plan`（决定需要哪些资产类型） → `reference-anchor`（按平台映射为 @编号）

@@ -92,25 +92,28 @@
 
 ## 修改后一致性重评（强制）
 
-每次单镜修改完成后，**必须**走简化一致性检查，防止修改引入断裂：
+每次单镜修改完成后，**必须**走增量更新流程，防止修改引入断裂：
 
 ```
 单镜修改完成
   ↓
 1. 更新 state/shot-state.md 对应镜头
   ↓
-2. 前后镜联动检查（3 镜窗口：N-1 → N → N+1）
-  ├─ end_state 继承：镜N-1 end_state = 镜N 起始？
-  ├─ 镜N end_state = 镜N+1 起始？
-  └─ 断裂则自动补过渡声明
+2. 判断是否需要跨镜传播：
+  ├─ 仅单镜内容变更（亮度/景别/运镜） → 不传播，直接进入一致性重评
+  ├─ 涉及角色外观 → 调用 incremental-update（entity_type=character）
+  ├─ 涉及场景元素 → 调用 incremental-update（entity_type=scene）
+  ├─ 涉及天气变更 → 调用 incremental-update（entity_type=scene, 天气字段）
+  └─ 涉及灯光/色彩 → 调用 incremental-update（entity_type=shot, 限定传播）
   ↓
-3. 关联字段联动传播
-  ├─ 涉及角色外观 → 全镜同步 DNA 字段 + 标记"角色DNA已更新"
-  ├─ 涉及天气变更 → 前一镜末插入过渡元素（R010）
-  ├─ 涉及场景变更 → 前后镜追加场景过渡说明
-  └─ 涉及灯光/色彩 → 检查前后镜光源方向一致性
+3. incremental-update 计算影响范围：
+  ├─ 读取 state/project-graph.md → affected_shots / affected_assets
+  ├─ 更新受影响镜头的 state/ 字段
+  └─ 返回影响范围报告
   ↓
-4. 输出修改影响报告
+4. 限定一致性重评（增量模式）：
+  ├─ 仅评估受影响的 RM 维度
+  └─ 输出修改影响报告
 ```
 
 ### 天气变更的过渡补桥（R010 规则）
@@ -118,45 +121,52 @@
 ```
 修改："把镜5的雨改成雪"
   ↓
-自动处理：
-  1. 镜5：rain → snow，追加 snowfall/cold atmosphere
-  2. 镜4 末尾插入：「雨势渐弱，第一片雪花飘落」
-  3. 镜6 开头确认：「雪持续飘落，地面已积薄雪」
-  4. 输出提示：「镜4末插入雨→雪过渡，镜5-7 雪景联动已更新」
+1. incremental-update 识别：entity_type=scene, 变更字段=weather
+2. 查询 project-graph：affected_shots("scene", "S1") → [SH04, SH05, SH06, SH07]
+3. 自动处理：
+   ├─ 镜5：rain → snow，追加 snowfall/cold atmosphere
+   ├─ 镜4 末尾插入：「雨势渐弱，第一片雪花飘落」
+   ├─ 镜6-7 同步 weather 字段
+   └─ 输出：「镜4末插入雨→雪过渡，4镜联动已更新（SH04-07）」
 ```
 
-### 角色外观变更的全镜传播
+### 角色外观变更的全镜传播（使用 project-graph）
 
 ```
 修改："墨渊换长发"
   ↓
-自动处理：
-  1. 更新 state/variable-registry（characters.protagonist.immutable_features）
-  2. 遍历 state/shot-state.md 所有引用墨渊的镜头
-  3. 各镜 action 描述中追加 "long flowing hair"
-  4. 标记受影响镜头：[SH1, SH3, SH5, SH7]
-  5. 输出：「角色DNA已更新：墨渊·发型→长发。4个镜头已同步（SH1/3/5/7）」
+1. incremental-update 识别：entity_type=character, entity_id=C1
+2. 查询 project-graph：
+   affected_shots("character", "C1") → [SH01, SH03, SH05, SH07]
+   affected_assets("character", "C1") → [@图1]
+3. 更新：
+   ├─ variable-registry.characters.protagonist.dna_full.发型发色 → 长发
+   ├─ variable-registry.characters.protagonist.immutable_features → 更新
+   ├─ shot-state: SH01/SH03/SH05/SH07 action 追加 "long flowing hair"
+   └─ asset-map: @图1 标记「⚠ 待重新生成」
+4. 一致性重评：仅 Character RM
+5. 不动 SH02/SH04/SH06（不含角色 C1）
 ```
 
-### 修改影响报告格式
+### 修改影响报告格式（增量更新版本）
 
 ```
 【单镜修改报告】镜5：雨→雪
 
 ✅ 修改完成：镜5 已更新
+📊 影响范围（project-graph 查询）：
+  受影响镜头：4 镜（SH04-SH07）
+  受影响资产：1 个（@图0 场景图标记待重新生成）
+  跳过镜头：3 镜（SH01-SH03 完全不动）
+
 🔗 前后镜联动：
   ✅ 镜4→镜5：已补雨→雪过渡
   ✅ 镜5→镜6：雪景连续
   ✅ end_state 继承链完整
 
-📋 受影响的关联字段：
-  - scene.weather：暴雨→暴雪（镜5-7）
-  - scene.primary.fixed_elements：新增"积雪地面"（镜5-7）
-
-🔄 一致性重评：
-  Story RM：end_state 继承 ✅
-  Scene RM：天气过渡 ✅ / 光源方向（雪地反射光）⚐ 需注意
-  Character RM：不受影响 ✅
+🔄 一致性重评（增量模式）：
+  评估：Scene RM（天气过渡+光源方向）
+  跳过：Character RM / Style RM / Story RM / Video RM（不受影响）
 
 ⚠ 建议：雪景的灯光方案建议从"闪电冷白"调整为"雪地漫反射柔光"，是否需要？
 ```
@@ -168,6 +178,8 @@
 ← 用户指令（"改第N镜" / "修改..."）
 → 更新 `state/shot-state.md`（对应镜号字段）
 → 更新 `state/variable-registry.md`（如涉及角色DNA/场景固定元素变更）
-→ **强制调用 consistency-engine**（简化模式：只检查受影响的 3 镜窗口 + 关联 RM 维度）
+→ **调用 `engines/incremental-update.md`**（计算影响范围：查询 project-graph → 传播变更 → 限定重评）
+← 读取 `state/project-graph.md`（查询受影响镜头，替代手动遍历 shot-state）
+→ **调用 `engines/consistency-engine.md`**（增量模式：只检查受影响的维度）
 → 输出修改影响报告
 → 触发 prompt-scorer 重评（如评分下降则进入 auto-repair）

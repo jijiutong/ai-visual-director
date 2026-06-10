@@ -46,6 +46,8 @@
 | "换成X风格但保持角色" | 风格迁移，DNA不变 |
 | "换个风格看看" | 自动选择差异最大的风格迁移 |
 | "A风格→B风格" | 明确指定源和目标风格 |
+| "换成王家卫风格" / "维伦纽瓦风格" | 读取 `imitation/[director].md` → 匹配最接近 VS → 执行迁移 |
+| "想要吉卜力那种感觉" | 读取 `imitation/ghibli.md` → 匹配 VS 组合 → 迁移 |
 
 ## 在 Prompt 中使用
 
@@ -99,10 +101,16 @@
 
 ## 联动
 
-← 用户指令（"换成X风格但保持角色"）
+← 用户指令（"换成X风格但保持角色" / "换成[导演]风格"）
 ← 读取 `state/variable-registry.md`（当前 style.*）
 ← 读取 `knowledge/visual-styles.md`（新风格参数）
+← 如果是导演风格指令：读取 `imitation/[director].md`（获取 composition/camera/lighting/color/rhythm/blocking 完整参数），匹配最接近的 VS 编号（通过文件的 VS Mapping section）
 → 更新 `state/variable-registry.md`（style.visual_style / color_narrative）
+→ **更新 `state/variable-registry.md`（style_memory.*）**：迁移完成后写入新的风格记忆
+  ├─ 解锁 style_memory.locked
+  ├─ 更新 style_memory.vs_id / color_palette / camera_language / lighting_setup / texture / negative_constraints
+  ├─ 更新 style_memory.director_reference（如迁移到导演风格）
+  └─ 重新锁定 style_memory.locked = true
 → **更新 `state/shot-state.md`**（每镜 color + lighting 字段）
 → 输出迁移影响报告
 → 建议触发 consistency-engine 重评（Style RM + Scene RM）

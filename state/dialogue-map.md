@@ -71,5 +71,6 @@ dialogues:
 ## 联动
 
 - **写入**：`story-intake`（提取台词文本） → `video-director`（分配 shot_id + delivery + subtitle）
-- **读取**：`video-prompt-assembly`（组装第 3 层约束时读取）
+- **更新**：`incremental-update`（台词修改时更新对应条目）
+- **读取**：`video-prompt-assembly`（组装第 3 层约束时读取）、`project-graph`（构建 dialogue↔shot + dialogue↔character 映射）
 - **校验**：`final-video-qc`（检查 shot_id 是否在 shot-state 中存在、speaker 是否在 variable-registry 中存在）

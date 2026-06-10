@@ -16,9 +16,10 @@ projects/
 │   │   ├── asset-map.md
 │   │   ├── shot-state.md
 │   │   ├── dialogue-map.md
+│   │   ├── prompt-contract.md
+│   │   ├── project-graph.md
 │   │   ├── continuity-state.md
-│   │   ├── continuity-snapshot.md
-│   │   └── prompt-contract.md
+│   │   └── continuity-snapshot.md
 │   └── assets/          ← 生成的资产（如有）
 └── README.md            ← 本文件
 ```

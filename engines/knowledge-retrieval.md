@@ -56,6 +56,7 @@ Knowledge Retrieval
 | 灯光方案不匹配 | `visual-styles.md` + `lighting.md` | VS 编号 → 灯光方案 |
 | 镜头语言不符合风格 | `visual-styles.md` | VS 编号 → 镜头语言 |
 | 文化元素混用 | `cultural-accuracy.md` | 按文化类型 → 正确/错误元素 |
+| 导演风格执行不精确（如"维伦纽瓦风格但灯光太亮"） | `imitation/[director].md` | 导演文件 → 对应维度 section（lighting/color/camera） |
 
 ### 叙事/节奏问题
 
@@ -137,8 +138,9 @@ Knowledge Retrieval：
 
 1. **规则文件**（已验证的补丁规则，如 R001-R010）→ 最高优先级
 2. **编号体系文件**（VS/EC/CN/P/LS — 直接给出具体编号替代方案）→ 高优先级
-3. **参考描述文件**（lighting/camera/composition — 提供选项列表）→ 中优先级
-4. **理论知识文件**（editing-theory/directing-performance — 提供原则指导）→ 低优先级
+3. **导演模仿文件**（`imitation/[director].md` — 精确到 9 维度的风格约束）→ 高优先级（当项目使用了导演风格时）
+4. **参考描述文件**（lighting/camera/composition — 提供选项列表）→ 中优先级
+5. **理论知识文件**（editing-theory/directing-performance — 提供原则指导）→ 低优先级
 
 ---
 
@@ -172,5 +174,6 @@ Knowledge Retrieval：
 ← 被调用方：`prompt-scorer`（评分维度发现问题 → 检索知识库建议）
 ← 被调用方：`auto-repair`（修复策略需要具体操作 → 检索知识库替代硬编码）
 → 读取 `knowledge/` 目录（36 个文件，按问题类型匹配）
+→ 读取 `imitation/` 目录（6 个导演文件，风格问题 → 导演精确维度约束）
 → 返回：优化建议 + 参考条目 + 替代编号 + 修复步骤
 → 不写入 state/（只读检索引擎）

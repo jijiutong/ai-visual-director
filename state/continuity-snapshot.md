@@ -113,5 +113,6 @@
 ← 写入：`video-director`（角色/空间状态） + `motion-physics`（运动状态）逐镜记录，段结束汇总
 → **数据来源：`state/shot-state.md`** 最后一镜的 end_state 8 字段作为快照数据
 → 读取：下一段的 `story-intake` → `video-director`（story-intake 从快照继承初始状态写入 variable-registry）
+→ 读取：`series`（续集引擎读取前集尾帧快照，继承角色位置/动作末态/光线/道具状态）
 ← 校验：`state/continuity-state` 的 8 字段继承规则
 → 修复：`auto-repair` 检测到断裂时对照快照修复

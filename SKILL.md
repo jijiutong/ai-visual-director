@@ -1,6 +1,6 @@
 ---
 name: ai-visual-director
-description: One-click AI visual director system — Story Production OS. Turn any story into a complete video generation package. Unified state registry (variable-registry + asset-map + shot-state + dialogue-map), project persistence (project-manager init/save/load), 5-dimension consistency engine (Character/Scene/Style/Story/Video RM), knowledge retrieval engine, standardized routing (/create /source /storyboard /character /scene /video), 8-item QC with reference consistency check. Legacy compatible: /style, /poster.
+description: One-click AI visual director system — Story Production OS. Turn any story into a complete video generation package. State registry (8 files: variable-registry + asset-map + shot-state + dialogue-map + prompt-contract + project-graph + continuity-state + continuity-snapshot)), project persistence (project-manager init/save/load), dependency graph (project-graph: entity↔shot bidirectional index), incremental update (impact range calculation + scoped re-evaluation), 5-dimension consistency engine (Character/Scene/Style/Story/Video RM) with incremental mode, style memory (project-level lock + cross-chapter inheritance), director imitation library (Wong Kar-wai / Villeneuve / Nolan / Ghibli / Pixar / Zhang Yimou, 9-dimension decomposition), knowledge retrieval engine, standardized routing (/create /source /storyboard /character /scene /video), 8-item QC with reference consistency check. Legacy compatible: /style, /poster.
 ---
 
 # AI Visual Director Skill
@@ -37,9 +37,11 @@ task-router（意图识别+路由分发）
   -> engines/asset-plan.md            → 写入 state/variable-registry
   -> engines/reference-anchor.md      → 写入 state/asset-map
   -> engines/motion-physics.md        → 补充 state/shot-state
+  -> engines/project-graph.md         → 构建 state/project-graph（依赖图：正向索引+反向索引）
   -> engines/video-prompt-assembly.md ← 读取 state/
+  -> engines/consistency-engine.md    → 5 维度 RM 评估（Character/Scene/Style/Story/Video）
   -> engines/prompt-scorer.md
-  -> engines/auto-repair.md           → 修复后更新 state/
+  -> engines/auto-repair.md           → 修复后更新 state/（调用 knowledge-retrieval + incremental-update 限定重评）
   -> rules/final-video-qc.md          ← 读取 state/（8项质检含引用一致性）
   -> engines/render-package.md
 ```
@@ -60,6 +62,10 @@ task-router（意图识别+路由分发）
 | 分镜节奏引擎 | 快切/标准/慢/渐进/喜剧，自动匹配类型 |
 | 43种微表情 | Ekman FACS编码系统，43种面部情绪+8种眼神路径 |
 | 台词节奏标注 | 停顿/重音/语速/音量/沉默，精确控制表演节奏 |
+| 项目依赖图 | 角色↔镜头↔场景↔资产 双向索引，改一个实体自动计算影响范围 |
+| 增量更新 | 只更新受影响的资产，不重新生成全量。变更传播+限定一致性重评 |
+| 风格记忆 | 项目级风格锁定，第2章自动继承第1章风格，跨会话持久化 |
+| 导演模仿库 | 王家卫/维伦纽瓦/诺兰/吉卜力/皮克斯/张艺谋，9维度精确模仿 |
 | 140+镜头技术 | 15景别/66运镜(基础16+进阶26+动作24)/21角度/11焦段/10画幅/10转场/8特殊视角/20情绪镜头/8叙事定格 |
 | 40+灯光方案 | 三点布光/逆光剪影/伦勃朗/蝴蝶光/体积光/生物光等 |
 | 12种叙事结构 | 三幕/四幕/倒叙/双线/环形/罗生门/碎片化/倒计时/英雄之旅/救猫咪/情绪弧线/双线汇合 |
@@ -195,7 +201,7 @@ target_platform: Seedance
 ## 工作流
 
 ```
-输入故事 → 自动路由 → 输入源处理 → 故事摄入 → 镜头预算 → 视频导演 → 资产规划 → 锚点分配 → 运动检查 → 平台适配 → 最终质检 → 修复 → 执行包
+输入故事 → 自动路由 → 输入源处理 → 故事摄入 → 镜头预算 → 视频导演 → 资产规划 → 锚点分配 → 运动检查 → 依赖图构建 → 平台适配 → 一致性评估 → 最终质检 → 修复 → 执行包
 ```
 
 **快捷模式**：使用 `/create` 或自然语言 `一键生成`。`/storyboard` 仅作为分镜专用入口。
@@ -996,7 +1002,7 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 - **DNA 锚定** → 生成角色 DNA 确保跨镜头一致性
 - **文化精准** → 确保东方/西方/日系描述不穿帮
 - **负面词自动** → 按风格/格式/关系/平台自动生成专属负面提示词
-- **单镜修改** → "第X镜暗一点/换长发/雨改雪" 只改指定镜，DNA 自动传播
+- **单镜修改** → "第X镜暗一点/换长发/雨改雪" 只改指定镜，通过项目依赖图自动计算影响范围并跨镜传播
 - **单镜修改强制保留时间码** — 精准修改第 X 镜时，必须保留原镜号、原时间码、原镜头顺序。除非用户明确要求调整时长，否则不得改动时间码
 - **连续性修改自动补桥** — 修改天气、时间、地点、角色外观等连续性强字段时，必须自动处理前后镜衔接（如雨转雪用"雨夹雪"过渡镜），并输出连续性提示说明影响范围
 - **音乐音效** → 每幕/每镜自动推荐音乐 mood + 音效
@@ -1047,7 +1053,7 @@ no text garbling, no watermark, no logo, no subtitles mismatch。
 - **风格迁移** → "换成X风格但保持角色" 跨风格迁移只改变视觉语言（色彩/光影/构图/运镜/节奏/表演方式），绝对不改变剧情事实（剧情事件/人物关系/冲突结果/镜头数量/总时长/关键动作）
 - **Prompt 压缩** → "压缩到MJ/SD" 自动精简到平台最佳长度
 - **批量处理** → "处理这一章" 整章小说自动拆场景批量生成
-详细设计见 `docs/system-architecture.md`
+详细设计见 `engines/README.md`（主链引擎 14 个 + state/ 9 个状态文件）和 `state/README.md`（状态生命周期）
 
 ## 负面清单（所有输出必须包含，专属负面词见 `rules/negative-prompt.md`）
 

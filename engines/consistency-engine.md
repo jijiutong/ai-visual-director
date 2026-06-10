@@ -253,6 +253,25 @@ Consistency Engine（5 维度评估）
   └─ 任一项 < 30 → 强制阻断，重新生成该维度
 ```
 
+### 增量评估模式（配合 Incremental Update）
+
+当 `engines/incremental-update.md` 触发时，consistency-engine 进入**增量模式**：
+
+```
+incremental-update 计算影响范围
+  ↓ 传递 affected_dimensions 列表
+Consistency Engine（增量模式）
+  ↓ 只评估受影响的 RM 维度
+  ├─ 角色变更 → 只跑 Character RM
+  ├─ 场景变更 → 只跑 Scene RM（+ Character RM 如有位置变更）
+  ├─ 风格变更 → 只跑 Style RM + Scene RM
+  └─ 单镜变更 → 只跑 Story RM（3 镜窗口）+ 相关 RM
+  ↓ 未受影响的维度标记为「跳过（无变更）」
+  ↓ 保持上次评分
+```
+
+增量模式开关由 `incremental-update` 传递的 `evaluation_mode: incremental` 参数控制。
+
 ---
 
 ## 联动
@@ -261,9 +280,11 @@ Consistency Engine（5 维度评估）
 ← 读取 `state/shot-state.md`（每镜状态 + end_state）
 ← 读取 `state/asset-map.md`（@图 映射验证）
 ← 读取 `state/continuity-state.md`（继承规则）
+← 读取 `state/project-graph.md`（依赖关系，用于限定评估范围——增量更新时只评受影响维度）
 ← 读取视频 prompt 文本（video-prompt-assembly 输出）
 ← 引用 `rules/character-consistency.md` / `rules/scene-consistency.md` / `rules/continuity-check.md` / `rules/final-video-qc.md`
 ← 引用 `knowledge/` 对应文件（character-dna / lighting / weather / visual-styles / pacing-types / transitions / directing-performance / micro-expressions）
 → 输出一致性评估报告（5 维度评分 + 阻断项 + 知识库建议）
 → 传递评分给 `prompt-scorer`（作为一致性维度的输入）
 → 触发 `auto-repair`（低于阈值时）
+→ 增量模式：通过 `state/project-graph.md` 查询影响范围，只评估受影响的 RM 维度（非全量 5 维度）

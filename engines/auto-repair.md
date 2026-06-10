@@ -130,6 +130,7 @@
 ← 接收 `engines/reference-anchor.md` 的平台校验结果（不通过时触发策略4压缩或策略5连续性修复）
 ← 调用 `engines/knowledge-retrieval.md`（修复前检索 knowledge/ 获取具体操作参数）
 → 按策略链修复
+→ **修复后调用 `engines/incremental-update.md`**（限定重评范围：只评估修复涉及的 RM 维度，不跑全量 5 维度）
 → 重新评分→仍不达标→再次修复（最多3轮）
 → 3轮后仍不达标→标记为"需人工介入"
 → 修复完成 → 输出给 `rules/final-video-qc` 做最终质检
