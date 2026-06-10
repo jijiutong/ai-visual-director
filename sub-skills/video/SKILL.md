@@ -69,7 +69,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 ### 第五步：输入视频工具
 
 ```
-→ Seedance：prompt + 角色卡 + 全景图 + 3-4 张分镜图（5-6 张参考图）
+→ Seedance：prompt + 角色卡 + 全景图 + 3-4 张分镜图（≤12 张参考图）
 → 费用：~USD0.50-1.0/条 | 耗时：1-3min
 ```
 
