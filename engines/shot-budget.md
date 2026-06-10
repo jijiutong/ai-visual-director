@@ -4,7 +4,21 @@
 
 ---
 
-## 一、可执行性判断
+## 一、读取平台配置（新增）
+
+**前置步骤**：读取 `state/platform-config.md`，获取：
+
+```
+platform.video.default → 目标视频平台（默认 Seedance）
+platform.video.max_duration → 平台最大单段时长（Seedance = 15s）
+platform.video.split.auto → 是否自动拆分（默认 true）
+```
+
+> 平台限制不硬编码在此文件中，全部从 `state/platform-config.md` 读取。
+
+---
+
+## 二、可执行性判断
 
 先判断故事能不能一次生成视频：
 
@@ -59,21 +73,33 @@
 保留：≤5场景 / 合并：过渡用匹配剪切 / 删除：不相关支线
 角色 ≤ 4人，次要角色→群像处理
 
+> **⚠ 如果输入时长 > 平台最大单段时长（从 platform-config 读取）→ 必须拆分，不可一次生成。**
+
 ---
 
-## 四、拆段
+## 三、自动拆分（按平台上限）
 
-超出单次生成条件时：
+从 `state/platform-config.md` 读取 `platform.video.max_duration`，自动计算拆分：
 
 ```
-拆段方案：
-  段1：镜[1]-[M]，「[核心描述]」[Ns]
-    高潮镜：[编号]
-    尾帧状态：[位置/动作末态/光线/道具]
-  段2：镜[M+1]-[P]，「[核心描述]」[Ns]
-    首帧承接段1尾帧 → [衔接技法编号]
-  ...
+拆分算法：
+  段数 = ceil(输入时长 / 平台max_duration)
+  每段时长 = 平台max_duration
+  每段镜数 = ceil(总镜数 / 段数)
+
+示例：60s 15镜 → Seedance max_duration=15s
+  → 4段
+  段1/4: 0-15s 镜1-4「压迫→觉醒」
+  段2/4: 15-30s 镜5-8「红光→现身」
+  段3/4: 30-45s 镜9-12「宣告→抬头」
+  段4/4: 45-60s 镜13-15「崩塌→黎明」
+
+输出：每段独立 shot-budget 报告
 ```
+
+---
+
+## 四、内容拆段（场景/角色超限时）
 
 ---
 
@@ -98,8 +124,9 @@
 
 ## 联动
 
+← 读取 `state/platform-config.md`（平台max_duration → 自动拆分计算）
 ← 接收 `story-intake` 的提取字段
-→ 不拆段 → 输出给 `video-director` 做导演决策
-→ 拆段 → 每段独立走 video-director → ... → render-package，段间联动 `state/continuity-state.md`
+→ 输出给 `video-director` 做导演决策
+→ 拆段时：每段独立走 video-director → ... → render-package，段间联动 `state/continuity-state.md`
 → 多段时：段1完成 → 保存快照 → 段2继承 → ...
-→ **写入 `state/variable-registry.md`**（project.duration, project.word_count 初始估算）
+→ **写入 `state/variable-registry.md`**（project.duration, project.word_count 初始估算, project.segment_count）
