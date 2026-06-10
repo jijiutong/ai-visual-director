@@ -201,6 +201,7 @@ project-graph 查询：
 
 ## 联动
 
+← 读取 `state/platform-config.md`（段数 → 全案图：每段1张。禁止60s只出1张全案图）
 ← 接收 `video-director` 的参考图决策 + `story-intake` 的视频类型
 → 输出资产列表给模板引擎
 → 不满足最低资产 → `auto-repair` 触发修复
