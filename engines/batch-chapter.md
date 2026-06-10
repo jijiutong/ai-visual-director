@@ -85,3 +85,34 @@ AI 自动识别故事中的场景切换点：
 位置：原文第 [X] 段
 关系：← [前场景] → [后场景]
 ```
+
+---
+
+## 风格记忆集成
+
+批量处理多章时，与 `style_memory` 协同：
+
+```
+第1章：
+  video-director 正常决策 → style_memory.locked = true（首次锁定）
+
+第2章起：
+  video-director 检测 style_memory.locked = true → 自动继承第1章风格
+
+章节风格变体（如某章需要特殊风格）：
+  1. 临时解锁 style_memory
+  2. 重新决策该章风格
+  3. 写入 style_memory.chapter_styles：
+     [{chapter: 3, vs_id: "VS7.东方玄幻修仙", notes: "回忆章节，用仙气缭绕替代前章的冷峻"}]
+  4. 该章处理完后恢复全局 style_memory
+```
+
+---
+
+## 联动
+
+← 用户指令（"处理这一章" / "处理第1-3章"）
+← 读取 `state/variable-registry.md`（style_memory.locked + style_memory.* — 检查是否已锁定以决定风格继承）
+← 调用 `engines/video-director.md`（每章的风格决策——如 style_memory 已锁定则自动继承）
+→ 写入 `state/variable-registry.md`（style_memory.chapter_styles — 记录各章风格变体）
+→ 每章输出独立 storyboard + 批量汇总

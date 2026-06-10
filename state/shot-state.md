@@ -99,5 +99,6 @@ shots:
 
 - **写入**：`video-director` 初始化（镜号/阶段/景别/灯光/色彩/转场/end_state/高潮镜定位）
 - **补充**：`motion-physics` 追加运动数据（每镜运动配对+兼容性检查）
-- **读取**：`video-prompt-assembly`（组装时遍历所有镜头）、`final-video-qc`（检查引用一致性）
+- **更新**：`incremental-update`（单镜/批量修改时更新对应镜头字段）、`style-migration`（风格迁移后更新全镜 color/lighting）
+- **读取**：`video-prompt-assembly`（组装时遍历所有镜头）、`project-graph`（构建 shot↔character + shot↔scene 映射）、`consistency-engine`（5 维度评估读取全量镜头数据）、`final-video-qc`（检查引用一致性）
 - **跨段**：段1最后一镜的 end_state → `continuity-snapshot.md` → 段2第一镜继承

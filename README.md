@@ -35,7 +35,7 @@ git clone https://github.com/jijiutong/ai-visual-director.git
 
 # 2. 复制 skill 文件到 Claude Code skills 目录
 mkdir -p ~/.claude/skills/ai-visual-director
-cp -r ai-visual-director/sources ai-visual-director/engines ai-visual-director/knowledge ai-visual-director/rules ai-visual-director/platforms ai-visual-director/templates ai-visual-director/state ai-visual-director/sub-skills ai-visual-director/SKILL.md ~/.claude/skills/ai-visual-director/
+cp -r ai-visual-director/sources ai-visual-director/engines ai-visual-director/knowledge ai-visual-director/rules ai-visual-director/platforms ai-visual-director/templates ai-visual-director/state ai-visual-director/projects ai-visual-director/imitation ai-visual-director/sub-skills ai-visual-director/docs ai-visual-director/examples ai-visual-director/SKILL.md ~/.claude/skills/ai-visual-director/
 ```
 
 安装后重启 Claude Code，输入 `/create` 即可使用。
@@ -120,9 +120,12 @@ cp -r ai-visual-director/sources ai-visual-director/engines ai-visual-director/k
 | `rules/` | 一致性、质量、文化准确性、负面词、规则补丁 |
 | `templates/` | 全案板、角色卡、场景卡、分镜页等最终 Prompt 模板 |
 | `platforms/` | GPT Image / Midjourney / SD / 视频平台适配 |
+| `state/` | 变量注册、资产映射、镜头状态、台词映射、项目依赖图 |
+| `projects/` | 项目模板、项目清单、可恢复的项目运行时结构 |
+| `imitation/` | 导演/工作室风格模仿库 |
 | `sub-skills/` | `/create`、`/source`、`/storyboard`、`/character`、`/scene`、`/video` 等子入口 |
 
-> 发布 / 安装时必须包含 `SKILL.md`、`sources/`、`engines/`、`knowledge/`、`rules/`、`templates/`、`platforms/`、`sub-skills/`、`docs/`、`examples/`。
+> 发布 / 安装时必须包含 `SKILL.md`、`sources/`、`engines/`、`knowledge/`、`rules/`、`templates/`、`platforms/`、`state/`、`projects/`、`imitation/`、`sub-skills/`、`docs/`、`examples/`。
 > `.agents/` 和 `.claude/` 是本机安装副本/缓存目录，不应进入发布包。
 
 ---

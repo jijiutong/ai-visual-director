@@ -80,3 +80,29 @@
 【系列延续】《[片名]》第 [X] 集。延续第 [X-1] 集设定：风格 [风格编号]，色彩基调 [色调]，角色 DNA [引用]。
 本集变化：[情绪曲线/节奏/角色状态/场景变化]。
 ```
+
+---
+
+## 风格记忆集成
+
+系列续集与 `style_memory` 协同。续集默认继承前集的风格锁：
+
+```
+第1集 → style_memory.locked = true（video-director 首次锁定）
+第2集 → style_memory.locked = true → 自动继承第1集风格
+  需变化的部分（色彩基调演变/情绪曲线）由 series 引擎追加增量：
+  - 色彩基调：[从 style_memory.color_palette] + 本集增量（如"冷灰蓝→冷灰蓝+暖橙"）
+  - 情绪曲线：按新剧情重新选择 EC 编号
+  - 角色状态：追加临时状态（受伤/换装），不变更 immutable_features
+第N集 → 同上，累计色彩演变轨迹
+```
+
+---
+
+## 联动
+
+← 用户指令（"这是第X集" / "继续上一集"）
+← 读取 `state/variable-registry.md`（style_memory.* — 继承前集风格锁；characters.*.immutable_features — 角色DNA不变）
+← 读取 `state/continuity-snapshot.md`（前集尾帧快照 — 继承起始状态）
+→ 输出系列延续 prompt（含风格继承 + 本集增量变化）
+→ 不修改 `state/variable-registry.md` 中的 style_memory.locked（保持锁定，让 video-director 继承）

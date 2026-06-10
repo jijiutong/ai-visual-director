@@ -22,11 +22,12 @@
 
 | 文件 | 用途 |
 |------|------|
-| `variable-registry.md` | **总变量注册中心** — project/style/characters/scene 全部全局变量 |
+| `variable-registry.md` | **总变量注册中心** — project/style/characters/scene 全部全局变量 + style_memory 风格记忆 |
 | `asset-map.md` | **@图动态映射** — @编号→类型→用途，由 reference-anchor 写入 |
 | `shot-state.md` | **每镜状态** — 镜号/时间/景别/运镜/色彩/灯光/转场/end_state |
 | `dialogue-map.md` | **台词映射** — shot_id/speaker/text/delivery/subtitle |
 | `prompt-contract.md` | **模板契约** — 每个模板读什么变量、产出什么 |
+| `project-graph.md` | **项目依赖图** — 正向索引（实体→下游）+ 反向索引（产物→上游），由 project-graph 引擎构建 |
 
 ### 连续性层（跨镜/跨段）
 
@@ -56,10 +57,13 @@ reference-anchor → 写入 asset-map（@图映射，按平台策略）
   ↓
 motion-physics → 补充 shot-state（运动数据）
   ↓
-video-prompt-assembly ← 读取 variable-registry + asset-map + shot-state + dialogue-map
+project-graph ← 读取 variable-registry + shot-state + asset-map + dialogue-map
+              → 写入 project-graph（依赖图：正向索引+反向索引）
+  ↓
+video-prompt-assembly ← 读取 variable-registry + asset-map + shot-state + dialogue-map + project-graph
                       → 组装视频 prompt
   ↓
-consistency-engine ← 读取全部 state/（5 维度 RM 评估 + 知识库建议）
+consistency-engine ← 读取全部 state/（5 维度 RM 评估 + project-graph 限定评估范围）
   ↓
 prompt-scorer → auto-repair → ... → final-video-qc → render-package
                    ↑ 调用 knowledge-retrieval 动态检索修复策略
@@ -67,7 +71,7 @@ prompt-scorer → auto-repair → ... → final-video-qc → render-package
 project-manager → 持久化 state/ → projects/<id>/state/
 ```
 
-> 虚线之后为 V2 新增：consistency-engine（一致性评估）、knowledge-retrieval（知识库检索）、project-manager（项目持久化）。
+> V2 新增引擎：consistency-engine（一致性评估）、knowledge-retrieval（知识库检索）、project-manager（项目持久化）、project-graph（依赖图）、incremental-update（增量更新）。V2.5 新增：style_memory（风格记忆）、imitation/（导演模仿库）。
 
 ---
 
@@ -82,8 +86,10 @@ engines/video-director → 写入 variable-registry + shot-state + dialogue-map
 engines/asset-plan → 写入 variable-registry（版式/不可变特征）
 engines/reference-anchor → 写入 asset-map（@图动态映射）
 engines/motion-physics → 补充 shot-state（运动数据）
-engines/video-prompt-assembly → 读取 variable-registry + asset-map + shot-state + dialogue-map
-engines/auto-repair → 检测状态断裂时读取 continuity-snapshot 修复
+engines/project-graph → 读取 variable-registry + shot-state + asset-map + dialogue-map → 写入 project-graph
+engines/video-prompt-assembly → 读取 variable-registry + asset-map + shot-state + dialogue-map + project-graph
+engines/incremental-update → 读取 project-graph（影响范围查询）→ 局部更新 state/ → 调用 consistency-engine（增量模式）
+engines/auto-repair → 检测状态断裂时读取 continuity-snapshot 修复；修复后调用 incremental-update 限定重评
 rules/final-video-qc → 读取 asset-map + shot-state + dialogue-map 校验引用一致性
 state/prompt-contract → 校验模板 reads 覆盖率
 ```
@@ -95,11 +101,12 @@ state/prompt-contract → 校验模板 reads 覆盖率
 ```
 state/
 ├── README.md                   ← 本文件
-├── variable-registry.md        ← 总变量注册中心（project/style/characters/scene）
+├── variable-registry.md        ← 总变量注册中心（project/style/characters/scene + style_memory）
 ├── asset-map.md                ← @图动态映射（reference-anchor 写入）
 ├── shot-state.md               ← 每镜状态（video-director 写入，motion-physics 补充）
 ├── dialogue-map.md             ← 台词映射（video-director 写入）
 ├── prompt-contract.md          ← 模板输入输出契约
+├── project-graph.md            ← 项目依赖图（project-graph 引擎构建：正向+反向索引）
 ├── continuity-state.md         ← 8字段定义+继承规则
 ├── continuity-snapshot.md      ← 跨段快照+衔接技法
 ├── [未来] character-dna-snapshots/  ← 多角色DNA快照存档

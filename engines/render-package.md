@@ -1,6 +1,6 @@
 # 渲染打包引擎
 
-最终一键输出「可执行视频生成包」。Prompt 已在 video-prompt-assembly → prompt-scorer → auto-repair 完成，本引擎负责打包全部资产+平台参数+执行清单。
+最终一键输出「可执行视频生成包」。Prompt 已在 video-prompt-assembly → consistency-engine → prompt-scorer → auto-repair 完成，本引擎负责打包全部资产+平台参数+执行清单。
 
 ---
 
