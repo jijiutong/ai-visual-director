@@ -159,7 +159,7 @@
 
 **映射规则**：
 1. **先执行资产存在性检查（零节）**— 确定哪些资产实际存在
-2. 按平台能力决定上限（Seedance 12张 / Runway 3张 / 可灵 3张 / Luma/Pika 2张）
+2. 按平台能力决定上限：读取 api-config.template.env → `{PLATFORM}_MAX_REF_IMAGES`（Seedance→SEEDANCE_MAX_REF_IMAGES，Runway→RUNWAY_MAX_REF_IMAGES，可灵→KELING_MAX_REF_IMAGES，Luma→LUMA_MAX_REF_IMAGES，Pika→PIKA_MAX_REF_IMAGES）
 3. 仅分配已存在的资产，null 引用不编造
 4. 按资产优先级排序（零节优先级表），超平台上限时裁切低优先级
 5. 已有资产覆盖的跳过独立分配（角色卡含武器→不另出武器卡）
