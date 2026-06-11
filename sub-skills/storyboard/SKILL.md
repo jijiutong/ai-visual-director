@@ -960,7 +960,7 @@ MJ 参数：--ar 16:9 --style raw --s 250 --v 6.1
 
 **分镜图像 Prompt 强制规则**：
 - 每图必须独立完整，含角色DNA+场景DNA，不可跨图依赖
-- 模块 8 默认使用中文 Prompt；用户说「英文版」时切换为英文 Prompt
+- 模块 8 默认使用 `DEFAULT_LANGUAGE`（api-config.template.env）Prompt；用户说「英文版」时切换为英文 Prompt
 - 每图中文标题 + 分镜参数 + 对白意图 + 中文 Prompt + Negative + MJ参数七段齐全
 - GPT Image 高清模式可省略 MJ参数 行；MJ/SD 版必须加参数行
 - 全案板合成图格数不等于镜数时（如 60s+ 选 7 个关键帧），分镜图像 Prompt 仍输出全部镜号
@@ -1023,7 +1023,7 @@ MJ 参数：--ar 16:9 --style raw --s 250 --v 6.1
 
 ### 视频 Prompt 输出规范（强制）
 
-1. 视频 Prompt 默认使用中文。用户说「英文版」时输出英文 Prompt。
+1. 视频 Prompt 默认使用 `DEFAULT_LANGUAGE`（api-config.template.env）。用户说「英文版」时输出英文 Prompt。
 2. **每个 Shot 必须带中文镜头标题**
 3. **每个 Shot 必须带 `分镜参数` 行**——从分镜表对应行提取景别/运镜/色彩灯光/转场，作为分镜表到 Prompt 的翻译桥
 4. 格式统一为：
@@ -1058,7 +1058,7 @@ MJ 参数：--ar 16:9 --style raw --s 250 --v 6.1
 Negative：```...```
 MJ 参数：--ar 16:9 --style raw --s 250 --v 6.1
 ```
-2. 图像 Prompt 默认使用中文（GPT Image / MJ / SD 通用）；用户说「英文版」时输出英文 Prompt。GPT Image 高清模式可省略 MJ参数行，其余模式必须加
+2. 图像 Prompt 默认使用 `DEFAULT_LANGUAGE`（从 api-config.template.env 读取，默认 zh）；用户说「英文版」时输出英文 Prompt。英文平台（MJ/SD/Flux）自动翻译。GPT Image 高清模式可省略 MJ参数行，其余模式必须加
 3. 每张图独立输出，方便用户单张复制使用
 
 ### 视频 Prompt 简化规则

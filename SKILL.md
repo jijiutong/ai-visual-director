@@ -216,7 +216,7 @@ target_platform: Seedance
 | 片名 | 2-8 字短标题 | — |
 | 类型 | 动作/悬疑/科幻/玄幻/都市/爱情/etc. | `engines/styles.md` |
 | 叙事结构 | 三幕/四幕/倒叙/双线 | `engines/act-structure.md` |
-| 时长 | 默认 15s，复杂用 30s | `engines/pacing.md` |
+| 时长 | 由 video-director 多维度决策 | `engines/pacing.md` |
 | 核心冲突 | 一句话：谁对抗谁，或主角要突破什么 | — |
 | 主角 | 20字段DNA：姓名/身份/面部/发型/声音/体态/习惯动作/服装/配饰/气味/情绪底色等 | `knowledge/character-dna.md` |
 | 对手 | 20字段DNA：同上，含武器能力/压迫感来源 | `knowledge/character-dna.md` |

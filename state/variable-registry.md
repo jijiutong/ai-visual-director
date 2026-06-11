@@ -18,9 +18,9 @@
 | `project.title` | — | `story-intake` |
 | `project.genre` | — | `story-intake` |
 | `project.duration` | — | `shot-budget` |
-| `project.aspect_ratio` | — | `story-intake`（默认 16:9） |
-| `project.target_platform` | — | `story-intake`（默认 Seedance） |
-| `project.language` | — | `story-intake`（默认中文） |
+| `project.aspect_ratio` | — | `story-intake`（读取 api-config.template.env → `DEFAULT_ASPECT_RATIO`） |
+| `project.target_platform` | — | `story-intake`（读取 api-config.template.env → `VIDEO_PLATFORM_DEFAULT`） |
+| `project.language` | — | `story-intake`（读取 api-config.template.env → `DEFAULT_LANGUAGE`） |
 | `project.word_count` | — | `shot-budget`（初始估算），`reference-anchor`（平台校验后更新） |
 
 ## 风格变量
