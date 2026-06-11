@@ -1,6 +1,13 @@
-# Platform Config — 平台统一配置
+# ⛔ 已弃用 — Platform Config
 
-所有引擎读取此文件获取平台参数。一处修改，全链生效。**禁止在引擎中硬编码平台限制。**
+> **此文件已弃用，保留仅供历史参考。所有配置已迁移到项目根目录 `api-config.template.env`。**
+>
+> 引擎读取 `api-config.template.env`（平键格式，如 `SEEDANCE_MAX_DURATION=15`），不再读取此文件。
+> 修改配置请编辑 `api-config.template.env`，一处修改全链生效。
+
+---
+
+以下为历史内容（不再被引擎读取）：
 
 ---
 

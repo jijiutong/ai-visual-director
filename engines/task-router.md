@@ -208,7 +208,7 @@ asset-plan → consistency-trigger → reference-anchor → motion-physics → v
 角色卡 + 场景卡 + 分镜图 + Prompt → 输出
 ```
 
-**触发条件**：用户输入 ≤ 100 字且无特殊指令 → 默认走最快路径。
+**触发条件**：用户输入 ≤ SHORT_INPUT_THRESHOLD_CHARS（从 api-config.template.env 读取）字且无特殊指令 → 默认走最快路径。
 
 ---
 

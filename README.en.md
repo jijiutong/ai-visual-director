@@ -27,6 +27,39 @@ Core abilities:
 
 ---
 
+## Installation
+
+### npx install
+
+```bash
+npx ai-visual-director
+```
+
+### sh install
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jijiutong/ai-visual-director/main/install.sh | sh
+```
+
+### Install from source
+
+```bash
+git clone https://github.com/jijiutong/ai-visual-director.git
+cd ai-visual-director
+sh install.sh
+```
+
+The default target is `~/.claude/skills/ai-visual-director`. To use another skills directory:
+
+```bash
+npx ai-visual-director --skills-dir ~/.claude/skills
+AI_VISUAL_DIRECTOR_SKILLS_DIR=~/.claude/skills sh install.sh
+```
+
+Restart Claude Code after installation, then use `/create`.
+
+---
+
 ## 30-Second Start
 
 ```text

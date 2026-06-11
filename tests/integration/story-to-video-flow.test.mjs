@@ -52,7 +52,7 @@ const sampleStory = {
 test("short story can enter the one-click route without a blocking question", () => {
   assert(sampleStory.text.length <= 100, "fixture should exercise the short-story fast path");
 
-  assertIncludes("engines/task-router.md", "短句 ≤100字");
+  assertIncludes("engines/task-router.md", "SHORT_INPUT_THRESHOLD_CHARS");
   assertIncludes("engines/task-router.md", "零确认");
   assertIncludes("engines/task-router.md", "一键生成最快路径");
   assertIncludes("engines/task-router.md", "雨夜古寺，两名剑客在佛像前对峙");
@@ -80,8 +80,9 @@ test("main story-to-video route keeps the required stage order", () => {
 
 test("story intake and shot budget can classify the sample story", () => {
   assertIncludes("engines/story-intake.md", "剑/刀/复仇/恩怨 | 武侠");
-  assertIncludes("engines/story-intake.md", "默认 Seedance");
-  assertIncludes("engines/story-intake.md", "默认 16:9");
+  assertIncludes("engines/story-intake.md", "api-config.template.env");
+  assertIncludes("engines/story-intake.md", "VIDEO_PLATFORM_DEFAULT");
+  assertIncludes("engines/story-intake.md", "DEFAULT_ASPECT_RATIO");
   assertIncludes("engines/shot-budget.md", "角色 ≤ 2（10-15s）");
   assertIncludes("engines/shot-budget.md", "10s（3-7镜）");
 

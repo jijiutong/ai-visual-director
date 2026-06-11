@@ -1,4 +1,6 @@
-import { existsSync, readFileSync } from "node:fs";
+import { existsSync, mkdtempSync, readFileSync, rmSync } from "node:fs";
+import { execFileSync } from "node:child_process";
+import { tmpdir } from "node:os";
 import { join } from "node:path";
 
 const root = process.cwd();
@@ -162,13 +164,40 @@ test("imitation library is discoverable", () => {
 
 test("README install and release package include all runtime directories", () => {
   for (const dir of requiredDirectories) {
-    assertIncludes("README.md", `ai-visual-director/${dir}`);
     assertIncludes("README.md", `\`${dir}/\``);
+    assertIncludes("package.json", `"${dir}/"`);
   }
 
   assertIncludes("README.md", "`SKILL.md`");
+  assertIncludes("package.json", "\"SKILL.md\"");
   assertIncludes("README.md", "`.agents/`");
   assertIncludes("README.md", "`.claude/`");
+});
+
+test("install docs expose npx and sh paths", () => {
+  assertIncludes("README.md", "npx ai-visual-director");
+  assertIncludes("README.md", "install.sh | sh");
+  assertIncludes("README.en.md", "npx ai-visual-director");
+  assertIncludes("README.en.md", "install.sh | sh");
+  assertIncludes("package.json", "\"bin\"");
+  assertIncludes("package.json", "\"ai-visual-director\"");
+});
+
+test("node installer copies every runtime entry", () => {
+  const temp = mkdtempSync(join(tmpdir(), "avd-install-"));
+
+  try {
+    execFileSync("node", ["scripts/install.mjs", "--skills-dir", temp], {
+      cwd: root,
+      stdio: "pipe",
+    });
+
+    for (const entry of ["SKILL.md", ...requiredDirectories]) {
+      assert(existsSync(join(temp, "ai-visual-director", entry)), `Installer should copy ${entry}`);
+    }
+  } finally {
+    rmSync(temp, { recursive: true, force: true });
+  }
 });
 
 let failed = 0;

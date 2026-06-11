@@ -4,17 +4,22 @@
 
 ---
 
-## 一、读取平台配置（新增）
+## 一、读取平台配置
 
 **前置步骤**：读取 `api-config.template.env`，获取：
 
 ```
-platform.video.default → 目标视频平台（默认 Seedance）
-platform.video.max_duration → 平台最大单段时长（Seedance = 15s）
-platform.video.split.auto → 是否自动拆分（默认 true）
+1. 确定目标平台 → 读取 VIDEO_PLATFORM_DEFAULT（默认 Seedance）
+2. 按平台名拼接键名查找限制：
+   {PLATFORM}_MAX_DURATION    → 如 SEEDANCE_MAX_DURATION=15
+   {PLATFORM}_MAX_REF_IMAGES  → 如 SEEDANCE_MAX_REF_IMAGES=12
+   {PLATFORM}_MAX_PROMPT_CHARS → 如 SEEDANCE_MAX_PROMPT_CHARS=1500
+   {PLATFORM}_SUPPORTS_CHINESE → 如 SEEDANCE_SUPPORTS_CHINESE=true
+3. 读取 SPLIT_AUTO → 是否自动拆分（默认 true）
+4. 读取 SHORT_INPUT_THRESHOLD_CHARS → 短输入阈值（默认 100）
 ```
 
-> 平台限制不硬编码在此文件中，全部从 `api-config.template.env` 读取。
+> **键名规范**：所有配置使用平键格式（`SEEDANCE_MAX_DURATION`），不使用嵌套路径（`platform.video.max_duration`）。引擎通过当前目标平台名拼接键名查找限制。
 
 ---
 
@@ -35,7 +40,7 @@ platform.video.split.auto → 是否自动拆分（默认 true）
 
 ---
 
-## 二、压缩原则
+## 三、压缩原则
 
 ```
 一条视频 = 一个核心动作 + 一个情绪转折
@@ -55,7 +60,7 @@ platform.video.split.auto → 是否自动拆分（默认 true）
 
 ---
 
-## 三、按时长压缩
+## 四、按时长压缩
 
 ### 10s（3-7镜）— 只保留一个节拍
 保留：高潮 / 合并：起因1镜交代 / 删除：过程细节
@@ -73,21 +78,28 @@ platform.video.split.auto → 是否自动拆分（默认 true）
 保留：≤5场景 / 合并：过渡用匹配剪切 / 删除：不相关支线
 角色 ≤ 4人，次要角色→群像处理
 
-> **⚠ 如果输入时长 > 平台最大单段时长（从 api-config.template.env 读取）→ 必须拆分，不可一次生成。**
+> **⚠ 如果输入时长 > {PLATFORM}_MAX_DURATION（从 api-config.template.env 读取）→ 必须拆分，不可一次生成。**
 
 ---
 
-## 三、自动拆分（按平台上限）
+## 五、自动拆分（按平台上限）
 
-从 `api-config.template.env` 读取 `platform.video.max_duration`，自动计算拆分：
+从 `api-config.template.env` 读取，按目标平台查找对应限制：
 
 ```
-拆分算法：
-  段数 = ceil(输入时长 / 平台max_duration)
-  每段时长 = 平台max_duration
+1. 读取 SPLIT_AUTO → false 则跳过拆分，强制单段生成
+2. 确定目标平台（VIDEO_PLATFORM_DEFAULT 或 state/variable-registry.project.target_platform）
+3. 按平台拼接键名：{PLATFORM}_MAX_DURATION → 查找对应值
+   例：平台=Seedance → SEEDANCE_MAX_DURATION=15
+       平台=可灵   → KELING_MAX_DURATION=10
+       平台=Runway → RUNWAY_MAX_DURATION=10
+       平台=Luma   → LUMA_MAX_DURATION=5
+4. 拆分算法：
+  段数 = ceil(输入时长 / {PLATFORM}_MAX_DURATION)
+  每段时长 = {PLATFORM}_MAX_DURATION
   每段镜数 = ceil(总镜数 / 段数)
 
-示例：60s 15镜 → Seedance max_duration=15s
+示例：60s 15镜 → Seedance SEEDANCE_MAX_DURATION=15s
   → 4段
   段1/4: 0-15s 镜1-4「压迫→觉醒」
   段2/4: 15-30s 镜5-8「红光→现身」
@@ -99,11 +111,11 @@ platform.video.split.auto → 是否自动拆分（默认 true）
 
 ---
 
-## 四、内容拆段（场景/角色超限时）
+## 六、内容拆段（场景/角色超限时）
 
 ---
 
-## 五、输出
+## 七、输出
 
 ```markdown
 【镜头预算】
@@ -124,7 +136,7 @@ platform.video.split.auto → 是否自动拆分（默认 true）
 
 ## 联动
 
-← 读取 `api-config.template.env`（平台max_duration → 自动拆分计算）
+← 读取 `api-config.template.env`（VIDEO_PLATFORM_DEFAULT + SPLIT_AUTO + {PLATFORM}_MAX_DURATION → 自动拆分计算）
 ← 接收 `story-intake` 的提取字段
 → 输出给 `video-director` 做导演决策
 → 拆段时：每段独立走 video-director → ... → render-package，段间联动 `state/continuity-state.md`
