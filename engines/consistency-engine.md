@@ -248,7 +248,7 @@ video-prompt-assembly（产出完整 prompt）
 Consistency Engine（5 维度评估）
   ↓ 输出评估报告
   ├─ 总分 ≥ SCORE_PASS_THRESHOLD（api-config.template.env，默认85）+ 无阻断项 → prompt-scorer（放行路径）
-  ├─ 总分 70-(SCORE_PASS_THRESHOLD-1) 或 有阻断项但非致命 → prompt-scorer（标记问题，放行）
+  ├─ 总分 70 ~ (SCORE_PASS_THRESHOLD - 1) 或 有阻断项但非致命 → prompt-scorer（标记问题，放行）
   ├─ 总分 < 70 或 任一项 < 50 → auto-repair（先修复再评分）
   └─ 任一项 < 30 → 强制阻断，重新生成该维度
 ```

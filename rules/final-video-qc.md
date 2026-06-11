@@ -149,5 +149,5 @@
 ← **读取 `state/dialogue-map.md`** 校验台词镜号
 → 通过 → `render-package` 输出
 → 不通过 → `auto-repair` 修复
-→ 修复后重新质检（最多3轮）
-→ 3轮后仍不通过 → 标记为"需人工介入"
+→ 修复后重新质检（最多 REPAIR_MAX_ROUNDS 轮，从 api-config.template.env 读取）
+→ REPAIR_MAX_ROUNDS 轮后仍不通过 → 标记为"需人工介入"

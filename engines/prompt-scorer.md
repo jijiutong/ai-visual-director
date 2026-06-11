@@ -69,7 +69,7 @@
 | 总分 | 操作 |
 |------|------|
 | ≥ SCORE_PASS_THRESHOLD（从 api-config.template.env 读取）| 放行 |
-| 70-(SCORE_PASS_THRESHOLD-1) | 标记问题，放行 |
+| 70 ~ (SCORE_PASS_THRESHOLD - 1) | 标记问题，放行 |
 | 60-69 | 触发 auto-repair |
 | < 60 | 强制 auto-repair |
 | 任一项 < 50 | 该单项强制修复 |
@@ -98,4 +98,4 @@
 ← 接收 `video-prompt-assembly` 组装完成的 prompt + 所有前序引擎的输出
 ← 接收 `consistency-engine` 的一致性评估报告（5 维度评分作为补充参考）
 → 评分低 → 触发 `auto-repair`
-→ 修复后重评（最多 3 轮）
+→ 修复后重评（最多 REPAIR_MAX_ROUNDS 轮，从 api-config.template.env 读取）

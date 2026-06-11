@@ -62,7 +62,7 @@ consistency-engine（5 维度 RM 评估 + 知识库建议）
   ↓
 prompt-scorer（6 维度评分，接收一致性报告）
   ↓
-（评分≥85跳过修复，<85触发auto-repair → 调用 knowledge-retrieval → 重评）
+（评分 ≥ SCORE_PASS_THRESHOLD 跳过修复，< SCORE_PASS_THRESHOLD 触发auto-repair → 调用 knowledge-retrieval → 重评。以上值从 api-config.template.env 读取）
   ↓
 final-video-qc → render-package
   ↑ 读取 state/
