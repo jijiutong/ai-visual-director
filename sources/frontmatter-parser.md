@@ -35,7 +35,7 @@ mood: 更燃更虐                      # → mood-slider
 structure: 三幕                     # → act-structure
 pacing: 快切                        # → pacing 类型
 target_platform: Seedance           # → 平台适配
-duration: 10s                       # → 时长（默认10s）
+duration: 10s                       # → 时长（未指定时由 video-director 多维度决策）
 shot_count: 5                       # → 分镜数（用户指定则不用自动算）
 color_scheme: 红黑                  # → 色彩方案
 camera_style: 手持跟拍              # → 运镜偏好

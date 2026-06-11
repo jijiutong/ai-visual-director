@@ -57,12 +57,12 @@ task-router
 
 ## 默认规则
 
-读取 `rules/one-click-defaults.md`。用户没有指定时：
+读取 `api-config.template.env` + `rules/one-click-defaults.md`。用户没有指定时：
 
-- 视频平台默认 Seedance
-- 画幅默认 16:9
-- 语言默认中文
-- 自动选择最匹配风格和版式
+- 视频平台 → `VIDEO_PLATFORM_DEFAULT`
+- 画幅 → `DEFAULT_ASPECT_RATIO`
+- 语言 → `DEFAULT_LANGUAGE`
+- 自动选择最匹配风格和版式（video-director 多维度决策）
 - 自动生成最低必要资产
 - 平台不支持当前时长时，自动拆段或压缩
 
