@@ -111,7 +111,7 @@
 1. 时长校验：≥平台上限 → 标记"需拆段"
 2. 字数校验：>平台上限 → 调用 prompt-compression
 3. 参考图校验：>平台上限 → 按优先级裁切（角色卡 > 首帧 > 尾帧 > 关键帧 > 其他）
-4. 语言校验：从 `state/platform-config.md` 二（视频平台）和五（图像平台）读取语言支持 → 不匹配则翻译
+4. 语言校验：从 `api-config.template.env`（视频平台硬限制 + 图像平台语言支持）读取语言支持 → 不匹配则翻译
 
 校验不通过 → auto-repair → 重新校验
 ```
@@ -167,11 +167,11 @@
 
 ## 联动
 
-← 读取 `state/platform-config.md`（平台限制 + 默认平台 + 拆分→参考图按段分配数量 + 平台语言支持）
+← 读取 `api-config.template.env`（平台限制 + 默认平台 + 语言支持）
 ← 接收 `asset-plan` 的资产列表
 → 按平台过滤和重新分配
 → **写入 `state/asset-map.md`**（动态生成 @图编号→用途映射表，供 video-prompt-assembly 读取）
 → **更新 `state/variable-registry.md`**（project.word_count 平台校验后更新）
 → 校验发现问题 → `auto-repair`
 → 通过 → `motion-physics`
-→ **平台限制从此文件读取，不硬编码**。修改 `state/platform-config.md` 即全局生效。
+→ **平台限制从此文件读取，不硬编码**。修改 `api-config.template.env` 即全局生效。

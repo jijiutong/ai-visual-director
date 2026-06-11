@@ -52,18 +52,9 @@ description: Character design card generation — 8 consistency methods. Route: 
 
 ### Step 2: 选择一致性方法（8 种）
 
-| 编号 | 方法 | 出图量 | 锁定强度 | 说明 |
-|------|------|--------|---------|------|
-| 1 | 角色设定卡（6 模块）⭐推荐 | 1 张 | ⭐⭐⭐ | 三视图+面部+表情+手部+武器+发型 |
-| 2 | 三视图 | 1 张 | ⭐⭐⭐ | 正/侧/背并排 |
-| 3 | 面部多角度（5 角度） | 1 张 | ⭐⭐⭐⭐ | 正面/45°/侧面/左45°/左侧面 |
-| 4 | 表情范围图（12 表情） | 1 张 | ⭐⭐⭐⭐ | 3×4 宫格全情绪 |
-| 5 | 服装/武器细节卡 | 1-2 张 | ⭐⭐⭐ | 红标注不可变细节 |
-| 6 | 14 图参考（Nano Banana） | 14 张 | ⭐⭐⭐⭐⭐ | 最强方案 |
-| 7 | IP-Adapter（ComfyUI） | 零 | ⭐⭐⭐⭐⭐ | 本地最强 |
-| 8 | 角色 DNA 20 字段 | 零 | ⭐⭐ | 纯文字，零成本 |
+**读取 `rules/character-consistency.md`** → 获取 8 种方法的最新参数（出图量/费用/锁定强度/耗时/适用平台）。方法参数不在此 SKILL 中硬编码，以 `rules/character-consistency.md` 为权威源。
 
-用户说编号确认，或说 "全部" 一键出角色卡。
+展示给用户时，按 `rules/character-consistency.md` 的方法选择指南表呈现。用户说编号确认，或说 "全部" 一键出角色卡。
 
 ### Step 3: 生成 Prompt
 
@@ -188,6 +179,8 @@ description: Character design card generation — 8 consistency methods. Route: 
 ```
 
 ## 方法叠加策略
+
+从 `rules/character-consistency.md` 获取最新的叠加策略和费用。简要参考：
 
 | 预算 | 组合 | 费用 | 锁定强度 |
 |------|------|------|---------|

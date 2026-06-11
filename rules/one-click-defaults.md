@@ -4,44 +4,42 @@
 
 ---
 
-## 一、硬默认（不可变，除非用户明确覆盖）
-
-| 参数 | 默认值 | 覆盖方式 |
-|------|--------|---------|
-| 时长 | 10s | 用户说"15s"/"30s"/"60s"。10s 保证全部平台兼容无需拆段 |
-| 画幅 | 16:9 | 用户说"竖屏"/"9:16" |
-| 平台 | GPT Image 2（图片）/ Seedance（视频） | 用户指定其他平台 |
-| 语言 | 中文 | 用户要求英文 |
-| 角色卡 | 1张（LS11干净一致性卡） | 用户指定其他版式 |
-| 场景图 | 1张（LS8场景全能参考板） | 用户指定其他 |
-| 分镜图 | 合并帧 2-3张（LS7合并帧视频锚点） | 用户指定其他版式 |
-| 风格 | 自动匹配（按类型关键词） | 用户指定风格 |
-
 ---
 
-## 二、软默认（AI 可根据故事调整）
+## 一、系统默认值
 
-| 参数 | 默认值 | 调整条件 |
-|------|--------|---------|
-| 镜数 | 5镜（10s标准） | 按节奏类型+时长查pacing表 |
-| 情绪曲线 | EC1 标准四阶段 | 按故事类型调整 |
-| 版式 | 按输出类型自动匹配 | 用户指定则覆盖 |
-| Mood | 无调整 | 用户说"更燃/更虐"等 |
-| 多平台 | 仅GPT Image | 用户说"多平台"才全部输出 |
+平台限制、阈值、默认语言/画幅——统一从 **`api-config.template.env`** 读取，不在此文件中硬编码。
+
+| 参数 | 来源 |
+|------|------|
+| 图片平台 | `api-config.template.env` → `IMAGE_PLATFORM_DEFAULT` |
+| 视频平台 | `api-config.template.env` → `VIDEO_PLATFORM_DEFAULT` |
+| 画幅 | `api-config.template.env` → `DEFAULT_ASPECT_RATIO` |
+| 语言 | `api-config.template.env` → `DEFAULT_LANGUAGE` |
+| 短输入阈值 | `api-config.template.env` → `SHORT_INPUT_THRESHOLD_CHARS` |
+| 评分通过线 | `api-config.template.env` → `SCORE_PASS_THRESHOLD` |
+| 最大修复轮次 | `api-config.template.env` → `REPAIR_MAX_ROUNDS` |
+
+## 二、AI 导演决策（引擎动态决定，不写死默认值）
+
+以下决策由 AI 导演引擎根据故事内容动态做出。不同故事、不同类型，结果不同。无"硬编码默认"。
+
+| 决策项 | 负责引擎 | 决策方式 |
+|--------|---------|---------|
+| 时长 + 镜数 | `shot-budget` + `pacing` | 故事字数 → 时长 → pacing表 → 镜数 |
+| 风格 VS | `video-director` | 故事类型关键词 → 匹配 VS1-53 |
+| 角色卡版式 LS | `video-director` → `asset-plan` | 故事类型：科幻→LS13，武侠→LS12，通用→LS11 |
+| 场景图版式 LS | `consistency-trigger`（场景） | 场景复杂度/角度分布 → 全能参考/4宫格/九宫格/720°全景 |
+| 分镜图版式 LS | `video-director` → `asset-plan` | 动作复杂度/时长/平台 → LS6/LS7/LS5 |
+| 角色一致性方法 | `consistency-trigger`（角色） | 角色出镜率/服装复杂度 → 角色卡/三视图/面部5角度/14图等 |
+| 场景一致性方法 | `consistency-trigger`（场景） | 场景数/角度分布/固定元素数 → 7方法择一 |
+| 情绪曲线 EC | `video-director` | 故事类型 → EC1-12 自动匹配 |
+| 色彩方案 CN | `video-director` | 情绪曲线 → 色彩叙事引擎驱动 |
+| 分镜节奏 P | `video-director` + `pacing` | 故事类型 → P1-P5 |
+
+> 用户可随时覆盖 AI 导演的任何决策，如"换九宫格"、"用LS12黑金角色卡"。
 
 ---
-
-## 三、自动决策规则
-
-| 决策项 | 自动策略 |
-|--------|---------|
-| 风格选择 | 按关键词匹配表取第一个推荐 |
-| 格式选择 | 按故事类型取最相关格式 |
-| 情绪曲线 | 按类型自动匹配（动作→EC1，悬疑→EC2，爱情→EC5） |
-| 角色关系 | 按互动描述自动识别 |
-| 分镜节奏 | 按类型自动匹配（动作→P1快切，文艺→P3慢） |
-| Mood | 无指定则不追加，有"更X"则追加 |
-| 平台 | 默认 Seedance |
 
 ---
 
@@ -64,7 +62,7 @@ consistency-engine（5 维度 RM 评估 + 知识库建议）
   ↓
 prompt-scorer（6 维度评分，接收一致性报告）
   ↓
-（评分≥85跳过修复，<85触发auto-repair → 调用 knowledge-retrieval → 重评）
+（评分 ≥ SCORE_PASS_THRESHOLD 跳过修复，< SCORE_PASS_THRESHOLD 触发auto-repair → 调用 knowledge-retrieval → 重评。以上值从 api-config.template.env 读取）
   ↓
 final-video-qc → render-package
   ↑ 读取 state/
@@ -100,7 +98,8 @@ project-manager（auto-save：持久化 state/ 到 projects/ 目录）
 
 ## 联动
 
-← 触发条件：用户输入 ≤ 100 字且无特殊指令
+← 触发条件：用户输入 ≤ `SHORT_INPUT_THRESHOLD_CHARS`（从 api-config.template.env 读取）且无特殊指令
+← **读取 `api-config.template.env`**（平台默认值：图片平台、视频平台、拆分规则）
 ← 被调用的引擎：`story-intake` → `shot-budget` → `video-director` → `asset-plan`（各阶段写入 `state/` 注册中心）
 → 模板从 `state/variable-registry.md` 读取变量生成 Prompt
 → 如果任何步骤评分低于阈值 → 调用 `auto-repair`

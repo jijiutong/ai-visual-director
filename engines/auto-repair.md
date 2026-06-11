@@ -131,8 +131,8 @@
 ← 调用 `engines/knowledge-retrieval.md`（修复前检索 knowledge/ 获取具体操作参数）
 → 按策略链修复
 → **修复后调用 `engines/incremental-update.md`**（限定重评范围：只评估修复涉及的 RM 维度，不跑全量 5 维度）
-→ 重新评分→仍不达标→再次修复（最多3轮）
-→ 3轮后仍不达标→标记为"需人工介入"
+→ 重新评分→仍不达标→再次修复（最多 REPAIR_MAX_ROUNDS 轮，从 api-config.template.env 读取）
+→ REPAIR_MAX_ROUNDS 轮后仍不达标→标记为"需人工介入"
 → 修复完成 → 输出给 `rules/final-video-qc` 做最终质检
-→ final-video-qc 不通过 → 再次进入修复（QC修复循环，与评分修复循环共用3轮总限制）
+→ final-video-qc 不通过 → 再次进入修复（QC修复循环，与评分修复循环共用 REPAIR_MAX_ROUNDS 总限制）
 → **修复后更新 state/**：策略1→更新 `variable-registry.md`（characters.immutable_features）；策略2→更新 `variable-registry.md`（scene.fixed_elements）；策略3/5→更新 `shot-state.md`（action/transition/end_state）；策略4→更新 `variable-registry.md`（word_count）

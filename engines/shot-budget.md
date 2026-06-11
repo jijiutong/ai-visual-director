@@ -6,7 +6,7 @@
 
 ## 一、读取平台配置（新增）
 
-**前置步骤**：读取 `state/platform-config.md`，获取：
+**前置步骤**：读取 `api-config.template.env`，获取：
 
 ```
 platform.video.default → 目标视频平台（默认 Seedance）
@@ -14,7 +14,7 @@ platform.video.max_duration → 平台最大单段时长（Seedance = 15s）
 platform.video.split.auto → 是否自动拆分（默认 true）
 ```
 
-> 平台限制不硬编码在此文件中，全部从 `state/platform-config.md` 读取。
+> 平台限制不硬编码在此文件中，全部从 `api-config.template.env` 读取。
 
 ---
 
@@ -73,13 +73,13 @@ platform.video.split.auto → 是否自动拆分（默认 true）
 保留：≤5场景 / 合并：过渡用匹配剪切 / 删除：不相关支线
 角色 ≤ 4人，次要角色→群像处理
 
-> **⚠ 如果输入时长 > 平台最大单段时长（从 platform-config 读取）→ 必须拆分，不可一次生成。**
+> **⚠ 如果输入时长 > 平台最大单段时长（从 api-config.template.env 读取）→ 必须拆分，不可一次生成。**
 
 ---
 
 ## 三、自动拆分（按平台上限）
 
-从 `state/platform-config.md` 读取 `platform.video.max_duration`，自动计算拆分：
+从 `api-config.template.env` 读取 `platform.video.max_duration`，自动计算拆分：
 
 ```
 拆分算法：
@@ -124,7 +124,7 @@ platform.video.split.auto → 是否自动拆分（默认 true）
 
 ## 联动
 
-← 读取 `state/platform-config.md`（平台max_duration → 自动拆分计算）
+← 读取 `api-config.template.env`（平台max_duration → 自动拆分计算）
 ← 接收 `story-intake` 的提取字段
 → 输出给 `video-director` 做导演决策
 → 拆段时：每段独立走 video-director → ... → render-package，段间联动 `state/continuity-state.md`

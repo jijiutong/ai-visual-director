@@ -22,7 +22,7 @@
 
 | 文件 | 用途 |
 |------|------|
-| `platform-config.md` | **平台统一配置** — 默认平台 / 时长上限 / 拆分规则 / 资产按段分配，全引擎读取 |
+| `api-config.template.env` | **系统统一配置** — 默认平台 / 时长上限 / 字数上限 / 参考图限制 / 语言支持 / 系统阈值。项目根目录，全引擎读取 |
 | `variable-registry.md` | **总变量注册中心** — project/style/characters/scene 全部全局变量 + style_memory 风格记忆 |
 | `asset-map.md` | **@图动态映射** — @编号→类型→用途，由 reference-anchor 写入 |
 | `shot-state.md` | **每镜状态** — 镜号/时间/景别/运镜/色彩/灯光/转场/end_state |

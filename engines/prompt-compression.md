@@ -20,14 +20,15 @@
 
 ## 二、字符预算
 
-| 平台 | 上限 | 安全线（90%） |
-|------|------|-------------|
-| Seedance | 1500字 | 1350字 |
-| 可灵 | 800字 | 720字 |
-| Runway | 500字 | 450字 |
-| Luma | 300字 | 270字 |
-| Pika | 300字 | 270字 |
-| Sora | 500字 | 450字 |
+**读取 `api-config.template.env`（视频平台硬限制）**，获取目标平台的 prompt 字数上限：
+
+```
+platform = state/variable-registry.project.target_platform（或用户指定平台）
+max_chars = api-config.template.env 该平台的「最大 prompt 字数」
+安全线 = max_chars × 0.9
+```
+
+> 平台字数限制不硬编码在此文件中，全部从 `api-config.template.env` 读取。修改 api-config.template.env 即全局生效。
 
 超安全线 → 立即压缩到安全线以下。
 
@@ -102,6 +103,7 @@
 
 ## 联动
 
+← **读取 `api-config.template.env`** → 获取目标平台字数上限（不硬编码）
 ← 被 `reference-anchor` 平台校验触发
 ← 被 `auto-repair` 策略4触发
 → 压缩后返回调用方
