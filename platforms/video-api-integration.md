@@ -6,22 +6,17 @@
 
 ## 配置
 
-```bash
-# Seedance 2.0 (火山引擎 Ark)
-ARK_API_KEY=xxxxxxxxxxxx
+模型名、API 端点、Key 统一在 `api-config.template.env` 中配置：
 
-# Runway Gen-4.5
-RUNWAY_API_KEY=key_xxxxxxxxxxxx
+| 平台 | Key 变量 | 模型变量 | 端点变量 |
+|------|---------|---------|---------|
+| Seedance 2.0 | `ARK_API_KEY` | `SEEDANCE_MODEL` | `SEEDANCE_ENDPOINT` |
+| Runway | `RUNWAY_API_KEY` | `RUNWAY_MODEL` | `RUNWAY_ENDPOINT` |
+| 可灵 Kling | `KLING_API_KEY` | `KLING_MODEL` | `KLING_ENDPOINT` |
+| Luma | `LUMAAI_API_KEY` | `LUMA_MODEL` | `LUMA_ENDPOINT` |
+| Pika | `FAL_API_KEY` | `PIKA_MODEL` | `PIKA_ENDPOINT` |
 
-# 可灵 Kling (阿里云百炼)
-KLING_API_KEY=xxxxxxxxxxxx
-
-# Luma Dream Machine
-LUMAAI_API_KEY=xxxxxxxxxxxx
-
-# Pika (via fal.ai)
-FAL_API_KEY=xxxxxxxxxxxx
-```
+网络说明：Seedance/Kling 国内直连；Runway/Luma/Pika 需海外网络。
 
 ---
 
@@ -30,15 +25,14 @@ FAL_API_KEY=xxxxxxxxxxxx
 官方 API，字节跳动。中文原生、多参考图、原生音频。
 
 ```javascript
-// 异步：创建任务 → 轮询结果
-const response = await fetch("https://ark.cn-beijing.volces.com/api/v3/v1/contents/generations/tasks", {
+const response = await fetch(process.env.SEEDANCE_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.ARK_API_KEY}`,
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    model: "doubao-seedance-2-0-260128",  // 或 doubao-seedance-2-0-fast-260128
+    model: process.env.SEEDANCE_MODEL,  // doubao-seedance-2-0-260128 或 fast 版
     content: [{
       type: "text",
       text: "[中文 prompt]"
@@ -76,11 +70,20 @@ const task = await client.imageToVideo.create({
 }).waitForTaskOutput();
 ```
 
-或直接 REST：
-```bash
-curl -X POST "https://api.dev.runwayml.com/v1/text_to_video" \
-  -H "Authorization: Bearer $RUNWAY_API_KEY" \
-  -d '{"model":"gen4.5","prompt_text":"...","duration":5}'
+ 或直接 REST：
+```javascript
+const response = await fetch(process.env.RUNWAY_ENDPOINT, {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${process.env.RUNWAY_API_KEY}`,
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    model: process.env.RUNWAY_MODEL,
+    prompt_text: "...",
+    duration: 5
+  })
+});
 ```
 
 **模型**：Gen-4.5、Gen-4、Gen-4 Turbo、Aleph 2.0（视频编辑）
@@ -93,8 +96,7 @@ curl -X POST "https://api.dev.runwayml.com/v1/text_to_video" \
 中文最强视频生成，Kling 3.0 支持 4K。
 
 ```javascript
-// 阿里云百炼
-const response = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/video-generation/video-synthesis", {
+const response = await fetch(process.env.KLING_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.KLING_API_KEY}`,
@@ -102,7 +104,7 @@ const response = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aig
     "X-DashScope-Async": "enable"
   },
   body: JSON.stringify({
-    model: "kling-v3",
+    model: process.env.KLING_MODEL,
     input: {
       prompt: "[中文 prompt]",
       media: [{ type: "first_frame", url: "https://..." }]  // 可选首帧图
@@ -128,7 +130,7 @@ const response = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aig
 官方 REST API，支持多关键帧插值。
 
 ```javascript
-const response = await fetch("https://api.lumalabs.ai/dream-machine/v1/generations", {
+const response = await fetch(process.env.LUMA_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.LUMAAI_API_KEY}`,
@@ -157,7 +159,7 @@ const response = await fetch("https://api.lumalabs.ai/dream-machine/v1/generatio
 无官方 API，通过 fal.ai 调用 Pika 2.2。
 
 ```javascript
-const response = await fetch("https://queue.fal.run/fal-ai/pika", {
+const response = await fetch(process.env.PIKA_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Key ${process.env.FAL_API_KEY}`,

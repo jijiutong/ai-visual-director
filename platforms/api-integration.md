@@ -6,47 +6,34 @@
 
 ## 配置
 
-在项目根目录创建 `.env` 文件（或直接设置环境变量）：
+模型名、API 端点、Key 统一在 `api-config.template.env` 中配置，代码从环境变量读取。以下代码中的 `${...}` 引用对应配置项：
 
-```bash
-# GPT Image (OpenAI DALL-E 3)
-OPENAI_API_KEY=***
+| 平台 | Key 变量 | 模型变量 | 端点变量 |
+|------|---------|---------|---------|
+| GPT Image | `OPENAI_API_KEY` | `GPT_IMAGE_MODEL` | `GPT_IMAGE_ENDPOINT` |
+| Nano Banana | `GEMINI_API_KEY` | `NANO_BANANA_MODEL` | `NANO_BANANA_ENDPOINT` |
+| Flux | `REPLICATE_API_TOKEN` | `FLUX_MODEL` | `FLUX_ENDPOINT` |
+| Ideogram | `IDEOGRAM_API_KEY` | `IDEOGRAM_MODEL` | `IDEOGRAM_ENDPOINT` |
+| 通义万相 | `DASHSCOPE_API_KEY` | `TONGYI_MODEL` | `TONGYI_ENDPOINT` |
+| Recraft | `RECRAFT_API_KEY` | `RECRAFT_MODEL` | `RECRAFT_ENDPOINT` |
+| ComfyUI | — | `COMFYUI_MODEL` | `COMFYUI_ENDPOINT` |
+| Stability AI | `STABILITY_API_KEY` | `STABILITY_MODEL` | `STABILITY_ENDPOINT` |
 
-# Nano Banana (Google Gemini Image)
-GEMINI_API_KEY=***
-
-# Flux (via Replicate)
-REPLICATE_API_TOKEN=***
-
-# Stability AI (SD3)
-STABILITY_API_KEY=***
-
-# Ideogram
-IDEOGRAM_API_KEY=xxxxxxxxxxxx
-
-# 通义万相 (Alibaba Cloud)
-DASHSCOPE_API_KEY=***
-
-# Recraft
-RECRAFT_API_KEY=xxxxxxxxxxxx
-
-# ComfyUI (本地)
-COMFYUI_BASE_URL=http://127.0.0.1:8188
-```
+所有配置的默认值见 `api-config.template.env`。
 
 ---
 
 ## 一、GPT Image (OpenAI DALL-E 3)
 
 ```javascript
-const response = await fetch("https://api.openai.com/v1/images/generations", {
+const response = await fetch(process.env.GPT_IMAGE_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.OPENAI_API_KEY}`,
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    model: "dall-e-3",
+    model: process.env.GPT_IMAGE_MODEL,
     prompt: `[中文 prompt]`,
     n: 1,
     size: "1792x1024",  // 16:9, 也可 1024x1024 / 1024x1792
@@ -65,24 +52,22 @@ const imageUrl = result.data[0].url;
 
 ## 二、Nano Banana (Google Gemini Image)
 
-Google Gemini 图片生成，代号 Nano Banana。当前支持 v1 (Gemini 2.0 Flash) 和 v2 (Gemini 3.1 Flash)。
+Google Gemini 图片生成，代号 Nano Banana。端点和模型从 `NANO_BANANA_ENDPOINT` / `NANO_BANANA_MODEL` 配置读取。需海外网络或代理。
 
 ```javascript
-const response = await fetch(
-  `https://generativelanguage.googleapis.com/v1beta/models/gemini-3-pro-image-preview:generateContent?key=${process.env.GEMINI_API_KEY}`,
-  {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({
-      contents: [{
-        parts: [{ text: `[中文 prompt，原生支持]` }]
-      }],
-      generationConfig: {
-        responseModalities: ["IMAGE", "TEXT"]
-      }
-    })
-  }
-);
+const endpoint = process.env.NANO_BANANA_ENDPOINT.replace("{model}", process.env.NANO_BANANA_MODEL);
+const response = await fetch(`${endpoint}?key=${process.env.GEMINI_API_KEY}`, {
+  method: "POST",
+  headers: { "Content-Type": "application/json" },
+  body: JSON.stringify({
+    contents: [{
+      parts: [{ text: `[中文 prompt，原生支持]` }]
+    }],
+    generationConfig: {
+      responseModalities: ["IMAGE", "TEXT"]
+    }
+  })
+});
 
 const result = await response.json();
 // 图片在 result.candidates[0].content.parts 中
@@ -106,8 +91,7 @@ const imageData = result.candidates[0].content.parts
 **模型**：`black-forest-labs/flux-1.1-pro` / `flux-dev` / `flux-schnell`
 
 ```javascript
-// 生成图片
-const response = await fetch("https://api.replicate.com/v1/predictions", {
+const response = await fetch(process.env.FLUX_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Token ${process.env.REPLICATE_API_TOKEN}`,
@@ -115,7 +99,7 @@ const response = await fetch("https://api.replicate.com/v1/predictions", {
   },
   body: JSON.stringify({
     // 使用特定版本号，避免每次拉最新
-    version: "f2fe2b3b5a1e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e",
+    version: "f2fe2b3b5a1e0e0e0e0e0e0e0e0e0e0e0e1e0e0e0e",
     input: {
       prompt: `[中文 prompt + 英文关键词]`,
       aspect_ratio: "16:9",
@@ -137,8 +121,10 @@ const imageUrl = await pollPrediction(result.id);
 
 ## 四、Ideogram
 
+端点和模型从配置读取：`IDEOGRAM_ENDPOINT` / `IDEOGRAM_MODEL`。需海外网络。
+
 ```javascript
-const response = await fetch("https://api.ideogram.ai/generate", {
+const response = await fetch(process.env.IDEOGRAM_ENDPOINT, {
   method: "POST",
   headers: {
     "Api-Key": process.env.IDEOGRAM_API_KEY,
@@ -148,7 +134,7 @@ const response = await fetch("https://api.ideogram.ai/generate", {
     image_request: {
       prompt: `[英文 prompt]`,
       aspect_ratio: "ASPECT_16_9",
-      model: "V_2A",
+      model: process.env.IDEOGRAM_MODEL,
       magic_prompt_option: "AUTO",
       num_images: 1
     }
@@ -168,14 +154,14 @@ const imageUrl = result.data[0].url;
 模型：`qwen-image-2.0-pro`，支持文本+图片混合输入。
 
 ```javascript
-const response = await fetch("https://dashscope.aliyuncs.com/api/v1/services/aigc/multimodal-generation/generation", {
+const response = await fetch(process.env.TONGYI_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.DASHSCOPE_API_KEY}`,
     "Content-Type": "application/json"
   },
   body: JSON.stringify({
-    model: "qwen-image-2.0-pro",
+    model: process.env.TONGYI_MODEL,
     input: {
       messages: [{
         role: "user",
@@ -198,9 +184,10 @@ const imageUrl = result.output.choices[0].message.content[0].image;
 
 ## 六、ComfyUI (本地)
 
+端点从 `COMFYUI_ENDPOINT` 配置读取（默认 `{COMFYUI_BASE_URL}/prompt`）。
+
 ```javascript
-// 1. 提交工作流
-const response = await fetch(`${COMFYUI_BASE_URL}/prompt`, {
+const response = await fetch(process.env.COMFYUI_ENDPOINT, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify({
@@ -230,9 +217,9 @@ const formData = new FormData();
 formData.append("prompt", `[英文 prompt]`);
 formData.append("output_format", "png");
 formData.append("aspect_ratio", "16:9");
-formData.append("model", "sd3");
+formData.append("model", process.env.STABILITY_MODEL);
 
-const response = await fetch("https://api.stability.ai/v2beta/stable-image/generate/sd3", {
+const response = await fetch(process.env.STABILITY_ENDPOINT, {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.STABILITY_API_KEY}`,
