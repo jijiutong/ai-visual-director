@@ -25,6 +25,7 @@
     "imitation/",
     "sub-skills/",
     "docs/",
+    "examples/",
     "scripts/install.mjs",
     "install.sh",
     "README.md",
@@ -32,7 +33,14 @@
     "LICENSE"
   ],
   "scripts": {
-    "install": "node scripts/install.mjs"
+    "test": "npm run test:unit && npm run test:integration",
+    "test:unit": "node tests/unit/architecture.test.mjs",
+    "test:integration": "node tests/integration/story-to-video-flow.test.mjs",
+    "smoke": "node scripts/smoke-create-project.mjs",
+    "smoke:obsidian": "node scripts/smoke-obsidian-novel.mjs",
+    "smoke:incremental": "npm run smoke && node scripts/smoke-incremental-update.mjs",
+    "test:e2e": "npm run smoke && node tests/e2e/smoke-project-package.test.mjs",
+    "test:e2e:obsidian": "npm run smoke:obsidian && node tests/e2e/obsidian-novel-package.test.mjs",
+    "test:incremental": "npm run smoke:incremental && node tests/e2e/incremental-update.test.mjs"
   }
-}
 }
