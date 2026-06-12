@@ -28,7 +28,7 @@
 |--------|---------|---------|
 | 时长 + 镜数 | `shot-budget` + `pacing` | 故事字数 → 时长 → pacing表 → 镜数 |
 | 风格 VS | `video-director` | 故事类型关键词 → 匹配 VS1-53 |
-| 角色卡版式 LS | `video-director` → `asset-plan` | 故事类型：科幻→LS13，武侠→LS12，通用→LS11 |
+| 角色卡版式 LS | `video-director` → `asset-plan` | 故事类型：科幻→LS13，武侠→LS12，都市/留白→LS41，默认→模式A 6模块全量版 |
 | 场景图版式 LS | `consistency-trigger`（场景） | 场景复杂度/角度分布 → 全能参考/4宫格/九宫格/720°全景 |
 | 分镜图版式 LS | `video-director` → `asset-plan` | 动作复杂度/时长/平台 → LS6/LS7/LS5 |
 | 角色一致性方法 | `consistency-trigger`（角色） | 角色出镜率/服装复杂度 → 角色卡/三视图/面部5角度/14图等 |

@@ -1,36 +1,53 @@
 ---
-name: character
-description: Character design card generation — 8 consistency methods. Route: story-intake → state/variable-registry → character-sheet → state/asset-map → QC. Use /character or "角色卡", "人物设计".
+name: avd/character
+description: 【AI视觉导演】角色设计 — 8种一致性方法（模式A/LS12黑金/LS41留白等），输出角色卡Prompt+DNA 20字段
 ---
 
 # Character — 角色设计
+
+> **治理**：走 `engines/command-gate.md` 权限表 §四 /avd/character。产出标记 `draft`，不写回主状态。禁止调用 D类发散能力。详见 `rules/format-contract.md` §1.1。
 
 输入角色描述 → 选择一致性方法 → 输出角色设定卡 prompt。支持 8 种人物一致性锁定方法。
 
 ## 触发方式
 
-- `/character [角色名] [描述]`
+- `/avd/character [角色名] [描述]`
 - 直接说 "角色卡"、"人物设计"、"生成角色卡"
 
 ## 子指令
 
 | 指令 | 效果 |
 |------|------|
-| `/character 生成角色卡` | 6 模块角色设定卡（三视图+面部+表情+手部+武器+发型），默认无文字标注 |
-| `/character 导演标注版` | 角色卡 + 红色标注/编号/文字说明（仅用于导演板/团队协作） |
-| `/character 黑金武侠角色圣经` | 黑底暗金高密度角色卡，三视图+不可变特征+表情+服装层次+武器手部 |
-| `/character 科幻神使系统卡` | 银蓝 HUD 科幻角色系统卡，适合机甲/太空/神级文明 |
-| `/character 留白东方角色研究板` | 参考“静尘”式白底横版角色板，主立绘+三视图+姿态+表情+细节研究 |
-| `/character 仙灵长发设定板` | 参考“卯”式白衣长发角色板，长发三视图+坐姿/俯身+服饰细节 |
-| `/character 姿态表演研究板` | 同一角色 8-10 个坐卧蹲跪/行礼/静修姿态，用于锁身体语言 |
-| `/character 服饰细节留白板` | 古风服装细节板，锁领口、袖口、腰封、衣摆、材质和配饰位置 |
-| `/character 三视图` | 正/侧/背三视图并排 |
-| `/character 面部多角度` | 5 角度面部特写（正面/45°/侧面/左45°/左侧面） |
-| `/character 12表情` | 3×4 宫格 12 种表情锁定情绪范围 |
-| `/character 服装武器细节卡` | 服装+武器独立细节参考，以视觉方式突出不可变细节 |
-| `/character 14图参考` | Nano Banana 最强角色锚定方案 |
-| `/character IP-Adapter` | ComfyUI 本地角色锁定方案 |
-| `/character 角色DNA` | 20 字段文字锚定，零成本保底 |
+| `/avd/character 生成角色卡` | 6 模块角色设定卡（三视图+面部+表情+手部+武器+发型），默认无文字标注 |
+| `/avd/character 导演标注版` | 角色卡 + 红色标注/编号/文字说明（仅用于导演板/团队协作） |
+| `/avd/character 黑金武侠角色圣经` | 黑底暗金高密度角色卡，三视图+不可变特征+表情+服装层次+武器手部 |
+| `/avd/character 科幻神使系统卡` | 银蓝 HUD 科幻角色系统卡，适合机甲/太空/神级文明 |
+| `/avd/character 留白东方角色研究板` | 参考“静尘”式白底横版角色板，主立绘+三视图+姿态+表情+细节研究 |
+| `/avd/character 仙灵长发设定板` | 参考“卯”式白衣长发角色板，长发三视图+坐姿/俯身+服饰细节 |
+| `/avd/character 姿态表演研究板` | 同一角色 8-10 个坐卧蹲跪/行礼/静修姿态，用于锁身体语言 |
+| `/avd/character 服饰细节留白板` | 古风服装细节板，锁领口、袖口、腰封、衣摆、材质和配饰位置 |
+| `/avd/character 三视图` | 正/侧/背三视图并排 |
+| `/avd/character 面部多角度` | 5 角度面部特写（正面/45°/侧面/左45°/左侧面） |
+| `/avd/character 12表情` | 3×4 宫格 12 种表情锁定情绪范围 |
+| `/avd/character 服装武器细节卡` | 服装+武器独立细节参考，以视觉方式突出不可变细节 |
+| `/avd/character 14图参考` | Nano Banana 最强角色锚定方案 |
+| `/avd/character IP-Adapter` | ComfyUI 本地角色锁定方案 |
+| `/avd/character 角色DNA` | 20 字段文字锚定，零成本保底 |
+
+## ⚠️ 路由规则
+
+| 用户说法 | 行为 |
+|---------|------|
+| `/avd/character` / `/avd/character 角色卡`（未指定） | **展示 C1-C8 方法选单**，等用户选方法后再生成 |
+| `/avd/character [角色名] [描述]` | 收集信息 → 展示方法表 → 用户选 → 生成 |
+| `/avd/character C1` / `/角色卡` | 直接用 C1 角色设定卡 |
+| `/avd/character C2` / `三视图` | 直接用 C2 三视图 |
+| `/avd/character C3` / `面部多角度` | 直接用 C3 面部5角度 |
+| `/avd/character C8` / `角色DNA` | 只用 DNA 20字段文字 |
+| `/avd/character 黑金` / `LS12` | 黑金武侠角色圣经 |
+| `/avd/character 科幻` / `LS13` | 科幻神使系统卡 |
+
+**禁止**：不展示方法选单直接生成。`/avd/character` 无参数时必须展示 C1-C8 全部方法。
 
 ## 工作流
 
@@ -62,7 +79,9 @@ description: Character design card generation — 8 consistency methods. Route: 
 
 ### Step 3: 生成 Prompt
 
-**默认：角色设定卡（6 模块 · 出图模式）**
+> **⚠️ 模板强制规则**：生成任何角色卡 Prompt 前，**必须先读取 `templates/character-sheet.md`**（项目根目录）。模板文件是 Prompt 结构的权威来源。本 Skill 中嵌入的版式描述仅为触发路由和简要参考，完整 Prompt 结构（模块1-6顺序、变量编号 ME/PR/BL/MT/CN/VS、不可变特征格式、服装分层标注、禁止项）以 `templates/character-sheet.md` 为准。不读模板直接写 = bug。
+
+**默认：角色设定卡（模式A 6模块全量版 · 出图模式）**
 
 ```
 6 模块角色设定卡，[角色名]：[性别/年龄/身份]。
@@ -233,14 +252,7 @@ description: Character design card generation — 8 consistency methods. Route: 
 
 ## 方法叠加策略
 
-从 `rules/character-consistency.md` 获取最新的叠加策略和费用。简要参考：
-
-| 预算 | 组合 | 费用 | 锁定强度 |
-|------|------|------|---------|
-| 快速 | 角色卡 1 张 | ~USD0.08 | ⭐⭐⭐ |
-| 标准 | 角色卡 + 面部多角度 | ~USD0.16 | ⭐⭐⭐⭐ |
-| 正式 | 角色卡 + 面部 + 表情12格 | ~USD0.24 | ⭐⭐⭐⭐⭐ |
-| 零成本 | DNA 文字 | USD0 | ⭐⭐ |
+从 `rules/character-consistency.md` 获取最新的叠加策略和费用。费用和锁定强度**不在此写死**——每次从 rules 文件读取最新值。
 
 ## English Prompt 模板（默认角色设定卡）
 

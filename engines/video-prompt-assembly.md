@@ -33,7 +33,7 @@
 
 ### 第 1 层：视频基础信息
 ```
-生成 [15s/30s] 电影级视频，主题《[片名]》。
+生成 [时长（从 state/variable-registry 读取，由 video-director 决策）] 电影级视频，主题《[片名]》。
 基于 [N] 帧故事板序列，按时间线完整呈现。
 参考图片：按 `state/asset-map.md` 动态映射，共 [M] 张参考图。
   → M = asset-map 实际条目数。有几张写几张，不编造不存在的 @图。
@@ -55,7 +55,7 @@
 
 > **帧描述 ≤15字约束**：保留核心视觉信息（角色动作+环境），删修辞/氛围/重复。此限制确保总 Prompt 不超平台上限。若帧阶段复杂可放宽至 ≤25字，但总字数不得超出。
 >
-> **Prompt 总字数上限**：从 api-config.template.env 读取目标平台的 `{PLATFORM}_MAX_PROMPT_CHARS`。默认 Seedance=1500字。超出则触发 prompt-compression。
+> **Prompt 总字数上限**：从 api-config.template.env 读取目标平台的 `{PLATFORM}_MAX_PROMPT_CHARS`。超出则触发 prompt-compression。
 
 ### 第 3 层：约束层（@图从 asset-map 动态读取）
 ```
@@ -120,8 +120,8 @@ no flickering, no morphing, no floating, no background shifting, no color shifts
 ### 视频基础设定块（开头）
 ```
 【视频基础设定】
-视频时长：15s / 30s
-视频比例：16:9 / 9:16
+视频时长：[时长（从 state/variable-registry 读取）]
+视频比例：DEFAULT_ASPECT_RATIO（api-config.template.env）或用户指定
 视频风格：「VS编号.风格名称」+「渲染引擎关键词」+「氛围关键词」
 ```
 
@@ -179,13 +179,60 @@ no flickering, no morphing, no floating, no background shifting, no color shifts
 
 ---
 
+## video_safe 检查（新增）
+
+组装视频 prompt 前，检查 asset-map 中每张 @图的 `video_safe` 字段：
+
+```
+1. 读取 state/asset-map.md → 遍历所有 @图条目
+2. 检查 video_safe 列：
+   ├─ true → 正常用作视频锚点，@图引用写入 prompt
+   ├─ false → ⚠ 不推荐用于视频首帧锚点（如高密度角色圣经、HUD科技卡）
+   │         降级处理：从该 @图中提取角色DNA/场景DNA文字描述代替
+   └─ 未标注 → 默认角色卡/场景卡=true，海报/HUD卡=false
+3. video_safe=false 的图不进入 prompt 的 @图引用列表
+4. 如所有参考图都 video_safe=false → 纯 prompt 模式（无 @图引用，靠文字描述）
+```
+
+## 视觉干净度控制（新增）
+
+组装完成后，读取 `state/visual-control-state.md`，在 prompt 末尾追加：
+
+```
+读取 visual-control-state →
+  ├─ density_level + negative_noise_bans（基础）
+  ├─ genre_override.film_grain（genre 感知）
+  ├─ genre_override.skin_detail（皮肤质感）
+  └─ genre_override.lighting_style（光线风格）
+  ↓
+追加到 prompt：
+  ├─ density_level ≥ 3 时跳过基础干净词（允许丰富画面）
+  ├─ density_level ≤ 2 时追加基础控制词：
+  │    clean composition, controlled detail, no random grid artifacts,
+  │    no fake UI clutter, no over-detailed background, subject-first focus
+  └─ **始终追加 genre 特定词**（不受 density_level 限制）：
+       genre_override.positive_keywords → [追加]
+       genre_override.forbidden → 加入负面提示词
+       film_grain=cineatic/heavy → 追加 "cinematic film grain, natural texture"
+       skin_detail=natural_rosiness → 追加 "natural skin flush, subtle rosiness"
+       skin_detail=battle_worn → 追加 "visible skin texture, sweat sheen, natural blemishes"
+       lighting_style=chiaroscuro → 追加 "dramatic chiaroscuro, strong light shadow contrast"
+       lighting_style=warm_soft → 追加 "warm soft lighting, gentle glow"
+```
+
+---
+
 ## 联动
 
 ← 接收 `motion-physics` 的运动方案（每镜运动配对+修正）
 ← 接收 `video-director` 的视频结构蓝图（镜号/阶段/梗概/节奏/EC）
 ← 接收 `reference-anchor` 的平台校验结果（参考图策略+平台参数）
-← **读取 `state/asset-map.md`** 的动态 @图映射（@编号→类型→用途，不硬编码）
+← **读取 `state/asset-map.md`** 的动态 @图映射（@编号→类型→用途+video_safe+density，不硬编码）
 ← **读取 `state/shot-state.md`** 的每镜状态（时间/景别/运镜/色彩/灯光/转场/end_state）
 ← **读取 `state/dialogue-map.md`** 的台词映射（shot_id/speaker/text/delivery/subtitle）
+← **读取 `state/sound-map.md`** 的音效映射（sound_id/shot_id/type/sd_code/description/timing/volume）
+← **读取 `state/visual-control-state.md`**（density_level + negative_noise_bans + genre_override.film_grain/skin_detail/lighting_style → 控制 prompt 视觉干净度 + genre 特定质感）
+→ 检查 asset-map video_safe → 非安全资产降级为文字描述
+→ 追加 visual-control 约束词
 → 组装完整视频 prompt
 → 输出给 `prompt-scorer` 评分

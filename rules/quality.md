@@ -42,11 +42,12 @@
 | QE3 | 过饱和 | oversaturated, neon colors(非指定) | natural color grading, cinematic color |
 | QE4 | 欠曝 | underexposed, too dark(非指定) | proper exposure, balanced lighting |
 | QE5 | 过曝 | overexposed, blown highlights | proper exposure, no blown highlights |
-| QE6 | 噪点 | excessive noise, grainy(非指定) | clean image, minimal noise |
+| QE6 | 噪点 | excessive noise, grainy(非指定 genre) | genre 感知：战争/末日/悬疑/纪录片/写实 允许 cinematic grain；动漫/童话/喜剧/爱情 禁止 grain；**GPT Image 默认追加去噪**：`clean image, minimal noise, no excessive grain, crisp details, sharp rendering` |
 | QE7 | 伪影 | artifacts, rendering errors, glitches | clean rendering, no artifacts |
 | QE8 | 透视错误 | wrong perspective, distorted architecture | correct perspective, proper depth |
 | QE9 | 光影混乱 | inconsistent lighting, multiple shadows | consistent light source, proper shadows |
 | QE10 | 色温混乱 | mismatched color temperature | consistent color temperature |
+| QE11 | **GPT Image 过度燥点/颗粒** | grainy image, noise artifacts, speckled rendering, excessive film grain overlay | GPT Image 易产生过度颗粒。所有 GPT Image prompt 必须追加：`clean crisp image, minimal digital noise, no excessive film grain, smooth gradients, sharp details, no speckled artifacts, no grainy overlay` |
 
 ### 构图/内容错误
 
@@ -120,6 +121,17 @@ no mismatched color temperature, no clipping, no blur (unless specified),
 no extra limbs, no missing limbs, no fused fingers, correct fingers count,
 no asymmetrical eyes, no twisted mouth, no extra heads, no third arm
 ```
+
+### GPT Image 强去燥（GPT Image / DALL-E 3 图片平台必须追加）
+
+```
+clean crisp image, minimal digital noise, no excessive film grain,
+smooth gradients, sharp details, no speckled artifacts, no grainy overlay,
+no noise artifacts, crisp rendering, clean edges, no muddy textures,
+no over-sharpening halos, natural sharpness without grain
+```
+
+> **触发**：当 `image_platform` = GPT Image 2 / DALL-E 3 → 所有图像 prompt 末尾自动追加上述强去燥词。
 
 ### 按格式追加
 

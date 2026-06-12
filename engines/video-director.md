@@ -147,7 +147,7 @@ shot-budget → video-director（本引擎）
 
 时长：[Ns] / 镜数：[N镜] / 节奏：[P编号]
 情绪曲线：[EC编号]
-高潮镜：[镜头编号](镜[编号])
+高潮镜：`镜[编号]`
 
 必须出参考图：
   - [镜头编号] → [参考图类型] → [原因]
@@ -170,9 +170,11 @@ shot-budget → video-director（本引擎）
 ← 接收 `shot-budget` 的时长+镜数+拆段决策 + `story-intake` 的类型+角色+场景
 → 输出给 `asset-plan` 做资产规划
 → 联动 `engines/pacing.md`（节奏）+ `engines/emotion-curve.md`（情绪曲线）+ `engines/styles.md`（风格关键词→VS编号）
+→ 镜头构图与视觉隐喻：读取 `knowledge/visual-subtext.md`（空间隐喻/色彩符号/光线潜台词/道具象征——参考好莱坞视觉语言体系辅助每镜构图决策）
 → 导演风格参考：读取 `imitation/` 目录（如用户指定导演风格：Villeneuve / Wong-Kar-Wai / Nolan / Ghibli / Pixar / Zhang-Yimou，从中提取详细参数辅助 VS 选择）
 → **写入 `state/variable-registry.md`**（style.visual_style/emotion_curve/color_narrative/pacing, style_memory.*, characters.dna_id, scene.scene_id/time_of_day/weather）
 → **写入 `state/shot-state.md`**（shot_id/time/phase/scene_id/characters/shot_size/camera/focal_length/action/lighting/color/transition/end_state/climax_shot）
   └─ lighting 字段参考 style_memory.lighting_setup；质感描述参考 style_memory.texture
 → video-prompt-assembly 负面约束层追加 style_memory.negative_constraints（项目级禁止方向）
-→ **写入 `state/dialogue-map.md`**（如有台词：dialogue_id/shot_id/speaker/text/delivery/subtitle.{enabled/position/duration}/lip_sync）
+→ **调用 `engines/dialogue-engine.md` 并写入 `state/dialogue-map.md`**（台词设计：从故事提取对话 → 分配 shot_id → 标注 delivery+rhythm+subtitle+lip_sync）
+→ **调用 `engines/sound-engine.md`**（音效设计：按 genre+场景+动作+情绪匹配 SE/FX/MU/RS → 写入 state/sound-map.md）

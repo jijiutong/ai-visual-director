@@ -1,6 +1,6 @@
 ---
-name: poster
-description: Movie poster generation — cinematic posters in any style, portrait or landscape. Reads project/style from state/variable-registry. Use /poster or say "海报", "电影海报", "封面".
+name: avd/poster
+description: 【AI视觉导演】电影海报 — 10种风格×3种画幅，竖版2:3/横版16:9/方形1:1
 ---
 
 # Poster — 电影海报
@@ -9,20 +9,33 @@ description: Movie poster generation — cinematic posters in any style, portrai
 
 ## 触发方式
 
-- `/poster [片名/故事]`
+- `/avd/poster [片名/故事]`
 - 直接说 "海报"、"电影海报"、"封面"、"出张海报"
 
 ## 常用参数
 
 | 指令 | 效果 |
 |------|------|
-| `/poster 电影海报` | 标准影院海报（默认竖版 2:3） |
-| `/poster 小红书封面` | 9:16 竖版封面，适合小红书 |
-| `/poster 抖音头图` | 抖音 profile 头图比例 |
-| `/poster B站封面` | B站视频封面 16:9 |
-| `/poster 竖版海报` | 2:3 竖版电影海报 |
-| `/poster 横版海报` | 16:9 宣传横幅 |
-| `/poster 多版本` | 同主题 A/B/C 三版本对比 |
+| `/avd/poster 电影海报` | 标准影院海报（默认竖版 2:3） |
+| `/avd/poster 小红书封面` | 9:16 竖版封面，适合小红书 |
+| `/avd/poster 抖音头图` | 抖音 profile 头图比例 |
+| `/avd/poster B站封面` | B站视频封面 16:9 |
+| `/avd/poster 竖版海报` | 2:3 竖版电影海报 |
+| `/avd/poster 横版海报` | 16:9 宣传横幅 |
+| `/avd/poster 多版本` | 同主题 A/B/C 三版本对比 |
+
+## ⚠️ 路由规则
+
+| 用户说法 | 行为 |
+|---------|------|
+| `/avd/poster`（未指定） | **展示风格+画幅选单**，等用户选后再生成 |
+| `/avd/poster [片名/故事]` | 提取海报要素 → 展示风格+画幅选单 → 用户选 → 生成 |
+| `/avd/poster 竖版` / `2:3` | 默认竖版电影海报 |
+| `/avd/poster 横版` / `B站封面` | 16:9 横幅 |
+| `/avd/poster 方形` / `朋友圈` | 1:1 社交版 |
+| `/avd/poster 看风格` | 展示 10 种海报风格 |
+
+**禁止**：不展示选单直接生成。`/avd/poster` 无参数时必须展示风格+画幅。
 
 ## 工作流
 
@@ -46,6 +59,8 @@ description: Movie poster generation — cinematic posters in any style, portrai
 **画幅**：竖版 2:3（标准海报）/ 横版 16:9（宣传横幅）/ 1:1（社交媒体）
 
 ### Step 3: 生成 Prompt
+
+> **⚠️ 模板强制规则**：生成海报 Prompt 前，**必须先读取 `templates/poster.md`**（Prompt 结构权威源——画幅自适应、变量编号 CP/EV/WT/HE/BL/ME/PR/CN/VS、标语≤12字规则）。本 Skill 中嵌入的模板仅为简要速查，完整 Prompt 结构以 `templates/poster.md` 为准。不读模板直接写 = bug。
 
 **竖版海报模板（2:3）**：
 ```

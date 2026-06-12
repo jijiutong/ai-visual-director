@@ -1,176 +1,144 @@
 # AI Visual Director
 
 <p align="center">
+  <b>Prompt Production OS</b> — 把故事变成电影的 AI 导演系统<br>
+  <sub>53 视觉风格 · 44 版式布局 · 140+ 镜头技术 · 5 视频平台 · 零幻觉治理</sub>
+</p>
+
+<p align="center">
   <a href="./README.md"><b>中文</b></a> · <a href="./README.en.md">English</a>
 </p>
 
-> 把一段故事变成电影级角色卡、场景图、分镜图、视频 Prompt 和执行包。
-> 输入文字 / Markdown / Obsidian 项目 → 输出可直接喂 AI 绘图/视频工具的专业方案。
-
 ---
 
-## 这是什么
+一个故事进来，角色卡、场景图、全案板、分镜图、视频 Prompt 出去。
 
-AI Visual Director 是一个 Claude Code Skill。粘贴故事 → 自动生成专业视觉开发方案；读取 Obsidian / Markdown 项目 → 批量生成章节视频包。
+不是灵感生成器。是带**命令闸门、格式合同、资产分层、状态锁定、多维度 QC** 的生产线。
 
-主要能力：
+```text
+故事 → 摄入 → 镜头预算 → 导演决策 → 资产规划 → 一致性锚定 → 平台适配 → QC → 执行包
+```
 
-- 🎬 **一键故事转视频** — 自动提取故事 → 规划资产 → 输出完整视频执行包
-- 🧭 **输入源路由** — 支持直接粘贴 / Markdown / Obsidian / frontmatter / 批量章节
-- 🎞️ **故事转分镜** — 自动提取角色/场景/冲突 → 完整故事板 + 灯光/运镜/色彩
-- 👤 **角色设计** — 6 模块角色设定卡 + DNA 锚定
-- 🏯 **场景设计** — 全能参考图 + 导演标注版
-- 🎥 **视频 Prompt** — 一条完整 Prompt 直喂 Seedance / Runway / 可灵
-- 🎨 **50+ 视觉风格** — 东方玄幻 / 王家卫 / 赛博 / 水墨 / 3D动画…
-- 🧩 **44 种版式样式** — 全能版 / 角色板 / 场景版 / 分镜板
-- 📱 **多平台输出** — GPT Image / Midjourney 主推，兼容 SD / DALL-E
+## 为什么是它
 
----
+AI 生图/生视频工具很强，但**稳定性**是最大的问题。同一个角色换一帧就变脸，换一个镜头场景就漂移，Prompt 写着写着就开始自由发挥。
+
+AI Visual Director 做的事：**把导演工作流编码成约束系统**。每一条 Prompt 生成前先过闸门、读锁定状态、按格式合同走——不是限制创意，是把创意锁死在可执行的范围里。
+
+```text
+完整能力保留 → 默认权力收敛 → 创意显式触发 → 状态确认后写回 → 视频只组装不重设计
+```
+
+## 能力数字
+
+| | |
+|---|---|
+| **53** 视觉风格 | 黑金动作 → 吉卜力治愈 → 故障艺术，含王家卫/张艺谋/Wes Anderson/Nolan 导演风格 |
+| **44** 版式布局 | 影视工业全案板、科幻 HUD 控制台、神话巨物四镜、横幅时间轴、留白东方… |
+| **140+** 镜头技术 | 15 景别 × 66 运镜 × 21 角度 × 11 焦段 × 10 画幅 × 10 转场 × 8 特殊视角 |
+| **19** 编号体系 | VS/EC/CN/CP/ME/BL/EV/WT/MT/CR/PR/HE/TR/SD/SE/FX/MU/RS/DR — 全自动填充 |
+| **5** 视频平台 | Seedance · Runway · 可灵 · Luma · Pika，一套故事板多平台输出 |
+| **8** 角色一致性方法 | 6 模块角色卡 → 面部 5 角度 → 12 表情 → 服装武器细节 → IP-Adapter → DNA 锚定 |
+| **7** 场景一致性方法 | 全能参考板 → 九宫格 → 720° 全景 → 俯拍蓝图 → 环绕截图 → 双联宽幅 |
+| **36** 跨段衔接技法 | 图形匹配剪 · J-Cut · L-Cut · 冷冻帧 · 裂像转场 · 色彩抽离… 尾帧→首帧锁定 |
+| **12** 项视频 QC | 场景/角色/光照/道具/动作/画面/转场/字幕/材质/视觉干净度/视觉可用性/台词音效 |
 
 ## 安装
-
-### npx 安装（推荐）
 
 ```bash
 npx ai-visual-director
 ```
 
-### sh 安装
+或：
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jijiutong/ai-visual-director/main/install.sh | sh
 ```
 
-### 从源码安装
-
 ```bash
-# 1. 克隆项目
-git clone https://github.com/jijiutong/ai-visual-director.git
-
-# 2. 安装到 Claude Code skills 目录
-cd ai-visual-director
-sh install.sh
+git clone https://github.com/jijiutong/ai-visual-director.git && cd ai-visual-director && sh install.sh
 ```
 
-安装后重启 Claude Code，输入 `/create` 即可使用。
+重启 Claude Code，输入 `/create`。
 
-默认安装到 `~/.claude/skills/ai-visual-director`。如需指定目录：
-
-```bash
-npx ai-visual-director --skills-dir ~/.claude/skills
-AI_VISUAL_DIRECTOR_SKILLS_DIR=~/.claude/skills sh install.sh
-```
-
----
-
-## 30 秒上手
+## 30 秒
 
 ```text
-/create 一键生成 雨夜古寺，两名剑客在佛像前对峙，师父发现徒弟已经入魔，二人拔剑相向。15s 7镜
+/create 雨夜古寺，两名剑客在佛像前对峙，师父发现徒弟已入魔，二人拔剑相向。15s 7镜
 ```
 
-输出：故事摄入 → 镜头预算 → 角色锚点 → 场景锚点 → 分镜图 Prompt → 视频 Prompt → 执行清单
+默认 `/create standard`：
 
----
+```text
+故事摄入 → 角色锚点 → 场景锚点 → 全案板 Prompt → 视频 Prompt → QC → 执行清单
+```
 
-## 6 个核心入口
+## 命令
 
-| 命令 | 用途 | 示例 |
-|------|------|------|
-| `/create` | 一键总编排 | `/create 一键生成 [故事] 15s 7镜` |
-| `/source` | Obsidian / Markdown 项目读取 | `/source 从 Obsidian 读取 剑道独尊` |
-| `/storyboard` | 核心资产：故事板 / 分镜图 | `/storyboard [故事]` |
-| `/character` | 核心资产：角色卡 | `/character 角色名 描述` |
-| `/scene` | 核心资产：场景图 | `/scene 场景描述` |
-| `/video` | 视频 Prompt / 执行包 | `/video 出视频 prompt` |
+| 命令 | 做什么 | 不管什么 |
+|------|--------|----------|
+| `/create` | 一键总编排，三档：fast / standard / full | 自动选择档位 |
+| `/character` | 角色卡，8 种一致性方法 | 不管音效、续写、多版本 |
+| `/scene` | 场景图，7 种空间锁定方法 | 不管角色脸 |
+| `/storyboard` | 全案板、分镜图、镜头设计 | 不管重写角色 DNA |
+| `/video` | 视频 Prompt + 执行包，5 平台适配 | 只组装，不重设计 |
+| `/source` | Obsidian / Markdown / 粘贴 / 批处理输入 | 只做结构化 |
+| `/dialogue` | 台词脚本 + 节奏标注 + 字幕方案 | 按镜头写入对话映射 |
+| `/sound` | 环境音 / 拟音 / 音乐 / 混响设计 | 16 SE × 20 FX × 12 MU × 8 RS |
+| `/poster` | 电影海报，10 风格 × 3 画幅 | marketing_asset，不进视频 |
+| `/style` | 53 风格浏览、融合、迁移、14 导演模仿 | 默认 derived，不写回 |
+| `/compact` | Token 压缩、上下文管理、视觉去噪 | 不重做角色和故事 |
 
-`/style` 和 `/poster` 仍可用，作为风格动作和海报输出格式保留。
+治理命令：`/lock` `/commit` `/unlock` `/check`
 
-核心资产关系：`角色卡` 锁定“谁”，`场景图` 锁定“在哪”，`分镜图/故事板` 锁定“怎么拍”，`/create` 负责把三者编排成完整视频执行包。
+## `/create` 三档
 
-## 常用动作
+| | fast | standard ⭐ | full |
+|---|------|------------|------|
+| 故事摄入 | ✅ | ✅ | ✅ |
+| 镜头预算 | ✅ | ✅ | ✅ |
+| 角色卡 | 内联 DNA | 走模板 | 走模板 |
+| 场景图 | 内联 DNA | 走模板 | 走模板 |
+| 全案板 | — | ✅ | ✅ |
+| 视频 Prompt | ✅ | ✅ | ✅ |
+| 台词 + 音效 | — | — | ✅ |
+| 质检报告 | — | ✅ | ✅ |
+| 场景 | 快速验证 | 正式出图 | 完整交付 |
 
-| 指令 | 用途 |
+## 治理架构
+
+AI Visual Director 是四层约束系统：
+
+| 层级 | 策略 | 做什么 |
+|------|------|--------|
+| **稳定层** | always on | command-gate · format-contract · lock-state · prompt-qc · asset-qc |
+| **资产层** | 命令驱动 | 角色卡 · 场景图 · 故事板 · 视频 prompt · 台词 · 音效 · 海报 |
+| **增强层** | project 模式 | 镜头 · 节奏 · 情绪曲线 · 色彩叙事 · 运动物理 · 连续性 |
+| **探索层** | 显式触发 | 多版本 · 风格融合 · 导演模仿 · 风格迁移 · 系列续写 · Mood 滑块 |
+
+```
+draft（默认，不写回） → locked（确认，禁止自动修改） → committed（持久化）
+```
+
+## 系统
+
+| 目录 | 是什么 |
+|------|--------|
+| `engines/` | 40 个决策引擎 — 路由、闸门、导演、规划、评分、修复、打包 |
+| `rules/` | 19 个规则文件 — 格式合同、编号体系、QC、一致性、负面词、平台红线 |
+| `templates/` | 12 个 Prompt 模板 — 全案板、角色卡、场景卡、分镜图、海报、台词、音效 |
+| `knowledge/` | 32 个知识库 — 镜头、灯光、构图、表情、材质、声音、时代、道具 |
+| `sub-skills/` | 9 个子入口 — create / character / scene / storyboard / video / source / poster / style / compact |
+| `state/` | 14 个状态文件 — 变量注册、锁定、资产映射、镜头状态、对话/音效映射、依赖图 |
+| `imitation/` | 14 位导演风格库 — 王家卫/维伦纽瓦/诺兰/吉卜力/皮克斯/张艺谋… |
+
+## 平台
+
+| 图片 | 视频 |
 |------|------|
-| `一键生成` | 自动选择最佳方案，直接出视频执行包 |
-| `多版本` | 输出 A/B/C 三版对比 |
-| `看全部` | 浏览全部风格与格式 |
-| `第X镜...` | 精准修改指定镜头 |
-| `换成X风格但保持角色` | 风格迁移 |
-| `从 Obsidian 读取` | 读取项目/章节并进入批量链路 |
-| `评分` | Prompt 质量打分 + 优化建议 |
-| `检查连续性` | 检查角色、场景、时间线是否断裂 |
-| `压缩到MJ` / `压缩到SD` | 适配平台长度限制 |
-
----
-
-## 典型示例
-
-| # | 题材 | 故事 | 风格 | 示例 |
-|---|------|------|------|------|
-| 01 | 武侠 | 雨夜古寺师徒对决 | 东方玄幻 | `examples/video/01-rainy-temple-action.md` |
-| 02 | 都市 | 深夜便利店前任偶遇 | 都市情绪 | `examples/video/02-convenience-store-mood.md` |
-| 03 | 科幻 | 废弃太空港仿生少女 | 暗黑科幻 | `examples/video/03-spaceport-countdown.md` |
-| 04 | 治愈 | 蓝色桌宠送牛奶 | 3D动画电影风 | `examples/video/04-desk-pet-comedy.md` |
-
-→ 📺 **完整 Demo**：从一句话到视频检查，9 步全流程未跳 → [`demo/zero-to-one-demo.md`](demo/zero-to-one-demo.md)
-
----
-
-## 高级用法导航
-
-| 想了解 | 看这里 |
-|--------|--------|
-| 全部命令 + 全局调整 + API | [docs/commands.md](docs/commands.md) |
-| 普通用户完整使用方式 | [docs/user-guide.md](docs/user-guide.md) |
-| 14 条核心规则与限制 | [docs/rules.md](docs/rules.md) |
-| 完整 Skill 文档 | [docs/SKILL.md](docs/SKILL.md) |
-| 系统架构 / 引擎分层 | [docs/system-architecture.md](docs/system-architecture.md) |
-| 视频工作流（转视频/续写/检查） | [docs/video-workflow.md](docs/video-workflow.md) |
-| Obsidian 读取 / 批量处理 / 续集 | [docs/obsidian-workflow.md](docs/obsidian-workflow.md) |
-| 各平台 Prompt 格式参考 | [docs/platform-prompts.md](docs/platform-prompts.md) |
-| 更多样例 | [examples/](examples/) |
-
-## 系统结构
-
-| 目录 | 职责 |
-|------|------|
-| `sources/` | 直接粘贴、Obsidian、Markdown、frontmatter 等输入源处理 |
-| `engines/` | 路由、故事摄入、镜头预算、视频导演、资产规划、评分、压缩等决策引擎 |
-| `knowledge/` | 角色、场景、镜头、材质、声音、时代等知识库 |
-| `rules/` | 一致性、质量、文化准确性、负面词、规则补丁 |
-| `templates/` | 全案板、角色卡、场景卡、分镜页等最终 Prompt 模板 |
-| `platforms/` | GPT Image / Midjourney / SD / 视频平台适配 |
-| `state/` | 变量注册、资产映射、镜头状态、台词映射、项目依赖图 |
-| `projects/` | 项目模板、项目清单、可恢复的项目运行时结构 |
-| `imitation/` | 导演/工作室风格模仿库 |
-| `sub-skills/` | `/create`、`/source`、`/storyboard`、`/character`、`/scene`、`/video` 等子入口 |
-
-> 发布 / 安装时必须包含 `SKILL.md`、`sources/`、`engines/`、`knowledge/`、`rules/`、`templates/`、`platforms/`、`state/`、`projects/`、`imitation/`、`sub-skills/`、`docs/`、`examples/`。
-> `.agents/` 和 `.claude/` 是本机安装副本/缓存目录，不应进入发布包。
-
----
-
-## 平台支持
-
-| 平台 | 状态 | 说明 |
-|------|------|------|
-| GPT Image | ✅ 主推 | 长自然语言 Prompt、角色卡、分镜全案 |
-| Midjourney | ✅ 主推 | 视觉风格图、海报、关键帧 |
-| SD / SDXL / SD3 | 📝 模板兼容 | 正向/负向 Prompt，本地参数用户自行调整 |
-| DALL-E 3 | 📝 模板兼容 | 自然语言图像 Prompt |
-| ComfyUI / IP-Adapter | 🔧 社区扩展 | 不内置本地部署，欢迎 PR / Issue |
-
-> 这是一个 Prompt Workflow Skill，不是本地出图框架。
-> 遇到任何平台兼容问题 → [提交 Issue](https://github.com/jijiutong/ai-visual-director/issues)
-
----
-
-## 测试
-
-90 条回归测试，全部通过。详见 [CHANGELOG.md](CHANGELOG.md)。
-
----
+| GPT Image 2 · Midjourney v6/7 | Seedance · Runway Gen-4 · 可灵 |
+| DALL-E 3 · SDXL · SD3 | Luma · Pika |
+| Flux · Ideogram · 通义万相 · Recraft | ComfyUI / IP-Adapter（社区扩展） |
 
 ## License
 

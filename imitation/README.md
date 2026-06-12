@@ -1,5 +1,7 @@
 # Imitation Library — 导演/工作室风格模仿库
 
+> **模式限制：D类 发散探索层**。本库全部导演模仿仅 `explore` 模式可调用。产出标记 `derived`，不写回主状态。用户明确触发（如"像王家卫""吉卜力风格"）才启用。video-director 在 stable/project 模式下只能从 VS1-53 标准风格中选择，不得调用本库。详见 `engines/command-gate.md` §四。
+
 将导演风格拆解为 9 个可操作维度，供 `video-director`（风格决策）和 `style-migration`（风格迁移）精确调用。
 
 ---

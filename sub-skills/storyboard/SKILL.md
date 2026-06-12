@@ -1,21 +1,173 @@
 ---
-name: storyboard
-description: Storyboard generation — 50+ styles, 10 formats. Route: story-intake → shot-budget → video-director → state/shot-state → full-board/quick-board → state/asset-map → QC. Use /storyboard or "故事板", "分镜".
+name: avd/storyboard
+description: 【AI视觉导演】故事板/全案板/分镜图 — 全案板/分镜图/漫画页/情绪板/台词脚本/音效表。支持续写和多版本
 ---
 
 # Storyboard — 快速故事板
+
+> **治理**：走 `engines/command-gate.md` 权限表 §四 /avd/storyboard。产出标记 `draft`，不写回主状态。禁止重设角色DNA/重设场景核心。详见 `rules/format-contract.md` §1.3。
 
 粘贴任意故事片段，AI 自动提取信息 → 智能推荐最佳风格+格式 → 输出可直接复制使用的 image prompt。
 
 ## 触发方式
 
-- `/storyboard [你的故事]`
+- `/avd/storyboard [你的故事]`
 - 直接说 "故事板"、"分镜"、"帮我做这个故事板"
 - 粘贴故事内容即可自动触发
 
+## ⚠️ 路由规则（必须遵守）
+
+不同用户意图走不同路径，**不能所有情况都跑 13 步流水线**。
+
+| 用户说法 | 路由 | 输出内容 |
+|---------|------|---------|
+| `/avd/storyboard 全案板` | **直接生成全案板图** | AI 选 LS1-LS4/LS14-LS16，`templates/full-board.md` |
+| `/avd/storyboard 分镜图` | **直接生成分镜图** | AI 选 LS5/LS6/LS7，`templates/quick-board.md` |
+| `/avd/storyboard 全能版` | **直接生成全能版图** | AI 选 LS14/LS16/LS15 |
+| `/avd/storyboard 漫画页` | **漫画分镜页** | `templates/manga-page.md`，多格漫画+对白气泡（给人看，不是AI视频施工指令） |
+| `/avd/storyboard 情绪板` | **情绪板** | `templates/mood-board.md`，色彩/材质/氛围参考 |
+| `/avd/storyboard 台词脚本` | **台词脚本** | `templates/dialogue-script.md`，角色×台词×节奏 |
+| `/avd/storyboard 音效表` | **音效设计表** | `templates/sound-design-sheet.md`，镜号×音效类型×SD编号 |
+| `/avd/storyboard 续写` / `/avd/storyboard 下一段` | **续写故事板** | `engines/series.md`，继承DNA+尾帧锚定 |
+| `/avd/storyboard 多版本` | **A/B/C 三版本对比** | `engines/multi-version.md` |
+| `/avd/storyboard 看全部` | **53种风格全览** | `engines/styles.md` |
+| `/avd/storyboard 一键全平台` | **GPT Image + MJ + SD 三平台** | 同内容三平台 Prompt |
+| `/avd/storyboard [故事]` | 轻量入口 | 识别+时长+3方向推荐 |
+| `/avd/storyboard 一键生成 [故事]` | **完整流水线** | 11模块全案板 + 视频 Prompt |
+
+### ⚠️ `/avd/storyboard` 无参数 = 展示全部路由
+
+**用户只输入 `/avd/storyboard` 不传参数时，必须展示完整路由选单，让用户选。不能只拣几条、不能猜用户意图。**
+
+| 编号 | 说 | 走 |
+|------|-----|----|
+| 1 | `全案板` | 1张 5模块导演总览，LS1-LS4 |
+| 2 | `分镜图` | N张纯镜头序列（每张≤4帧），LS5/LS6/LS7 |
+| 3 | `全能版` | 一张图锁全部，LS14/LS15/LS16 |
+| 4 | `漫画页` | 多格漫画+对白气泡 |
+| 5 | `情绪板` | 色彩/材质/氛围参考 |
+| 6 | `台词脚本` | 角色×台词×节奏 |
+| 7 | `音效表` | 镜号×音效类型×SD编号 |
+| 8 | `续写` / `下一段` | 继承DNA+尾帧锚定 |
+| 9 | `多版本` | A/B/C 三版本对比 |
+| 10 | `看全部` | 53种风格全览 |
+| 11 | `一键全平台` | GPT Image + MJ + SD 三平台 |
+| 12 | `一键生成 [故事]` | 11模块完整包 |
+| 13 | `[粘贴故事]` | 我识别后推荐 3 个方向 |
+
+### 多画幅适配（全局）
+
+| 命令 | 效果 |
+|------|------|
+| `适配小红书` / `适配抖音` | 9:16 竖版 |
+| `适配B站` / `适配朋友圈` | 16:9 / 1:1 |
+| `适配所有平台` | 自动切换全部画幅 |
+
+### ⚠️ 职责边界：/avd/storyboard 不管场景和角色
+
+```
+/avd/storyboard 管：全案板、分镜图、全能版（都是"怎么拍"）
+/avd/scene 管：场景图、场景九宫格、场景锚点（都是"在哪拍"）
+/avd/character 管：角色卡、三视图、面部多角度（都是"谁在拍"）
+```
+
+**用户在本命令下说"场景""场景板""场景图""出个场景" → 不处理，提示用 `/avd/scene`。**
+
+### Mood 命令（全局识别）
+
+以下命令在任何上下文都生效，调用 `engines/mood-slider.md`：
+
+| 命令 | 色彩 | 运镜 | 镜头 |
+|------|------|------|------|
+| `更燃` | 暖色 | 快切 | 低角度+疾推 |
+| `更虐` | 冷色 | 慢镜 | 高角度俯拍+拉远 |
+| `更甜` | 柔光+粉 | 环绕→狭小空间改前推 | 浅景深 |
+| `更丧` | 去饱和 | 固定 | 空旷构图+空镜 |
+| `更暧昧` | 暖暗 | 拉焦 | 负空间+过肩 |
+| `更恐怖` | 暗调 | 手持 | 窥视视角+极速推进 |
+| `更史诗` | 金色逆光 | 慢推 | 广角+航拍 |
+| `更贵` | 材质感+秩序感 | — | 摄影参数/色卡 |
+| `克制悲壮` | 冷色低调 | 慢镜+固定 | 禁打斗动作词 |
+
+### 全案板 = 一张合成图，不是分镜拆图
+
+```
+全案板 = 一张 16:9 图，LS 版式由 AI 根据故事类型动态选择：
+  ├── 默认 LS1 影视工业全案板（5模块：顶部项目栏/左侧角色锚点/中部主视觉/右侧分镜序列/底部三栏）
+  ├── 科幻/太空/机甲 → LS2 科幻控制台全案板（HUD细线/银蓝冷光/深空黑背景）
+  ├── 神话巨物/神宫/巨龙 → LS3 神话巨物四镜序列（4大画幅电影帧/暗金标题）
+  └── 复杂调度/群像动作 → LS15 导演作战室全案（机位动线/多角色站位）
+```
+
+**禁止**：用户要全案板时输出逐帧独立 Prompt（那是 8b 分镜图像，属于一键生成流水线才出的）。**禁止输出视频 Prompt**（那是 /avd/create 的事）。
+
+### 全案板 vs 分镜图（不是一回事）
+
+```
+全案板（full_board）= 导演全案板，一张图5模块
+  ├── 顶部项目栏
+  ├── 左侧角色锚点
+  ├── 中部核心主视觉/场景概念图
+  ├── 右侧分镜序列
+  └── 底部技术参数/色彩脚本/情绪曲线
+  模板：templates/full-board.md
+  LS：LS1/LS2/LS3/LS4/LS14/LS15/LS16
+
+分镜图（storyboard）= 纯镜头序列，只有分镜帧+参数
+  ├── 顶部片名信息栏
+  ├── 中部核心场景画面
+  └── 底部 N 镜分镜序列 + 技术参数
+  模板：templates/quick-board.md
+  LS：LS5 竖排技术分镜表 / LS6 横幅长镜头时间轴 / LS7 合并帧视频锚点
+```
+
+### 全案板生成流程（简化路径）
+
+```
+用户说"全案板"（无故事，已有角色/场景）：
+  1. 读取 templates/full-board.md（必须，不走模板=bug）
+  2. 读取 rules/format-contract.md §1.3（分镜资产格式合同）
+  3. 读取 api-config.template.env（画幅/语言/平台）
+  4. 从已有资产提取变量（角色DNA/场景DNA/镜数/时长）
+  5. 按 templates/full-board.md 结构 + AI 选择的 LS 版式填充 → 输出全案板 Prompt
+  6. 分镜图张数 = ceil(总镜数/4)，每张标注"第N/M张"
+  7. 每镜标注 11 项完整参数（镜号/时间/阶段/景别/运镜/焦段/灯光/色彩/转场/动作描述/end_state）
+  8. 标注高潮帧★、首帧、尾帧
+```
+
+### 分镜图生成流程（简化路径）
+
+```
+用户说"分镜图"（无故事，已有角色/场景/镜数）：
+  1. 读取 templates/quick-board.md（必须，不走模板=bug）
+  2. 读取 rules/format-contract.md §1.3（分镜资产格式合同）→ 确认 output_type=storyboard_frame
+  3. 读取 api-config.template.env（画幅/语言/平台）
+  4. 从已有资产提取变量（角色DNA/场景DNA/镜数/时长/每镜参数）
+  5. 按 templates/quick-board.md 对应 LS 版式（LS5/LS6/LS7 择一）填充 → 输出分镜图 Prompt
+  6. 分镜图张数 = ceil(总镜数/4)，每张标注"第N/M张"
+  7. 每张≤4帧，LS6 用 21:9横幅帧+右侧参数区，LS5 用竖排表格，LS7 用合并帧堆叠
+```
+
+**分镜图禁止输出**：
+- ❌ 用 full-board 模板（全案板5模块结构）——分镜图是纯镜头序列
+- ❌ 有角色锚点栏/场景概念图模块（那些是 full-board 的模块）
+- ❌ 只出 1 张即使总镜数>4 —— 每张≤4帧，必须拆多张
+- ❌ 每帧参数缺失（11项参数必须完整：镜号/时间/阶段/景别/运镜/焦段/灯光/色彩/转场/动作描述/end_state）
+
+**全案板禁止输出**：
+- ❌ 视频 Prompt（那是 /avd/create 的事）
+- ❌ 逐帧独立图像 Prompt（那是 一键生成 模块8b 的事）
+- ❌ 场景图（那是 /avd/scene 的事）
+- ❌ 角色卡（那是 /avd/character 的事）
+- ❌ Gate 检测清单（全案板图是施工指令，不需要）
+- ❌ 连续性检查表（全案板图上已标注帧序/角色/场景一致性）
+- ❌ 技术参数总表（全案板 prompt 内的底部信息区已有）
+
 ## Visual Director Pipeline（导演总控流水线）
 
-本 Skill 按流水线执行，而不是一次性生成 Prompt。任何故事输入后，必须依次经过 13 步。
+> **此流水线仅在 `/avd/storyboard 一键生成` 或用户明确要求"完整故事板"/"出全部"时触发。** 普通 `/avd/storyboard [故事]` 走轻量入口（Step 1-3），`/avd/storyboard 全案板` 走简化路径。
+
+本 Skill 的完整流水线按 13 步执行。
 
 ### 时长自动判断（AI 多维度决策）
 
@@ -33,24 +185,46 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 
 ### 版式样式路由
 
-生成全案图、分镜图、场景图、角色卡时，必须从 `../engines/layout-styles.md` 选择一个 LS 版式样式。VS 负责视觉风格，LS 负责图面排版。
+生成全案图和分镜图时，必须从 `engines/layout-styles.md` 选择一个 LS 版式样式。VS 负责视觉风格，LS 负责图面排版。（场景图走 `/avd/scene`，角色卡走 `/avd/character`）
+
+### ⚠️ 模板强制规则（防自由发挥）
+
+**生成每个资产 Prompt 前，必须先读取对应模板文件。不读模板直接写 = bug。模板文件是 Prompt 结构的唯一权威源，Skill 不重复描述模板内容。**
+
+| 产出资产 | 必须读取的模板 |
+|---------|--------------|
+| **角色卡 Prompt** | `templates/character-sheet.md` |
+| **全案板** | `templates/full-board.md` |
+| **分镜图** | `templates/quick-board.md` |
+| **漫画分镜** | `templates/manga-page.md` |
+| **情绪板** | `templates/mood-board.md` |
+| **台词脚本** | `templates/dialogue-script.md` |
+| **音效表** | `templates/sound-design-sheet.md` |
+| **格式合同** | `rules/format-contract.md`（锁定 output_type，§1.1-§1.5） |
+
+**执行顺序**：每项资产 Prompt 生成前 → 先 Read 对应模板 → 按模板结构填充 → 输出。
+
+**禁止**：
+- ❌ 不读模板凭记忆写 Prompt
+- ❌ 分镜图用全案板模板——先读 format-contract §1.3 确认 output_type
+- ❌ 全案板拆多张 / 分镜图只出 1 张——遵守模板内帧数规则
 
 | 用户说法 | 自动版式 |
 |---------|----------|
-| 全案图 / 全案板 / 项目总览 | LS1 影视工业全案板 |
+| 全案图 / 全案板 / 项目总览 | **AI 动态选择**（默认 LS1，科幻→LS2，神话巨物→LS3） |
 | 科幻全案 / 太空 / 机甲 / 神使 | LS2 科幻控制台全案板 |
 | 神话巨物 / 巨龙 / 神宫 / 云海废墟 | LS3 神话巨物四镜序列 |
 | 九宫格 / 拼贴 / 氛围参考 | LS4 九宫格情绪拼贴全案 |
 | 技术分镜表 / 执行表 | LS5 竖排技术分镜表 |
-| 分镜图 / 15s 动作 / 一剑开天 | LS6 横幅长镜头时间轴 |
+| 分镜图 / 15s 动作 / 一剑开天 | **AI 动态选择**（默认 LS6 横幅长镜头，执行表→LS5，视频锚点→LS7） |
 | 合并帧 / 视频分镜图 / 参考图喂视频 | LS7 合并帧视频锚点 |
 | 场景图 / 场景参考图 | LS8 场景全能参考板 |
 | 场景九宫格 / 多角度锁场景 | LS9 场景九宫格锁定 |
 | 双联宽幅 / 首尾锚点 | LS10 双联宽幅场景锚点 |
-| 角色卡 / 视频一致性 | LS11 干净角色一致性卡 |
+| 角色卡 / 视频一致性 | 模式A 6模块全量版 |
 | 黑金武侠角色卡 / 玄幻角色圣经 | LS12 黑金武侠角色圣经 |
 | 科幻角色卡 / 银甲神使 / 机甲角色 | LS13 科幻神使角色系统卡 |
-| 全能版 / 一张图锁全部 / 电影圣经 | LS14 全能电影圣经板 |
+| 全能版 / 一张图锁全部 / 电影圣经 | **AI 动态选择**（默认 LS14，世界观重→LS16，复杂调度→LS15） |
 | 导演作战室 / 复杂调度 / 群像动作 | LS15 导演作战室全案 |
 | 世界观 / 阵营 / 地图 / 系列设定 | LS16 世界观设定全能板 |
 | 多版本 / 风格对比 / A/B/C 方案 | LS19 多版本风格对比板 |
@@ -206,20 +380,22 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 
 ### 一致性保证方案
 
-角色和场景的一致性不能只靠 DNA 文字重复。根据预算和需求，Gate 04/06 自动匹配对应方法。方法定义来自 `/character` 和 `/scene` skill，此处只做触发路由，不重复定义方法细节。
+角色和场景的一致性不能只靠 DNA 文字重复。根据预算和需求，Gate 04/06 自动匹配对应方法。方法定义来自 `/avd/character` 和 `/avd/scene` skill，此处只做触发路由，不重复定义方法细节。
 
-#### 角色一致性 8 种方法（Gate 04 自动选择，详见 /character）
+#### 角色一致性 8 种方法（Gate 04 自动选择，详见 /avd/character）
 
-| 编号 | 方法 | 出图量 | 锁定强度 | 适用条件（自动触发） |
-|------|------|--------|---------|-------------------|
-| C1 | 角色设定卡（6 模块） | 1 张 | ⭐⭐⭐ | 角色 ≥3 镜 / 15s+ / 用户要求一致性（**默认方法**） |
-| C2 | 三视图 | 1 张 | ⭐⭐⭐ | 用户说「三视图」/ 服装层叠复杂需多面锁定 |
-| C3 | 面部多角度（5 角度） | 1 张 | ⭐⭐⭐⭐ | 近景或特写 ≥2 个 / 双人关系戏 / 需多表情 |
-| C4 | 表情范围图（12 表情） | 1 张 | ⭐⭐⭐⭐ | 情绪弧线复杂 / 角色需极限表情 |
-| C5 | 服装/武器细节卡 | 1-2 张 | ⭐⭐⭐ | 服装饰品复杂 / 道具需跨镜精细化锁定 |
-| C6 | 14 图参考（Nano Banana） | 14 张 | ⭐⭐⭐⭐⭐ | 用户说「14图」/ 最强一致性需求 |
-| C7 | IP-Adapter（ComfyUI） | 零 | ⭐⭐⭐⭐⭐ | 用户说「IP-Adapter」/ 本地最强锁定 |
-| C8 | 角色 DNA 20 字段 | 零 | ⭐⭐ | 5-10s 快速版 / 单图 / 短 Prompt（默认最低锚点） |
+> 出图量/锁定强度/费用/耗时 **不在此表中写死**——从 `rules/character-consistency.md` 读取最新值。
+
+| 编号 | 方法 | 适用条件（自动触发） |
+|------|------|-------------------|
+| C1 | 角色设定卡（6 模块） | 角色 ≥3 镜 / 15s+ / 用户要求一致性（**默认方法**） |
+| C2 | 三视图 | 用户说「三视图」/ 服装层叠复杂需多面锁定 |
+| C3 | 面部多角度（5 角度） | 近景或特写 ≥2 个 / 双人关系戏 / 需多表情 |
+| C4 | 表情范围图（12 表情） | 情绪弧线复杂 / 角色需极限表情 |
+| C5 | 服装/武器细节卡 | 服装饰品复杂 / 道具需跨镜精细化锁定 |
+| C6 | 14 图参考（Nano Banana） | 用户说「14图」/ 最强一致性需求 |
+| C7 | IP-Adapter（ComfyUI） | 用户说「IP-Adapter」/ 本地最强锁定 |
+| C8 | 角色 DNA 20 字段 | 5-10s 快速版 / 单图 / 短 Prompt（默认最低锚点） |
 
 **方法叠加策略**（自动判断，只升不降）：
 - **5-10s 快速版** → C8（DNA 文字，零成本保底），角色 DNA 内联嵌入分镜 Prompt
@@ -245,17 +421,19 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 [✅ 通过 / ⚠️ 需修正：具体问题]
 ```
 
-#### 场景一致性 7 种方法（Gate 06 自动选择，详见 /scene）
+#### 场景一致性 7 种方法（Gate 06 自动选择，详见 /avd/scene）
 
-| 编号 | 方法 | 出图量 | 锁定强度 | 适用条件（自动触发） |
-|------|------|--------|---------|-------------------|
-| S1 | 俯拍图 | 1 张 | ⭐⭐ | 室内/庭院/需锁定空间布局 |
-| S2 | 4 宫格 | 1 张 | ⭐⭐ | 中小场景（房间/走廊） |
-| S3 | 9 宫格 | 1 张 | ⭐⭐⭐ | 复杂场景 / 用户说「场景九宫格」 |
-| S4 | 全能参考模式 | 1 张 | ⭐⭐⭐⭐ | 15s+ / 同空间连续（**默认方法**） |
-| S5 | 720° 全景图 | 6 张 | ⭐⭐⭐⭐ | 30s+ / 多角度视频拍摄 |
-| S6 | 环绕视频截图法 | 1视频+N图 | ⭐⭐⭐⭐⭐ | 3D 引擎 / 空间一致性极高需求 |
-| S7 | 文字场景锁定 | N 张 | ⭐⭐⭐ | 5-10s 快速版 / 单场景短片（默认最低锚点） |
+> 出图量/锁定强度/费用/耗时 **不在此表中写死**——从 `rules/scene-consistency.md` 读取最新值。
+
+| 编号 | 方法 | 适用条件（自动触发） |
+|------|------|-------------------|
+| S1 | 俯拍图 | 室内/庭院/需锁定空间布局 |
+| S2 | 4 宫格 | 中小场景（房间/走廊） |
+| S3 | 9 宫格 | 复杂场景 / 用户说「场景九宫格」 |
+| S4 | 全能参考模式 | 15s+ / 同空间连续（**默认方法**） |
+| S5 | 720° 全景图 | 30s+ / 多角度视频拍摄 |
+| S6 | 环绕视频截图法 | 3D 引擎 / 空间一致性极高需求 |
+| S7 | 文字场景锁定 | 5-10s 快速版 / 单场景短片（默认最低锚点） |
 
 **方法叠加策略**（自动判断，只升不降）：
 - **5-10s 快速版** → S7（文字场景锁定），场景 DNA 内联嵌入分镜 Prompt
@@ -286,9 +464,9 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 ```
 01 全案版 → 角色DNA + 场景DNA + 色彩DNA + 道具DNA（首次定义）
      ↓
-03 角色版 → 继承角色DNA，锁定20字段，按自动匹配或用户指定方法生成角色卡（→ /character）
+03 角色版 → 继承角色DNA，锁定20字段，按自动匹配或用户指定方法生成角色卡（→ /avd/character）
      ↓
-05 场景版 → 继承场景DNA + 色彩DNA，锁定空间/灯光/氛围，按自动匹配或用户指定方法生成场景参考图（→ /scene）
+05 场景版 → 继承场景DNA + 色彩DNA，锁定空间/灯光/氛围，按自动匹配或用户指定方法生成场景参考图（→ /avd/scene）
      ↓
 07 分镜版 → 继承全部DNA，角色DNA必须逐镜重复 + @角色卡/@场景图引用到位
      ↓
@@ -349,7 +527,7 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 
 **缺字段自动补全**：没角色名 → 起电影感名字；没明确类型 → 按冲突强度推断。
 
-**重要**：Step 1 信息提取表仅内部使用。第一轮推荐不展示完整提取表，完整表放入 `/storyboard 一键生成` 输出。
+**重要**：Step 1 信息提取表仅内部使用。第一轮推荐不展示完整提取表，完整表放入 `/avd/storyboard 一键生成` 输出。
 
 ### Step 2: 智能推荐（轻量入口）
 
@@ -395,7 +573,7 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 - 品牌名仅在用户说「看全部」或明确指定品牌风格时展示
 - 科幻题材**禁止默认推荐机甲**。仅当文本明确出现机甲/驾驶舱/外骨骼/机器人战斗单位等硬核机械战斗元素时，才推荐科幻机甲风格。太空/空间站/仿生人/AI/外星等题材默认推荐暗黑科幻
 
-完整 53 种风格 → 说 "看全部" 展示（完整列表见 ai-visual-director 主 Skill 的 `../engines/styles.md`）。
+完整 53 种风格 → 说 "看全部" 展示（完整列表见 `engines/styles.md`）。
 
 ### 题材禁忌矩阵
 
@@ -429,36 +607,36 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 
 ### 快捷指令
 
-#### /storyboard — 故事板生成
+#### /avd/storyboard — 故事板生成
 
 | 指令 | 效果 |
 |------|------|
-| `/storyboard [故事]` | 粘贴故事 → 智能推荐 2-3 个风格方向 |
-| `/storyboard 一键生成 [故事] [时长] [镜数]` | 直接出 11 模块完整故事板 |
-| `/storyboard 一键生成 简洁` | 精简输出：角色+场景+分镜表+Prompt |
-| `/storyboard 多版本` | A/B/C 三版本对比 |
-| `/storyboard 一键全平台` | GPT Image + Midjourney + SD 三平台输出 |
-| `/storyboard 看全部` | 展示 53 种风格 + 10 种格式 + 全部工作流 |
+| `/avd/storyboard [故事]` | 粘贴故事 → 智能推荐 2-3 个风格方向 |
+| `/avd/storyboard 一键生成 [故事] [时长] [镜数]` | 直接出 11 模块完整故事板 |
+| `/avd/storyboard 一键生成 简洁` | 精简输出：角色+场景+分镜表+Prompt |
+| `/avd/storyboard 多版本` | A/B/C 三版本对比 |
+| `/avd/storyboard 一键全平台` | GPT Image + Midjourney + SD 三平台输出 |
+| `/avd/storyboard 看全部` | 展示 53 种风格 + 10 种格式 + 全部工作流 |
 
 参数：`时长(如 15s)` / `镜数(如 4镜)` / `风格名` / `格式名`
 
-#### /character — 角色设计
+#### /avd/character — 角色设计
 
 | 指令 | 效果 |
 |------|------|
-| `/character [角色名] [描述]` | 默认 6 模块角色设定卡（出图模式，无文字标注） |
-| `/character 三视图 [角色名]` | 正/侧/背三视图 |
-| `/character 面部多角度 [角色名]` | 5 角度面部特写 |
-| `/character 角色DNA [角色名]` | 20 字段文字锚定（零成本） |
+| `/avd/character [角色名] [描述]` | 默认 6 模块角色设定卡（出图模式，无文字标注） |
+| `/avd/character 三视图 [角色名]` | 正/侧/背三视图 |
+| `/avd/character 面部多角度 [角色名]` | 5 角度面部特写 |
+| `/avd/character 角色DNA [角色名]` | 20 字段文字锚定（零成本） |
 
-#### /scene — 场景设计
+#### /avd/scene — 场景设计
 
 | 指令 | 效果 |
 |------|------|
-| `/scene [描述]` | 默认全能参考图（出图模式，无标注） |
-| `/scene 场景九宫格 [描述]` | 3×3 九宫格场景参考图，9 视角空间全覆盖 |
+| `/avd/scene [描述]` | 默认全能参考图（出图模式，无标注） |
+| `/avd/scene 场景九宫格 [描述]` | 3×3 九宫格场景参考图，9 视角空间全覆盖 |
 
-#### /video — 视频 Prompt
+#### /avd/video — 视频 Prompt
 
 | 指令 | 效果 |
 |------|------|
@@ -483,19 +661,19 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 **角色设计（完整）**：
 | 指令 | 效果 |
 |------|------|
-| `/character 导演标注版 [角色名]` | 角色卡 + 红色标注/编号（团队协作） |
-| `/character 12表情 [角色名]` | 3×4 宫格情绪范围图 |
-| `/character 服装武器细节卡 [角色名]` | 服装+武器独立细节卡 |
-| `/character 14图参考 [角色名]` | Nano Banana 最强锚定（14 图全角度） |
-| `/character IP-Adapter [角色名]` | ComfyUI IP-Adapter 本地锁定 |
+| `/avd/character 导演标注版 [角色名]` | 角色卡 + 红色标注/编号（团队协作） |
+| `/avd/character 12表情 [角色名]` | 3×4 宫格情绪范围图 |
+| `/avd/character 服装武器细节卡 [角色名]` | 服装+武器独立细节卡 |
+| `/avd/character 14图参考 [角色名]` | Nano Banana 最强锚定（14 图全角度） |
+| `/avd/character IP-Adapter [角色名]` | ComfyUI IP-Adapter 本地锁定 |
 
 **场景设计（完整）**：
 | 指令 | 效果 |
 |------|------|
-| `/scene 导演标注版 [描述]` | 全能参考图 + 箭头/编号/红框 |
-| `/scene 720全景 [描述]` | 360°×180° 全景环境图 |
-| `/scene 环绕截图 [描述]` | 环绕视频 → 8 角度截图 |
-| `/scene camera remix [描述]` | 同场景多角度镜头变化 |
+| `/avd/scene 导演标注版 [描述]` | 全能参考图 + 箭头/编号/红框 |
+| `/avd/scene 720全景 [描述]` | 360°×180° 全景环境图 |
+| `/avd/scene 环绕截图 [描述]` | 环绕视频 → 8 角度截图 |
+| `/avd/scene camera remix [描述]` | 同场景多角度镜头变化 |
 
 **视频 Prompt（完整）**：
 | 指令 | 效果 |
@@ -510,15 +688,15 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 **风格调整**：
 | 指令 | 效果 |
 |------|------|
-| `/style 换成 [风格名] 但保持角色` | 风格迁移（只改视觉不改剧情） |
-| `/style 多版本` | A/B/C 三版本对比 |
-| `/style 压缩到 MJ` / `压缩到 SD` | 平台最佳长度压缩 |
-| `/style 看全部` | 浏览 53 种风格 |
+| `/avd/style 换成 [风格名] 但保持角色` | 风格迁移（只改视觉不改剧情） |
+| `/avd/style 多版本` | A/B/C 三版本对比 |
+| `/avd/style 压缩到 MJ` / `压缩到 SD` | 平台最佳长度压缩 |
+| `/avd/style 看全部` | 浏览 53 种风格 |
 
 **海报**：
 | 指令 | 效果 |
 |------|------|
-| `/poster [故事/描述]` | 电影海报/宣传海报 |
+| `/avd/poster [故事/描述]` | 电影海报/宣传海报 |
 
 **Mood 滑块详情**：
 | 指令 | 色彩 | 运镜 | 镜头 |
@@ -544,7 +722,7 @@ description: Storyboard generation — 50+ styles, 10 formats. Route: story-inta
 
 ## 推荐默认输出（全案板 · 11 模块）
 
-/storyboard 一键生成默认固定输出以下 11 个模块（全案板）：
+/avd/storyboard 一键生成默认固定输出以下 11 个模块（全案板）：
 
 ```
 1. 故事核心 — 片名/类型/核心冲突/叙事结构
@@ -919,7 +1097,7 @@ MJ 参数：--ar 16:9 --style raw --s 250 --v 6.1
 [✅ Gate 08 通过 / ⚠️ 需修正：具体断裂点及修复建议]
 
 【10. 禁文字 / 禁动作 / 禁风格漂移扫描】
-□ 禁文字：Prompt 中无 inscription/name/text/character/written → 全部改为 abstract grooves/scar-like marks/non-symbolic
+□ 禁文字：Prompt 中无 inscription/name/text/avd/character/written → 全部改为 abstract grooves/scar-like marks/non-symbolic
 □ 禁动作：Prompt 中无 combat/fight/attack/battle → 改为 restrained gesture/ritual movement/slow ceremonial
 □ 禁风格漂移：所有 Prompt 包含风格关键词 [风格关键词]
 □ 高频文字泄漏点：[逐项扫描工牌/店招/监控/海报/硬币/书本]
@@ -978,7 +1156,7 @@ MJ 参数：--ar 16:9 --style raw --s 250 --v 6.1
 
 ### 视频 Prompt 简化规则
 
-- 视频 Prompt（模块 7）必须精简：每个镜头 ≤3 句画面描述 + 运镜 + 转场，总字数 ≤1500
+- 视频 Prompt（模块 7）必须精简：每个镜头 ≤3 句画面描述 + 运镜 + 转场，总字数 ≤ {PLATFORM}_MAX_PROMPT_CHARS（从 api-config.template.env 读取目标平台限制）
 - 平台压缩版（按需输出）≤ 800字（视频平台通用安全线，短于各平台硬上限），去掉场景重复描述，仅保留角色DNA+画面+运镜+转场
 - 图像 Prompt（模块 8）可以更详细：每个镜头 3-5 句完整描述
 - 技术参数（焦段/T值/色温）保留在分镜表中，不进入复制 Prompt
@@ -1194,7 +1372,7 @@ no supernatural distortion — just a soft reflection, like looking through a we
 
 ### Prompt 简化规则
 
-- **视频 Prompt**（模块 7）：每个镜头 ≤3 句，总 Prompt ≤1500 字，去掉焦段/T值等人类导演参数
+- **视频 Prompt**（模块 7）：每个镜头 ≤3 句，总 Prompt ≤ {PLATFORM}_MAX_PROMPT_CHARS 字（从 api-config.template.env 读取），去掉焦段/T值等人类导演参数
 - **图像 Prompt**（模块 8）：每个镜头 3-5 句完整描述
 - **复制 Prompt** 只保留：角色 DNA 片段 + 场景 DNA 片段 + 画面描述 + 运镜 + 色彩/灯光 + 负面词
 - **技术参数表**（焦段/T值/色温/摄影机）保留为导演参考，不混入可复制 Prompt 中
@@ -1205,7 +1383,7 @@ no supernatural distortion — just a soft reflection, like looking through a we
 
 - **视频完整可复制连续版**（≤ {PLATFORM}_MAX_PROMPT_CHARS 字，中文，长度=当前平台上限）：用户输入 `输出连续版` 时触发。所有镜头合并为一条连续中文 prompt。
 - **视频完整可复制英文版**（≤ {PLATFORM}_MAX_PROMPT_CHARS 字，英文）：用户输入 `输出英文版` 时触发。所有镜头合并为一条连续英文 prompt，含角色DNA+场景DNA+运镜+转场+色彩。
-- **平台压缩版**（≤ 800字，视频平台通用安全线）：用户输入 `输出平台压缩版` 时触发。去掉场景重复描述、焦段信息、色彩渐变细节，只保留角色DNA片段 + 每镜关键画面描述 + 运镜 + 转场 + 核心负面词。标注 `【平台压缩版 · 直接复制到 Seedance / Runway / 可灵】`。如15s视频镜数≥6，建议标注"稳定性提示：可压缩为5镜"。
+- **平台压缩版**（≤ 800字，视频平台通用安全线，短于各平台硬上限）：用户输入 `输出平台压缩版` 时触发。去掉场景重复描述、焦段信息、色彩渐变细节，只保留角色DNA片段 + 每镜关键画面描述 + 运镜 + 转场 + 核心负面词。标注 `【平台压缩版 · 直接复制到 Seedance / Runway / 可灵】`。如镜数≥6且平台上限紧张，建议标注"稳定性提示：可压缩为5镜"。
 
 ### 输出后交互提示
 
@@ -1219,5 +1397,5 @@ no supernatural distortion — just a soft reflection, like looking through a we
 5. 场景九宫格 → 3×3 九宫格场景参考图，9 视角空间全覆盖
 6. 切换风格 → 如"换成黑金动作风"
 7. 调整情绪 → 更燃 / 更虐 / 更甜 / 更丧 / 更暧昧 / 更恐怖 / 更史诗
-8. 更多指令 → 查询 /character、/scene、/video、/style、/poster 子指令（如"查询 /character"）
+8. 更多指令 → 查询 /avd/character、/avd/scene、/avd/video、/avd/style、/avd/poster 子指令（如"查询 /avd/character"）
 ```

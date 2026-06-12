@@ -11,30 +11,31 @@
 
 | 变量 | 值 | 写入方 |
 |------|-----|--------|
-| `project.id` | — | `project-manager`（格式：PROJ-YYYYMMDD-XXXX） |
-| `project.state_dir` | — | `project-manager`（如：projects/PROJ-20260610-A3F2/） |
-| `project.created_at` | — | `project-manager`（初始化时间戳） |
-| `project.saved_at` | — | `project-manager`（最后保存时间戳） |
-| `project.title` | — | `story-intake` |
-| `project.genre` | — | `story-intake` |
-| `project.duration` | — | `shot-budget` |
-| `project.aspect_ratio` | — | `story-intake`（读取 api-config.template.env → `DEFAULT_ASPECT_RATIO`） |
-| `project.target_platform` | — | `story-intake`（读取 api-config.template.env → `VIDEO_PLATFORM_DEFAULT`） |
-| `project.language` | — | `story-intake`（读取 api-config.template.env → `DEFAULT_LANGUAGE`） |
-| `project.word_count` | — | `shot-budget`（初始估算），`reference-anchor`（平台校验后更新） |
+| `project.id` | `PROJ-20260612-A7K2` | `project-manager`（格式：PROJ-YYYYMMDD-XXXX） |
+| `project.state_dir` | `projects/PROJ-20260612-A7K2/` | `project-manager`（如：projects/PROJ-20260610-A3F2/） |
+| `project.created_at` | `2026-06-12T00:00:00Z` | `project-manager`（初始化时间戳） |
+| `project.saved_at` | `—` | `project-manager`（最后保存时间戳） |
+| `project.title` | `雨夜窗边` | `story-intake` |
+| `project.genre` | `都市 / 情绪` | `story-intake` |
+| `project.duration` | `15s` | `shot-budget` |
+| `project.aspect_ratio` | `16:9` | `story-intake`（读取 api-config.template.env → `DEFAULT_ASPECT_RATIO`） |
+| `project.target_platform` | `Seedance` | `story-intake`（读取 api-config.template.env → `VIDEO_PLATFORM_DEFAULT`） |
+| `project.language` | `zh` | `story-intake`（读取 api-config.template.env → `DEFAULT_LANGUAGE`） |
+| `project.word_count` | `7`（输入）→ 扩展约120字 | `shot-budget`（初始估算），`reference-anchor`（平台校验后更新） |
+| `project.segment_count` | `1` | `shot-budget`（15s ≤ SEEDANCE_MAX_DURATION=15s，不拆段） |
 
 ## 风格变量
 
 | 变量 | 值 | 写入方 |
 |------|-----|--------|
-| `style.visual_style` | — | `video-director`（VS编号.名称） |
-| `style.emotion_curve` | — | `video-director`（EC编号） |
-| `style.layout_full_board` | — | `asset-plan`（LS编号，全案板用） |
-| `style.layout_storyboard` | — | `asset-plan`（LS编号，故事板用） |
-| `style.layout_character` | — | `asset-plan`（LS编号，角色卡用） |
-| `style.layout_scene` | — | `asset-plan`（LS编号，场景图用） |
-| `style.color_narrative` | — | `video-director`（CN编号） |
-| `style.pacing` | — | `video-director`（P编号） |
+| `style.visual_style` | `VS18 都市情绪` | `video-director`（VS编号.名称） |
+| `style.emotion_curve` | `EC4 忧郁→释然` | `video-director`（EC编号） |
+| `style.layout_full_board` | `—` | `asset-plan`（LS编号，全案板用） |
+| `style.layout_storyboard` | `LS6 6格分镜` | `asset-plan`（LS编号，故事板用） |
+| `style.layout_character` | `模式A 6模块全量版` | `asset-plan`（LS编号，角色卡用） |
+| `style.layout_scene` | `LS8 全能参考图` | `asset-plan`（LS编号，场景图用） |
+| `style.color_narrative` | `CN3 冷暖对比` | `video-director`（CN编号） |
+| `style.pacing` | `P3 慢节奏` | `video-director`（P编号） |
 
 ## 风格记忆（项目级持久化）
 
@@ -42,15 +43,15 @@
 
 | 变量 | 值 | 写入方 |
 |------|-----|--------|
-| `style_memory.locked` | — | `video-director`（首次设定后标记 true，用户说"换风格"时解锁） |
-| `style_memory.director_reference` | — | `video-director`（导演风格参考：Villeneuve / Wong-Kar-Wai / Nolan / Ghibli / Pixar / Zhang-Yimou） |
-| `style_memory.vs_id` | — | `video-director`（VS编号.名称，如 VS7.东方玄幻修仙） |
-| `style_memory.color_palette` | — | `video-director`（主配色方案：hex色值列表，从 VS 定义提取） |
-| `style_memory.camera_language` | — | `video-director`（运镜偏好描述） |
-| `style_memory.lighting_setup` | — | `video-director`（灯光方案偏好描述） |
-| `style_memory.texture` | — | `video-director`（质感偏好：film grain / clean digital / vintage / etc） |
-| `style_memory.negative_constraints` | — | `video-director`（项目级禁止方向列表） |
-| `style_memory.chapter_styles` | — | `batch-chapter`（各章风格变体记录：[{chapter, vs_id, color_override, notes}]） |
+| `style_memory.locked` | `true` | `video-director`（首次设定后标记 true，用户说"换风格"时解锁） |
+| `style_memory.director_reference` | `王家卫（Wong-Kar-Wai）— 雨夜情绪、城市孤独` | `video-director`（导演风格参考：Villeneuve / Wong-Kar-Wai / Nolan / Ghibli / Pixar / Zhang-Yimou） |
+| `style_memory.vs_id` | `VS18 都市情绪` | `video-director`（VS编号.名称，如 VS7.东方玄幻修仙） |
+| `style_memory.color_palette` | `暖黄 #d4a574 / 冷蓝 #3a5a7c / 琥珀 #8b6914 / 深棕 #2a1a0a` | `video-director`（主配色方案：hex色值列表，从 VS 定义提取） |
+| `style_memory.camera_language` | `缓慢前推/后拉、固定机位、浅景深、凝视式长镜头` | `video-director`（运镜偏好描述） |
+| `style_memory.lighting_setup` | `窗边自然主义：室内暖黄主光 + 窗外冷蓝街灯 + 雨痕折射光斑` | `video-director`（灯光方案偏好描述） |
+| `style_memory.texture` | `轻微胶片颗粒、柔和散景、雨天湿润质感` | `video-director`（质感偏好：film grain / clean digital / vintage / etc） |
+| `style_memory.negative_constraints` | `无快速运镜/无环绕/无旋转/无航拍/无强光直射/无饱和色彩` | `video-director`（项目级禁止方向列表） |
+| `style_memory.chapter_styles` | `—` | `batch-chapter`（各章风格变体记录：[{chapter, vs_id, color_override, notes}]） |
 
 ### 风格记忆使用规则
 
@@ -76,15 +77,15 @@ video-director 启动时：
 
 | 变量 | 值 | 写入方 |
 |------|-----|--------|
-| `characters.protagonist.name` | — | `story-intake`（缺则自动起名） |
-| `characters.protagonist.dna_id` | — | `video-director`（C1/C2...） |
-| `characters.protagonist.immutable_features` | — | `asset-plan`（硬锁特征，必含：脸型/眼型瞳色/鼻型/发型发色/肤色/身高体型，+ 角色特有标志） |
-| `characters.protagonist.dna_full` | — | `asset-plan`（DNA 20 字段完整值：1姓名 2性别年龄 3身高体型 4脸型 5眼型瞳色 6眉型 7鼻型 8嘴型唇色 9发型发色 10肤色 11服装 12配饰 13武器道具 14声音 15体态站姿 16习惯动作 17气味 18情绪底色 19可变字段 20不变量标注） |
-| `characters.antagonist.name` | — | `story-intake` |
-| `characters.antagonist.dna_id` | — | `video-director` |
-| `characters.antagonist.immutable_features` | — | `asset-plan` |
-| `characters.antagonist.dna_full` | — | `asset-plan` |
-| `characters.supporting` | — | `story-intake`（[{name, role}] 列表） |
+| `characters.protagonist.name` | `沈默` | `story-intake`（缺则自动起名） |
+| `characters.protagonist.dna_id` | `C1` | `video-director`（C1/C2...） |
+| `characters.protagonist.immutable_features` | `单眼皮、直鼻梁、薄唇、下颌线清晰但柔和、深黑短发自然纹理、瘦高体型、肤色偏白` | `asset-plan`（硬锁特征，必含：脸型/眼型瞳色/鼻型/发型发色/肤色/身高体型，+ 角色特有标志） |
+| `characters.protagonist.dna_full` | `1沈默 2男32岁 3瘦高肩背微前倾 4椭圆脸下颌清晰 5单眼皮深棕瞳 6平直眉 7直鼻梁 8薄唇浅粉 9深黑短发自然纹理几缕垂额 10偏白肤色 11黑色高领毛衣深灰长裤 12无配饰 13白色陶瓷咖啡杯 14低沉缓慢男声 15微微前倾坐姿双手自然放桌上 16拇指轻摩挲杯沿 17淡淡木质调气息 18忧郁/沉静 19表情/姿态/光照角度 20均不可变` | `asset-plan`（DNA 20 字段完整值：1姓名 2性别年龄 3身高体型 4脸型 5眼型瞳色 6眉型 7鼻型 8嘴型唇色 9发型发色 10肤色 11服装 12配饰 13武器道具 14声音 15体态站姿 16习惯动作 17气味 18情绪底色 19可变字段 20不变量标注） |
+| `characters.antagonist.name` | `—` | `story-intake` |
+| `characters.antagonist.dna_id` | `—` | `video-director` |
+| `characters.antagonist.immutable_features` | `—` | `asset-plan` |
+| `characters.antagonist.dna_full` | `—` | `asset-plan` |
+| `characters.supporting` | `[{"name":"咖啡师","role":"背景功能角色，不露脸，仅在背景虚化中出现"}]` | `story-intake`（[{name, role}] 列表） |
 
 > **DNA 锁定分层**：
 > - **硬锁（immutable_features）**：跨镜绝对不变 — 脸型/眼型瞳色/鼻型/发型发色/肤色/身高体型/标志性特征（疤痕/纹身/胎记）
@@ -95,11 +96,11 @@ video-director 启动时：
 
 | 变量 | 值 | 写入方 |
 |------|-----|--------|
-| `scene.primary.name` | — | `story-intake` |
-| `scene.primary.scene_id` | — | `video-director`（S1/S2...） |
-| `scene.primary.fixed_elements` | — | `asset-plan`（不可变空间元素列表） |
-| `scene.time_of_day` | — | `video-director` |
-| `scene.weather` | — | `video-director`（WT编号） |
+| `scene.primary.name` | `深夜咖啡店` | `story-intake` |
+| `scene.primary.scene_id` | `S1` | `video-director`（S1/S2...） |
+| `scene.primary.fixed_elements` | `靠窗双人桌（窗边第3桌）、窗上雨痕、吧台位置（画面右侧后方）、窗外街灯与模糊霓虹、咖啡杯位置（桌面右侧）` | `asset-plan`（不可变空间元素列表） |
+| `scene.time_of_day` | `深夜 23:00` | `video-director` |
+| `scene.weather` | `WT3 持续细雨` | `video-director`（WT编号） |
 
 ## 写入阶段
 

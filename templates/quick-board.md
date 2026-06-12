@@ -1,13 +1,43 @@
 # 快速故事板模板
 
+> **治理**：生成前读 `state/format-contract-state.md`。产出标记 `draft`，不写回主状态。资产用途 `display_asset`，进视频 @图需先派生 clean keyframe。详见 `rules/format-contract.md` §1.3。
+
 ## 适用场景
 
 精简版故事板，适合快速验证想法和单场景分镜参考。比全案板少了角色三视图和技术规范栏，出图速度快，成本低。
 
+> **视觉密度控制**：生成前读取 `state/visual-control-state.md`。分镜图默认 density=2, background=low, text=minimal, hud=none, particles=subtle, focus=action。所有分镜图 prompt 末尾自动追加：`clear panel separation, readable action, controlled annotations, no overloaded labels, no messy panels`。
+
+## 每帧必须标注的参数
+
+> LS5/LS6/关键帧模式统一参数基线。LS7 合并帧为纯视觉锚点，免除文字参数。
+
+| 参数 | 说明 | LS5 | LS6 | 关键帧 | LS7 |
+|------|------|:---:|:---:|:---:|:---:|
+| **镜号** | SH01-SH0N | ✅ 镜头编号 | ✅ 帧名 | ✅ 帧号 | — |
+| **时间段** | 起止时间码 | ✅ 时长 | ✅ | ✅ | — |
+| **阶段** | 建立/引入/发展/高潮/余韵/收束 | — | ✅ | ✅ | ✅ 阶段名 |
+| **景别** | ELS/FS/LS/MS/MCU/CU/ECU | ✅ | ✅ | ✅ | — |
+| **运镜** | 前推/后拉/侧推/固定/跟拍/俯拍/仰拍 + 速度 | ✅ | ✅ | ✅ | — |
+| **焦段** | mm 数 | ✅ | ✅ | ✅ | — |
+| **灯光** | 主光方向/补光/轮廓光/环境光 | ✅ | ✅ | ✅ | — |
+| **色彩** | 色值/色彩倾向 | ✅ | ✅ | ✅ | — |
+| **转场** | 入/出转场方式 | ✅ 转场节奏 | ✅ | ✅ | — |
+| **动作描述** | ≤25字，画面核心内容 | ✅ 画面内容 | ✅ | ✅ | — |
+| **end_state** | 角色位置/动作末态/视线/光向/情绪（供下镜继承） | ✅ | ✅ | ✅ | — |
+
+> **end_state 规则**：每镜必须标注 end_state，下一镜继承。格式：`{角色}在{位置}，{动作末态}，{视线方向}，{光向}，{情绪}`。例：`周野靠椅背坐电脑前，放松后仰，视线在屏幕，屏幕冷蓝光，麻木`。
+
+### 参数跨 LS 差异说明
+
+- **LS5 竖排表**：灯光/色彩合并到「镜头语言」字段中（`机位/景别/运镜/焦段/灯光/色彩`），声音独立为单独列
+- **LS6 横幅**：动作描述放在画面内显示，end_state 放在参数区末行
+- **LS7 合并帧**：纯视觉锚点。仅标注阶段名（覆盖的镜头阶段），其余参数免除。文字越少越好
+
 ## Prompt 模板
 
 ```text
-电影级漫剧故事板，主题《[片名]》，核心冲突：[一句话故事]。[画幅比例，默认 DEFAULT_ASPECT_RATIO（api-config.template.env）] 横版，专业电影前期制作分镜板。版式样式：[LS编号. 版式名称]（见 engines/layout-styles.md）；默认 LS6 横幅长镜头时间轴，执行表/广告片用 LS5，视频参考图用 LS7。顶部片名和信息栏，中部超大核心场景概念图展示 [EV编号. 环境 + 场景地点] + [WT编号. 天气] + [氛围] + [构图: CP编号]，[场景地点] 的对峙画面（身体语言：[BL编号. 姿态]），底部 [7/13] 镜分镜表（情绪曲线 [EC编号] 驱动）+ 简易镜头轨迹图 + 色彩叙事 [CN编号]。角色DNA：主角 [核心面部/服装特征]，对手 [核心面部/服装特征]。风格：[风格编号. 风格名称]，[氛围关键词]，配色 [主色1] + [主色2] + [点缀色]，cinematic storyboard sheet, professional film production layout, ARRI ALEXA 35, anamorphic lens, strong contrast lighting, film grain, volumetric light, ultra-detailed, 8K, clean industrial layout, coherent character design, no watermark, no garbled text, no messy panels, no broken anatomy, no flat illustration, no marketing poster style。
+电影级漫剧故事板，主题《[片名]》，核心冲突：[一句话故事]。[画幅比例，默认 DEFAULT_ASPECT_RATIO（api-config.template.env）] 横版，专业电影前期制作分镜板。版式样式：[LS编号. 版式名称]（见 engines/layout-styles.md）；默认 LS6 横幅长镜头时间轴，执行表/广告片用 LS5，视频参考图用 LS7。顶部片名和信息栏，中部超大核心场景概念图展示 [EV编号. 环境 + 场景地点] + [WT编号. 天气] + [氛围] + [构图: CP编号]，[场景地点] 的对峙画面（身体语言：[BL编号. 姿态]），底部 [镜数] 镜分镜表（镜数由 video-director + consistency-trigger 决策）（情绪曲线 [EC编号] 驱动）+ 简易镜头轨迹图 + 色彩叙事 [CN编号]。角色DNA：主角 [核心面部/服装特征]，对手 [核心面部/服装特征]。风格：[风格编号. 风格名称]，[氛围关键词]，配色 [主色1] + [主色2] + [点缀色]，cinematic storyboard sheet, professional film production layout, ARRI ALEXA 35, anamorphic lens, strong contrast lighting, film grain, volumetric light, ultra-detailed, 8K, clean industrial layout, coherent character design, no watermark, no garbled text, no messy panels, no broken anatomy, no flat illustration, no marketing poster style。
 ```
 
 ## 关键帧模式（格式 10）
@@ -15,7 +45,7 @@
 当用户选择"关键帧序列"时，用以下模板：
 
 ```text
-电影级关键帧序列，主题《[片名]》，[动作/场景描述]。[画幅比例，默认 DEFAULT_ASPECT_RATIO（api-config.template.env）] 横版，专业电影故事板排版，[5-9] 个关键帧纵向排列。每个关键帧占画面一栏，左侧是画面，右侧是技术参数标注栏（黑色半透明背景+白色文字）。技术参数栏必须包含：帧号+阶段名称+时间范围 | 景别(ELS/FS/LS/MS/MCU/CU/ECU) | 运镜方式 | 焦段(mm) | 色彩标注 | 灯光方案 | 转场方式。如有台词，画面中必须包含台词字幕框（黑色半透明圆角矩形+白色文字），台词内容：「[台词]」，节奏标注 [DR编号. 节奏]。主角 [主角DNA核心特征] 在 [EV编号. 环境] 中执行 [BL编号. 动作姿态]。武器/道具：[PR编号]。生物（如有）：[CR编号]。天气：[WT编号]。风格：[风格编号. 风格名称]，[氛围关键词]，配色 [主色1] + [主色2] + [点缀色]，色彩叙事 [CN编号]，动作轨迹线标注，特效标注，角色DNA一致性（面部/服装/武器跨帧不变），consistent character across all frames, technical parameter annotations on each panel, dialogue subtitle boxes where applicable, motion blur on moving elements, cinematic storyboard sheet with labeled panels, ultra-detailed, 8K, sharp focus, no watermark, no garbled text, no broken faces, no extra limbs。
+电影级关键帧序列，主题《[片名]》，[动作/场景描述]。[画幅比例，默认 DEFAULT_ASPECT_RATIO（api-config.template.env）] 横版，专业电影故事板排版，[5-9] 个关键帧纵向排列。每个关键帧占画面一栏，左侧是画面，右侧是技术参数标注栏（黑色半透明背景+白色文字）。技术参数栏必须包含：帧号+阶段名称+时间范围 | 景别(ELS/FS/LS/MS/MCU/CU/ECU) | 运镜方式 | 焦段(mm) | 色彩标注 | 灯光方案 | 转场方式 | end_state。如有台词，画面中必须包含台词字幕框（黑色半透明圆角矩形+白色文字），台词内容：「[台词]」，节奏标注 [DR编号. 节奏]。主角 [主角DNA核心特征] 在 [EV编号. 环境] 中执行 [BL编号. 动作姿态]。武器/道具：[PR编号]。生物（如有）：[CR编号]。天气：[WT编号]。风格：[风格编号. 风格名称]，[氛围关键词]，配色 [主色1] + [主色2] + [点缀色]，色彩叙事 [CN编号]，动作轨迹线标注，特效标注，角色DNA一致性（面部/服装/武器跨帧不变），end_state 逐帧继承，consistent character across all frames, technical parameter annotations on each panel, dialogue subtitle boxes where applicable, motion blur on moving elements, cinematic storyboard sheet with labeled panels, ultra-detailed, 8K, sharp focus, no watermark, no garbled text, no broken faces, no extra limbs。
 ```
 
 ## 分镜版式预设
@@ -23,17 +53,17 @@
 ### LS5 竖排技术分镜表
 
 ```text
-专业导演技术分镜表，主题《[片名]》。16:9 横版，黑底灰线表格，列结构固定为：镜头编号 / 画面缩略图 / 时长 / 镜头语言（机位/景别/运镜/焦段） / 画面内容 / 声音（环境/音效/旁白） / 转场节奏。每行一镜，共 [5-8] 镜。
+专业导演技术分镜表，主题《[片名]》。16:9 横版，黑底灰线表格，列结构固定为：镜头编号 / 画面缩略图 / 时长 / 镜头语言（机位/景别/运镜/焦段/灯光/色彩） / 画面内容 / 声音（环境/音效/旁白） / 转场节奏 / end_state。每行一镜，共 [5-8] 镜。
 
-每个画面缩略图必须是同一影片调色的电影 still；文字区保持克制清晰，像拍摄执行表；声音栏包含环境音、音效、旁白或沉默；转场栏标注推进、快切、淡入、黑场、匹配剪辑等。禁止海报式大标题、无表格、无时长、无声音栏。
+每个画面缩略图必须是同一影片调色的电影 still；文字区保持克制清晰，像拍摄执行表；声音栏包含环境音、音效、旁白或沉默；转场栏标注推进、快切、淡入、黑场、匹配剪辑等；end_state 栏标注角色末态供下镜继承。禁止海报式大标题、无表格、无时长、无声音栏、无 end_state。
 ```
 
 ### LS6 横幅长镜头时间轴（默认）
 
 ```text
-电影级横幅长镜头分镜图，主题《[片名]》，总时长 [15s/30s]，共 [5-7] 帧。16:9 横版，黑金边框。左侧为竖向编号圆点和箭头，表示时间推进；中间为 [5-7] 条 21:9 超宽电影横幅，每条是一帧关键画面；右侧为每帧参数区，包含：帧名、时间段、景别、运镜方式、焦段(mm)、色彩标注、灯光方案、转场方式。
+电影级横幅长镜头分镜图，主题《[片名]》，总时长 [时长（video-director 决策，受 {PLATFORM}_MAX_DURATION 约束）]，共 [帧数] 帧。16:9 横版，黑金边框。左侧为竖向编号圆点和箭头，表示时间推进；中间为 [5-7] 条 21:9 超宽电影横幅，每条是一帧关键画面，画面内标注动作描述（≤25字）；右侧为每帧参数区，包含：帧名、阶段、时间段、景别、运镜方式、焦段(mm)、色彩标注、灯光方案、转场方式、end_state。
 
-画面优先：每个横幅必须有强电影构图、同一角色 DNA、同一场景空间和连续动作；动作从 [起始动作] 推进到 [高潮动作] 再到 [余韵动作]。如有台词，在对应横幅底部加入小型黑色半透明字幕框，文字不遮挡主体。禁止方格拼贴、角色换脸、参数缺失、画面和时间轴不对应。
+画面优先：每个横幅必须有强电影构图、同一角色 DNA、同一场景空间和连续动作；动作从 [起始动作] 推进到 [高潮动作] 再到 [余韵动作]。end_state 每帧必须标注，下一帧继承。如有台词，在对应横幅底部加入小型黑色半透明字幕框，文字不遮挡主体。禁止方格拼贴、角色换脸、参数缺失（尤其 end_state）、画面和时间轴不对应。
 ```
 
 ### LS7 合并帧视频锚点
@@ -86,5 +116,8 @@ ultra-detailed, 8K, clean industrial layout, coherent character design。
 | PR编号 | `knowledge/props.md` | 按武器/道具匹配 |
 | WT编号 | `knowledge/weather.md` | 按故事天气匹配 |
 | VS编号 | `engines/styles.md` | 用户选择或智能推荐 |
-| 镜数 | — | 短篇 7 镜，中篇 10 镜，史诗 13 镜 |
+| 镜数 | — | 由 video-director + consistency-trigger 决策 |
 | 画幅 | — | `DEFAULT_ASPECT_RATIO`（api-config.template.env），用户可指定 |
+
+> **所有分镜图 prompt 末尾必须追加**（读取 `state/visual-control-state.md`）：
+> `clear panel separation, readable action, controlled annotations, no overloaded labels, no messy panels`。

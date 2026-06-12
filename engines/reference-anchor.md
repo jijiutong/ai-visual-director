@@ -110,20 +110,55 @@
 
 ---
 
-## 四、平台校验
+## 四、用途分流过滤
+
+> 分配视频参考图时，**只选 video_asset 和 consistency_asset**。display_asset 和 marketing_asset 不进视频 @图列表。
+
+### 过滤规则
+
+```
+1. 读取 asset-map 中每张图的 asset_purpose 字段
+2. 用途 = video_asset → ✅ 直接进入视频 @图引用
+3. 用途 = consistency_asset → ✅ 进入视频 @图引用（结构化的空间/角色锁定）
+4. 用途 = display_asset → ❌ 不进视频 → 提示需要派生 video_asset（见 rules/video-reference-assets.md）
+5. 用途 = marketing_asset → ❌ 不进视频 → 仅作封面/海报输出
+```
+
+### 自动降级提示
+
+当视频 @图全部为 display_asset 时：
+
+```markdown
+⚠ 视频参考图不可用：
+
+当前资产均为 📋 display_asset，不适合直接喂给 {PLATFORM}：
+  - 文字/边框/标注会污染 AI 视频模型理解
+  - 高密度排版无法作为画面锚点
+
+建议：
+  1. 生成 🎬 video_asset：clean 角色卡 + clean 场景锚点 + 首尾帧
+  2. 或使用 /declutter video-ref 从 display_asset 派生 clean 版本
+
+回复「生成视频锚点」→ 自动生成
+回复「跳过」→ 降级为纯 prompt 文字描述
+```
+
+---
+## 五、平台校验
 
 ```
 1. 时长校验：≥平台上限 → 标记"需拆段"
 2. 字数校验：>平台上限 → 调用 prompt-compression
-3. 参考图校验：>平台上限 → 按优先级裁切（角色卡 > 首帧 > 尾帧 > 关键帧 > 其他）
-4. 语言校验：从 `api-config.template.env`（视频平台硬限制 + 图像平台语言支持）读取语言支持 → 不匹配则翻译
+3. 参考图校验：>平台上限 → 按优先级裁切（video_asset > consistency_asset > display_asset）
+4. 用途校验：video @图中无 video_asset → 触发自动降级提示（§四）
+5. 语言校验：从 `api-config.template.env`（视频平台硬限制 + 图像平台语言支持）读取语言支持 → 不匹配则翻译
 
 校验不通过 → auto-repair → 重新校验
 ```
 
 ---
 
-## 五、输出
+## 六、输出
 
 ```markdown
 【参考锚点方案】
@@ -131,15 +166,18 @@
 目标平台：[平台名] / 策略：[参考图优先/Prompt优先/首帧优先/轻量]
 
 参考图包（[N]张）：
-  1. [类型]：[用途] - 用于[镜头编号]
+  1. [类型]：[用途 📋/🎬/🔒/📢] - 用于[镜头编号]
   2. ...
 
 平台校验：
   ✅ 时长：[Ns] — 在限制内
   ✅ 字数：[N字] — 在限制内
   ✅ 参考图：[N张] — 在限制内
+  ✅ 用途：🎬 video_asset [N]张 / 🔒 consistency_asset [N]张 — 视频可用
   ✅ 语言：[语言] — 平台支持
   ⚠ [问题] → [修复]
+
+⚠ [若无 video_asset，显示降级提示]
 
 平台注意事项：
   - [特殊限制/注意事项]
@@ -150,21 +188,24 @@
 按平台策略生成结构化映射表，供 `video-prompt-assembly` 动态读取：
 
 ```markdown
-| @编号 | type | name | source | locks |
-|-------|------|------|--------|-------|
-| @图0 | [scene_reference/character_sheet/end_frame] | [名称] | [来源路径] | [锁定的维度] |
-| @图1 | ... | ... | ... | ... |
-| @图2 | ... | ... | ... | ... |
+| @编号 | type | name | source | asset_purpose | locks | video_safe | density |
+|-------|------|------|--------|---------------|-------|------------|---------|
+| @图0 | [scene_reference/character_sheet/end_frame] | [名称] | [来源路径] | [video_asset/consistency_asset/display_asset/marketing_asset] | [锁定的维度] | [true/false] | [1-5] |
+| @图1 | ... | ... | ... | ... | ... | ... | ... |
+| @图2 | ... | ... | ... | ... | ... | ... | ... |
 ```
 
 **映射规则**：
 1. **先执行资产存在性检查（零节）**— 确定哪些资产实际存在
-2. 按平台能力决定上限：读取 api-config.template.env → `{PLATFORM}_MAX_REF_IMAGES`（Seedance→SEEDANCE_MAX_REF_IMAGES，Runway→RUNWAY_MAX_REF_IMAGES，可灵→KELING_MAX_REF_IMAGES，Luma→LUMA_MAX_REF_IMAGES，Pika→PIKA_MAX_REF_IMAGES）
+2. 按平台能力决定上限：读取 api-config.template.env → `{PLATFORM}_MAX_REF_IMAGES`
 3. 仅分配已存在的资产，null 引用不编造
-4. 按资产优先级排序（零节优先级表），超平台上限时裁切低优先级
-5. 已有资产覆盖的跳过独立分配（角色卡含武器→不另出武器卡）
-6. 每张图标注 `type`（类型）、`name`（名称）、`locks`（锁定维度）
-7. 最终 @编号从 0 开始连续编号，只编号实际存在的图
+4. 按资产优先级排序：video_asset > consistency_asset > display_asset，超平台上限时裁切低优先级
+5. **用途分流**：video_asset 和 consistency_asset 进入 @图引用；display_asset 和 marketing_asset 不进视频 @图（触发降级提示）
+6. 已有资产覆盖的跳过独立分配（角色卡含武器→不另出武器卡）
+7. 每张图标注 `type`（类型）、`name`（名称）、`asset_purpose`（📋/🎬/🔒/📢）、`locks`（锁定维度）、`video_safe`（来自 LS metadata）、`density`（1-5）
+8. `video_safe` 判定：读取 `knowledge/layout-styles.md` 当前 LS 的 `video_safe` metadata
+9. `density` 判定：读取 `state/visual-control-state.md` 当前 density_level
+10. 最终 @编号从 0 开始连续编号，只编号实际存在的图（仅 video_asset + consistency_asset）
 
 > 视频 prompt 生成时，**不硬编码 @图0=场景、@图1=角色**，而是从 `state/asset-map.md` 动态读取映射。
 
