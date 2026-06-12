@@ -10,16 +10,22 @@
 
 ```bash
 # GPT Image (OpenAI DALL-E 3)
-OPENAI_API_KEY=sk-xxxxxxxxxxxx
+OPENAI_API_KEY=***
+
+# Nano Banana (Google Gemini Image)
+GEMINI_API_KEY=***
 
 # Flux (via Replicate)
-REPLICATE_API_TOKEN=r8_xxxxxxxxxxxx
+REPLICATE_API_TOKEN=***
+
+# Stability AI (SD3)
+STABILITY_API_KEY=***
 
 # Ideogram
 IDEOGRAM_API_KEY=xxxxxxxxxxxx
 
 # 通义万相 (Alibaba Cloud)
-DASHSCOPE_API_KEY=sk-xxxxxxxxxxxx
+DASHSCOPE_API_KEY=***
 
 # Recraft
 RECRAFT_API_KEY=xxxxxxxxxxxx
@@ -215,24 +221,33 @@ const imageUrl = `${COMFYUI_BASE_URL}/view?filename=${result.filename}`;
 
 ---
 
-## 七、Stable Diffusion XL/3 (Stability AI)
+## 七、Stable Diffusion 3 (Stability AI)
+
+**模型**：`sd3`（通过 `text-to-image` endpoint）。SD3 输出为 PNG 图片。
 
 ```javascript
+const formData = new FormData();
+formData.append("prompt", `[英文 prompt]`);
+formData.append("output_format", "png");
+formData.append("aspect_ratio", "16:9");
+formData.append("model", "sd3");
+
 const response = await fetch("https://api.stability.ai/v2beta/stable-image/generate/sd3", {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.STABILITY_API_KEY}`,
-    "Accept": "application/json"
+    "Accept": "image/*"
   },
-  body: new FormData()
-    .append("prompt", `[英文 prompt]`)
-    .append("output_format", "png")
-    .append("aspect_ratio", "16:9")
+  body: formData
 });
 
-const result = await response.json();
-const imageUrl = result.image;
+// 返回二进制 PNG，需要 base64
+const buffer = await response.arrayBuffer();
+const base64 = Buffer.from(buffer).toString("base64");
+const imageUrl = `data:image/png;base64,${base64}`;
 ```
+
+**注意**：SD3 直接返回 PNG 二进制数据（Accept: image/*），不是 JSON。仅在出错时返回 JSON。
 
 **适用场景**：SD3 角色一致性好，SDXL 生态成熟，ControlNet 精细控制
 
@@ -252,7 +267,7 @@ Midjourney 没有公开 REST API，只有 Discord Bot 方式。推荐替代：
 ## 九、Recraft
 
 ```javascript
-const response = await fetch("https://api.recraft.ai/v1/images/generations", {
+const response = await fetch("https://external.api.recraft.ai/v1/images/generations", {
   method: "POST",
   headers: {
     "Authorization": `Bearer ${process.env.RECRAFT_API_KEY}`,
@@ -261,8 +276,8 @@ const response = await fetch("https://api.recraft.ai/v1/images/generations", {
   body: JSON.stringify({
     prompt: `[英文 prompt]`,
     style: "digital_illustration",
-    model: "recraft-v3",
-    size: { width: 1920, height: 1080 }
+    model: "recraftv3",
+    size: "1792x1024"  // 字符串格式
   })
 });
 
