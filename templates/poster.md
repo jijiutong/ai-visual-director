@@ -1,18 +1,22 @@
 # 海报模板
 
+> **治理**：生成前读 `state/format-contract-state.md`。产出标记 `draft`，不写回主状态。资产用途 `marketing_asset`，`video_safe=false`，禁止进入视频 @图。详见 `rules/format-contract.md` §1.5。
+
 ## 适用场景
 
 电影海报/宣传海报。支持竖版（2:3）和横版（16:9）两种画幅。适合电影宣传、社交媒体推广、概念提案封面。
 
+> **视觉密度控制**：生成前读取 `state/visual-control-state.md`。海报默认 density=3-4, background=medium, text=readable, hud=none, particles=cinematic, focus=character。所有海报 prompt 末尾自动追加：`dramatic but focused composition, subject-first poster design, controlled particles, no random text, no fake logos`。
+
 ## Prompt 模板
 
 ```text
-电影级宣传海报，主题《[片名]》。[画幅比例，默认2:3] [竖版/横版]，professional cinematic movie poster design，构图 [CP编号. 构图法则]。主视觉：[主视觉描述 — 角色剪影(BL编号. 姿态)/面部特写(ME编号. 微表情)/核心场景(EV编号)/象征物(PR编号)]，占据画面 50-70%。片名《[片名]》以 [字体风格] 排版在 [位置]，副标题/标语 "[标语内容]" 在片名下方。底部信息：[导演/主演/上映日期等，作为排版质感不要求可读]。背景：[EV编号. 环境/天空/城市/抽象纹理(MT编号)]，天气 [WT编号. 天气]，时代 [HE编号. 历史时代]。如有生物：[CR编号. 生物]。海报风格：[风格编号. 风格名称]，[氛围关键词]，色彩叙事 [CN编号. 色彩方案]，配色 [主色1] + [主色2] + [点缀色]，灯光 [灯光方案]，专业电影海报质感，高对比、强视觉冲击、层次丰富。cinematic movie poster, dramatic lighting, professional typography integration, high contrast, layered composition, environmental atmosphere, ultra-detailed, 8K, sharp focus, no watermark, no logo, no random large text, no garbled Chinese, no broken faces, no flat illustration, no cartoon style。
+电影级宣传海报，主题《[片名]》。[画幅比例，默认2:3（海报竖版），横版用 DEFAULT_ASPECT_RATIO（从 api-config.template.env 读取）] [竖版/横版]，professional cinematic movie poster design，构图 [CP编号. 构图法则]。主视觉：[主视觉描述 — 角色剪影(BL编号. 姿态)/面部特写(ME编号. 微表情)/核心场景(EV编号)/象征物(PR编号)]，占据画面 50-70%。片名《[片名]》以 [字体风格] 排版在 [位置]，副标题/标语 "[标语内容]" 在片名下方。底部信息：[导演/主演/上映日期等，作为排版质感不要求可读]。背景：[EV编号. 环境/天空/城市/抽象纹理(MT编号)]，天气 [WT编号. 天气]，时代 [HE编号. 历史时代]。如有生物：[CR编号. 生物]。海报风格：[风格编号. 风格名称]，[氛围关键词]，色彩叙事 [CN编号. 色彩方案]，配色 [主色1] + [主色2] + [点缀色]，灯光 [灯光方案]，专业电影海报质感，高对比、强视觉冲击、层次丰富。cinematic movie poster, dramatic lighting, professional typography integration, high contrast, layered composition, environmental atmosphere, ultra-detailed, 8K, sharp focus, no watermark, no logo, no random large text, no garbled Chinese, no broken faces, no flat illustration, no cartoon style。
 ```
 
 画幅自动适配：
-- 用户说 "海报" → 默认 2:3 竖版
-- 用户说 "横版海报" → 16:9 横版
+- 用户说 "海报" → 默认 2:3 竖版（海报传统比例）
+- 用户说 "横版海报" → DEFAULT_ASPECT_RATIO（从 api-config.template.env 读取）横版
 - 用户说 "小红书" → 3:4 竖版
 - 用户说 "朋友圈海报" → 1:1 方形
 
@@ -72,4 +76,7 @@ high contrast, layered composition, ultra-detailed, 8K, sharp focus。
 | ME编号 | `knowledge/micro-expressions.md` | 按角色情绪匹配 |
 | EV编号 | `knowledge/environments.md` | 按故事场景匹配 |
 | PR编号 | `knowledge/props.md` | 按角色武器/道具匹配 |
-| 画幅 | — | 默认 2:3，用户可指定 |
+| 画幅 | — | 默认 2:3（海报竖版），横版用 DEFAULT_ASPECT_RATIO |
+
+> **所有海报 prompt 末尾必须追加**（读取 `state/visual-control-state.md`）：
+> `dramatic but focused composition, subject-first poster design, controlled particles, no random text, no fake logos`。

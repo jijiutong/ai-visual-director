@@ -8,25 +8,13 @@
 
 | @编号 | type | name | source | locks |
 |-------|------|------|--------|-------|
-| @图0 | scene_reference | （场景名）场景图 | /scene | 空间布局 / 主光方向 / 地面材质 |
-| @图1 | character_sheet | （角色名）角色卡 | /character | 面部 / 服装 / 武器 |
-| @图2 | storyboard_board | 横幅分镜图 | /storyboard | 镜头顺序 / 构图 / 运镜 |
-| @图3 | keyframe | SH(N) 关键帧 | /shot/SH(N) | 高潮动作 |
-| @图4 | end_frame | 尾帧锚点 | /shot/last | 结尾状态 |
+| @图0 | scene_reference | 深夜咖啡店 场景图 | /scene | 空间布局 / 主光方向 / 地面材质 |
+| @图1 | character_sheet | 沈默 角色卡 | /character | 面部 / 服装 / 道具 |
+| @图2 | storyboard_board | 雨夜窗边 分镜图 | /storyboard | 镜头顺序 / 构图 / 运镜 |
+| @图3 | keyframe | SH04 高潮关键帧 | /shot/SH04 | 高潮情绪 / 雨痕瞳孔 |
+| @图4 | end_frame | SH06 尾帧锚点 | /shot/SH06 | 结尾剪影状态 |
 
-> 上表为 Seedance 标准 5 张包的示例映射。实际映射按平台策略动态调整。
-
----
-
-## 字段说明
-
-| 字段 | 说明 |
-|------|------|
-| @编号 | @图0, @图1, @图2... 按生成优先级排列 |
-| type | 资产类型：scene_reference / character_sheet / storyboard_board / keyframe / end_frame / prop_card / multi_char_relation / creature_card |
-| name | 人类可读的资产名称 |
-| source | 资产来源路径：/scene, /character, /storyboard, /shot/SH(N), /shot/last |
-| locks | 此资产锁定的维度（视频生成时不可变的内容） |
+> Seedance 标准 5 张包。12 张上限，当前用量 5/12。
 
 ---
 
@@ -34,41 +22,25 @@
 
 ### Seedance（参考图优先型，≤12张）
 
-| @编号 | type | 说明 |
-|-------|------|------|
-| @图0 | scene_reference | 场景全景 |
-| @图1 | character_sheet | 主角角色卡 |
-| @图2 | storyboard_board | 分镜图 |
-| @图3 | keyframe | 高潮动作关键帧 |
-| @图4 | end_frame | 尾帧 |
-| @图5 | keyframe | 第二关键帧（可选） |
+| @编号 | type | 说明 | video_safe |
+|-------|------|------|------------|
+| @图0 | scene_reference | 场景全景 | ✅ true |
+| @图1 | character_sheet | 主角角色卡 | ✅ true |
+| @图2 | storyboard_board | 分镜图 | ✅ true |
+| @图3 | keyframe | 高潮动作关键帧 | ✅ true |
+| @图4 | end_frame | 尾帧 | ✅ true |
 
-### Runway Gen-3（Prompt优先型，3张）
+---
 
-| @编号 | type | 说明 |
-|-------|------|------|
-| @图0 | end_frame | 首帧 |
-| @图1 | keyframe | 关键帧 |
-| @图2 | end_frame | 尾帧 |
+## 资产用途标注
 
-> Runway 不传角色卡，角色一致性靠英文 prompt DNA 描述，参考图只给最重要的。
-
-### 可灵（首帧优先型，3张）
-
-| @编号 | type | 说明 |
-|-------|------|------|
-| @图0 | end_frame | 首帧(first_frame) |
-| @图1 | character_sheet | 角色卡 |
-| @图2 | keyframe | 关键帧 |
-
-### Luma / Pika（轻量型，2张）
-
-| @编号 | type | 说明 |
-|-------|------|------|
-| @图0 | end_frame | 首帧 |
-| @图1 | end_frame | 尾帧 |
-
-> Luma/Pika 不传角色卡，角色一致性靠英文 prompt DNA 描述。
+| @编号 | asset_purpose | video_safe | 说明 |
+|-------|---------------|------------|------|
+| @图0 | video_asset | ✅ | 直接进入视频 @图引用 |
+| @图1 | video_asset | ✅ | 直接进入视频 @图引用 |
+| @图2 | video_asset | ✅ | 直接进入视频 @图引用 |
+| @图3 | video_asset | ✅ | 直接进入视频 @图引用 |
+| @图4 | video_asset | ✅ | 直接进入视频 @图引用 |
 
 ---
 
@@ -85,29 +57,10 @@
   @图(end_frame) 锁定结尾状态
 ```
 
-具体 @编号由 `state/asset-map.md` 动态提供，video-prompt-assembly 读取映射后生成最终引用。
-
----
-
-## 资产优先级（参考图裁切时）
-
-当参考图数量超过平台限制时，按以下优先级保留：
-
-```
-1. character_sheet（角色卡） — 最高优先级，人不能变
-2. end_frame（首帧锚点） — 视频起点
-3. scene_reference（场景图） — 空间锚点
-4. keyframe（关键帧） — 动作锚点
-5. storyboard_board（分镜图） — 可降级为纯文本描述
-6. prop_card / creature_card（道具/生物卡） — 可省略
-```
-
 ---
 
 ## 联动
 
 - **写入**：`reference-anchor`（平台校验后，按策略生成映射表）
-- **标记更新**：`incremental-update`（变更传播时标记受影响 @图 为「待重新生成」）、`asset-plan`（资产变更时标记对应 @图）
 - **读取**：`video-prompt-assembly`（组装时读取 @编号→用途对应关系）、`project-graph`（构建 asset↔entity 映射）、`consistency-engine`（Video RM 验证 @图 引用完整性）
 - **校验**：`final-video-qc`（检查视频 prompt 中的 @引用是否与 asset-map 一致、数量是否匹配）
-- **基础数据来源**：`asset-plan`（决定需要哪些资产类型） → `reference-anchor`（按平台映射为 @编号）

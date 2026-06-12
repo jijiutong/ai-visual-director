@@ -1,5 +1,7 @@
 # 情绪板模板
 
+> **治理**：生成前读 `state/format-contract-state.md`。产出标记 `draft`，不写回主状态。资产用途 `display_asset`，不进视频 @图。详见 `rules/format-contract.md` §1.2。
+
 ## 适用场景
 
 美术方向确认用。展示色彩基调、材质参考、灯光氛围和纹理方向。适合前期视觉开发、与团队/客户对齐视觉方向。

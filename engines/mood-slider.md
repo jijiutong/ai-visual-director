@@ -1,5 +1,7 @@
 # Mood 滑块引擎
 
+> **模式限制：D类 发散探索层**。仅 `explore` 模式可调用。产出标记 `derived`，不写回主状态。用户明确触发（如"更燃""更虐""更甜"等 mood 词）才启用。详见 `engines/command-gate.md` §四。
+
 根据用户情绪关键词调整输出参数。数据表见 `knowledge/mood-sliders.md`。
 
 ---

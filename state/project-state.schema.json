@@ -1,0 +1,173 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "AI Visual Director Project State",
+  "description": "Complete project state schema for ai-visual-director. Validates state/ file structure across the pipeline.",
+  "type": "object",
+  "required": ["project", "style", "characters", "scenes", "shots", "assets", "visual_control"],
+  "properties": {
+    "project": {
+      "type": "object",
+      "required": ["id", "title", "target_platform", "duration"],
+      "properties": {
+        "id": { "type": "string", "pattern": "^PROJ-\\d{8}-[A-Z0-9]{4}$", "description": "项目唯一标识" },
+        "title": { "type": "string", "minLength": 1, "description": "片名" },
+        "genre": { "type": "string", "description": "类型" },
+        "target_platform": { "type": "string", "enum": ["Seedance", "Runway", "Keling", "Luma", "Sora", "Pika"], "description": "视频目标平台" },
+        "duration": { "type": "string", "pattern": "^\\d+s$", "description": "时长如 15s/30s" },
+        "aspect_ratio": { "type": "string", "description": "画幅比例" },
+        "language": { "type": "string", "description": "输出语言" },
+        "word_count": { "type": "integer", "description": "输入字数" },
+        "segment_count": { "type": "integer", "minimum": 1, "description": "拆段数" }
+      }
+    },
+    "style": {
+      "type": "object",
+      "required": ["visual_style", "layout_style", "color_narrative"],
+      "properties": {
+        "visual_style": { "type": "string", "description": "VS编号" },
+        "layout_style": { "type": "string", "description": "LS编号" },
+        "color_narrative": { "type": "string", "description": "CN编号" },
+        "emotion_curve": { "type": "string", "description": "EC编号" },
+        "pacing": { "type": "string", "description": "P编号" }
+      }
+    },
+    "characters": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "role", "dna", "immutable_features"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^C\\d+$", "description": "角色ID" },
+          "name": { "type": "string", "description": "角色名" },
+          "role": { "type": "string", "enum": ["protagonist", "antagonist", "supporting", "cameo"], "description": "角色重要度" },
+          "dna": {
+            "type": "object",
+            "description": "角色DNA 20字段",
+            "properties": {
+              "face_shape": { "type": "string" },
+              "eye_type": { "type": "string" },
+              "hair_style": { "type": "string" },
+              "body_type": { "type": "string" },
+              "costume": { "type": "string" },
+              "weapon": { "type": "string" },
+              "voice": { "type": "string" }
+            }
+          },
+          "immutable_features": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "不可变特征列表"
+          },
+          "mutable_features": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "可变特征列表"
+          },
+          "shot_appearances": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "出镜镜头列表"
+          }
+        }
+      }
+    },
+    "scenes": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "fixed_elements", "light_direction", "main_color"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^S\\d+$", "description": "场景ID" },
+          "name": { "type": "string", "description": "场景名" },
+          "time_of_day": { "type": "string", "description": "时间" },
+          "weather": { "type": "string", "description": "天气" },
+          "fixed_elements": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "固定元素列表"
+          },
+          "light_direction": { "type": "string", "description": "主光方向" },
+          "main_color": { "type": "string", "description": "主色调" }
+        }
+      }
+    },
+    "shots": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "duration", "shot_size", "camera_motion", "start_state", "end_state"],
+        "properties": {
+          "id": { "type": "string", "pattern": "^SH\\d+$", "description": "镜头ID" },
+          "phase": { "type": "string", "description": "阶段名" },
+          "duration": { "type": "string", "description": "时间范围" },
+          "shot_size": { "type": "string", "description": "景别" },
+          "camera_motion": { "type": "string", "description": "运镜" },
+          "focal_length": { "type": "string", "description": "焦段" },
+          "lighting": { "type": "string", "description": "灯光方案" },
+          "color": { "type": "string", "description": "色彩" },
+          "transition": { "type": "string", "description": "转场" },
+          "action": { "type": "string", "description": "画面描述（≤25字）" },
+          "start_state": { "type": "string", "description": "起始状态" },
+          "end_state": { "type": "string", "description": "结束状态" },
+          "characters": {
+            "type": "array",
+            "items": { "type": "string" },
+            "description": "出镜角色"
+          },
+          "climax_shot": { "type": "boolean", "description": "是否高潮镜" }
+        }
+      }
+    },
+    "assets": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["ref", "type", "name", "locks", "video_safe"],
+        "properties": {
+          "ref": { "type": "string", "pattern": "^@图\\d+$", "description": "@图编号" },
+          "type": {
+            "type": "string",
+            "enum": ["character_sheet", "scene_reference", "storyboard_board", "keyframe", "end_frame", "prop_card", "poster", "mood_board"],
+            "description": "资产类型"
+          },
+          "name": { "type": "string", "description": "资产名称" },
+          "source": { "type": "string", "description": "来源路径" },
+          "locks": { "type": "string", "description": "锁定的维度" },
+          "video_safe": { "type": "boolean", "description": "是否适合用作视频锚点" },
+          "density": { "type": "integer", "minimum": 1, "maximum": 5, "description": "视觉密度" }
+        }
+      }
+    },
+    "visual_control": {
+      "type": "object",
+      "required": ["density_level", "background_complexity", "hud_elements", "particle_level", "text_level"],
+      "properties": {
+        "density_level": { "type": "integer", "minimum": 1, "maximum": 5 },
+        "background_complexity": { "type": "string", "enum": ["none", "low", "medium", "high"] },
+        "annotation_level": { "type": "string", "enum": ["none", "minimal", "moderate", "dense"] },
+        "texture_noise": { "type": "string", "enum": ["none", "low", "medium", "high"] },
+        "hud_elements": { "type": "string", "enum": ["none", "minimal", "moderate", "dense"] },
+        "particle_level": { "type": "string", "enum": ["none", "subtle", "cinematic", "heavy"] },
+        "text_level": { "type": "string", "enum": ["none", "minimal", "readable", "production_notes"] },
+        "focus_priority": { "type": "string", "enum": ["character", "scene", "action", "material", "worldbuilding"] },
+        "negative_noise_bans": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "style_memory": {
+      "type": "object",
+      "properties": {
+        "locked": { "type": "boolean" },
+        "vs_id": { "type": "string" },
+        "director_reference": { "type": "string" },
+        "color_palette": { "type": "string" },
+        "camera_language": { "type": "string" },
+        "lighting_setup": { "type": "string" },
+        "texture": { "type": "string" },
+        "negative_constraints": { "type": "array", "items": { "type": "string" } }
+      }
+    }
+  }
+}

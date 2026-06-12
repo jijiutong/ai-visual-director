@@ -8,6 +8,31 @@ SKILLS_DIR="${CLAUDE_SKILLS_DIR:-${AI_VISUAL_DIRECTOR_SKILLS_DIR:-$HOME/.claude/
 TARGET="${AI_VISUAL_DIRECTOR_TARGET:-$SKILLS_DIR/$SKILL_NAME}"
 ENTRIES="SKILL.md api-config.template.env sources engines knowledge rules templates platforms state projects imitation sub-skills docs examples"
 
+# --sync: only sync changed files, don't remove existing state/projects
+if [ "${1:-}" = "--sync" ]; then
+  script_dir() {
+    case "$0" in
+      */*) cd "$(dirname "$0")" && pwd ;;
+      *) pwd ;;
+    esac
+  }
+  SOURCE_DIR="$(script_dir)"
+  if [ ! -d "$TARGET" ]; then
+    echo "No existing install at $TARGET. Run without --sync to install." >&2
+    exit 1
+  fi
+
+  ENTRIES="SKILL.md api-config.template.env sources engines knowledge rules templates platforms imitation sub-skills docs examples"
+  for entry in $ENTRIES; do
+    if [ -e "$SOURCE_DIR/$entry" ]; then
+      rm -rf "$TARGET/$entry"
+      cp -R "$SOURCE_DIR/$entry" "$TARGET/"
+    fi
+  done
+  echo "Synced $SKILL_NAME to $TARGET"
+  exit 0
+fi
+
 cleanup_dir=""
 
 cleanup() {

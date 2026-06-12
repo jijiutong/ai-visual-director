@@ -1,26 +1,63 @@
 ---
-name: style
-description: Style explorer — browse 53 visual styles, fuse any two styles, or migrate styles while preserving character DNA. Reads style from state/variable-registry. Use /style or say "风格", "换风格", "风格融合".
+name: avd/style
+description: 【AI视觉导演】风格浏览器 — 53种视觉风格/融合/迁移/模仿15位导演
 ---
 
 # Style — 风格浏览器
+
+> **治理**：走 `engines/command-gate.md` 权限表 §四 /avd/style。产出默认标记 `derived`，不写回主状态。用户说 `--apply` 或 `/commit style` 才写回。风格迁移属 D类，仅 explore 模式。详见 `engines/command-gate.md` §四。
 
 浏览 53 种视觉风格，支持风格融合、预览和风格迁移（换风格保持角色不变）。
 
 ## 触发方式
 
-- `/style [风格名/编号]`
+- `/avd/style [风格名/编号]`
 - 直接说 "风格"、"看风格"、"有哪些风格"、"换风格"
-- 风格融合：`/style [风格A] + [风格B]`
-- 风格迁移：`/style 换成 [风格X] 但保持角色`
+- 风格融合：`/avd/style [风格A] + [风格B]`
+- 风格迁移：`/avd/style 换成 [风格X] 但保持角色`
+
+## ⚠️ 路由规则
+
+| 用户说法 | 行为 |
+|---------|------|
+| `/avd/style` / `/avd/style 看风格`（未指定） | **展示风格分类选单**（类型片/导演风/情绪风 + 热门推荐） |
+| `/avd/style [编号]` | 展示该风格详情（关键词+配色+光线），提示是否应用 |
+| `/avd/style [A] + [B]` | 调用 `engines/fusion.md` 融合 |
+| `/avd/style 换成 [X] 但保持角色` | 调用 `engines/style-migration.md` 迁移 |
+| `/avd/style 模仿 [导演名]` | 调用 `imitation/[导演名].md` 导演模仿库 |
+| `/avd/style 多版本` | 调用 `engines/multi-version.md` A/B/C 对比 |
+| `/avd/style 看全部` | 展示完整 53 种风格表 |
+
+**禁止**：用户说"换风格"时不展示选单直接改。
 
 ## 子指令
 
-| 指令 | 效果 |
+| 指令 | 效果 | 引擎 |
+|------|------|------|
+| `/avd/style 看全部` | 展示 53 种风格 | — |
+| `/avd/style [A] + [B]` | 风格融合 60%+40% | `engines/fusion.md` |
+| `/avd/style 换成 [X] 但保持角色` | 风格迁移 | `engines/style-migration.md` |
+| `/avd/style 模仿 [导演名]` | 导演模仿 | `imitation/[导演].md` |
+| `/avd/style 多版本` | A/B/C 三版本对比 | `engines/multi-version.md` |
+
+## 导演模仿库
+
+| 导演 | 文件 |
 |------|------|
-| `/style 看全部` | 展示 53 种风格 + 10 种格式 + 常用融合方案 |
-| `/style [A] + [B]` | 风格融合：60% 主风格 + 40% 副风格 |
-| `/style 换成 [X] 但保持角色` | 风格迁移：保持角色 DNA，只改变画面风格 |
+| 王家卫 | `imitation/wong-kar-wai.md` |
+| 张艺谋 | `imitation/zhang-yimou.md` |
+| 徐克 | `imitation/tsui-hark.md` |
+| 诺兰 | `imitation/nolan.md` |
+| 韦斯·安德森 | `imitation/wes-anderson.md` |
+| 蒂姆·波顿 | `imitation/tim-burton.md` |
+| 维伦纽瓦 | `imitation/villeneuve.md` |
+| 大卫·芬奇 | `imitation/david-fincher.md` |
+| 雷德利·斯科特 | `imitation/ridley-scott.md` |
+| 扎克·施奈德 | `imitation/zack-snyder.md` |
+| 宫崎骏/吉卜力 | `imitation/ghibli.md` |
+| 新海诚 | `imitation/makoto-shinkai.md` |
+| 皮克斯 | `imitation/pixar.md` |
+| 朴赞郁 | `imitation/park-chan-wook.md` |
 
 ## 全部 53 种风格
 
@@ -129,3 +166,19 @@ slow shutter × Ghibli clouds
 | `看导演风` | 展示 21-35 号风格 |
 | `看情绪风` | 展示 36-53 号风格 |
 | `风格 [编号] 预览` | 展示该风格的详细关键词+配色+光线方案 |
+
+## AI 内部参考（自动调用，用户无需手动触发）
+
+以下知识库在生成 Prompt 时由 AI 自动查阅——选焦段、定灯光、构图的依据。**不是用户命令，是 AI 的工具箱。**
+
+| 知识库 | 自动调用场景 |
+|------|------------|
+| `knowledge/camera.md` | 分镜需要焦段/运镜参数时 |
+| `knowledge/lighting.md` | 场景需要灯光方案时 |
+| `knowledge/composition.md` | 需要构图法则编号时 |
+| `knowledge/color-grading.md` | 需要调色方案时 |
+| `knowledge/editing-theory.md` | 需要剪辑节奏建议时 |
+| `knowledge/transitions.md` | 需要转场方式编号时 |
+| `knowledge/vfx-design.md` | 需要特效描述时 |
+| `knowledge/costume-design.md` | 角色服装需要参考时 |
+| `knowledge/directing-performance.md` | 角色表演需要指导时 |

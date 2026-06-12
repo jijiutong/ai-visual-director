@@ -1,30 +1,51 @@
 ---
-name: video
-description: AI video full workflow — 5-step recommended pipeline from storyboard to final video. Route: state/asset-map → video-prompt-assembly → final-video-qc. Supports Seedance, Runway, Kling, Luma, Pika. Use /video or say "转视频", "视频工作流".
+name: avd/video
+description: 【AI视觉导演】视频工作流 — 5平台(Seedance/Runway/可灵/Luma/Pika)，声音设计，续写
 ---
 
 # Video — AI 视频全流程
+
+> **治理**：走 `engines/command-gate.md` 权限表 §四 /video。产出标记 `draft`，不写回主状态。只读取 `state/asset-map.md`、`state/shot-state.md`、`state/dialogue-map.md`、`state/sound-map.md` 组装视频执行包，禁止临时重写角色卡、场景图或故事方向。详见 `rules/format-contract.md` §1.4。
 
 输入故事 → 5 步推荐流程 → 输出完整视频 prompt + 参考图方案。支持 5 个视频平台。
 
 ## 触发方式
 
-- `/video [故事/故事板]`
+- `/avd/video [故事/故事板]`
 - 直接说 "转视频"、"出视频"、"视频工作流"、"Seedance"
 
 ## 子指令
 
 | 指令 | 效果 |
 |------|------|
-| `/video 转视频` | 故事板→推荐流程→视频方案 |
-| `/video 出视频 prompt` | 压缩模式 ≤1500 字，适合 Seedance |
-| `/video 详细模式` / `展开 prompt` | 3000+ 字详细 Prompt，适合 Runway/可灵/Luma |
-| `/video 切分各帧` / `逐帧接力` | 前一帧作后一帧参考图，链式传递 |
-| `/video 生成视频分镜图` / `合并帧` | 3-4 个关键帧合成一张分镜图 |
-| `/video 继续下一段` / `续写下一段` | AI 自动续写下一段剧情+匹配衔接技法 |
-| `/video 用 [技法名] 衔接，继续下一段` | 手动指定衔接技法（如 J-Cut/图形匹配剪） |
-| `/video 下一段往 [方向] 发展` | 手动指定剧情发展方向 |
-| `/video 检查视频` / `视频检查` | 10 项生成后检查清单 |
+| `/avd/video 转视频` | 故事板→推荐流程→视频方案 |
+| `/avd/video 出视频 prompt` | 压缩模式 ≤ {PLATFORM}_MAX_PROMPT_CHARS 字，适合 Seedance |
+| `/avd/video 详细模式` / `展开 prompt` | 3000+ 字详细 Prompt，适合 Runway/可灵/Luma |
+| `/avd/video 切分各帧` / `逐帧接力` | 前一帧作后一帧参考图，链式传递 |
+| `/avd/video 生成视频分镜图` / `合并帧` | 3-4 个关键帧合成一张分镜图 |
+| `/avd/video 继续下一段` / `续写下一段` | AI 自动续写下一段剧情+匹配衔接技法 |
+| `/avd/video 用 [技法名] 衔接，继续下一段` | 手动指定衔接技法（如 J-Cut/图形匹配剪） |
+| `/avd/video 下一段往 [方向] 发展` | 手动指定剧情发展方向 |
+| `/avd/video 检查视频` / `视频检查` | 12 项生成后检查清单（详见 `rules/qc.md` §三） |
+
+## ⚠️ 路由规则
+
+| 用户说法 | 行为 |
+|---------|------|
+| `/avd/video`（未指定） | **展示平台+动作选单**，等用户选 |
+| `/avd/video [故事/故事板]` | 走 5 步推荐流程 → 输出视频 prompt + 参考图方案 |
+| `/avd/video 转视频` | 已有故事板 → 直接出视频方案 |
+| `/avd/video 出视频 prompt` | 仅出压缩版 Prompt |
+| `/avd/video 详细模式` | 3000+ 字展开 Prompt |
+| `/avd/video 逐帧接力` | 逐帧出图，前帧作后帧参考 |
+| `/avd/video 合并帧` | 3-4 关键帧合并一张分镜图 |
+| `/avd/video 续写下一段` | 继承DNA+尾帧→首帧衔接 |
+| `/avd/video 用 Seedance` | 直接选 Seedance 平台 |
+| `/avd/video 用 Runway` | 直接选 Runway 平台 |
+| `/avd/video 用 可灵` | 直接选 可灵 平台 |
+| `/avd/video 声音设计` | 输出音效表+声音方案 |
+
+**禁止**：不展示选单直接生成。`/avd/video` 无参数时必须展示平台+动作。
 
 ## 5 步推荐流程
 
@@ -50,7 +71,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 出图量：6 张 → 拼接为 1 张全景 | 费用：~USD0.24-0.48 | 耗时：~90s
 ```
 
-### 第三步：生成分镜图（3-4 张，覆盖 15s 全部镜头）
+### 第三步：生成分镜图（由 video-director + consistency-trigger 决定张数，覆盖当前段全部镜头）
 
 ```
 → 回复"生成视频分镜图"或"合并帧"
@@ -62,7 +83,7 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 ### 第四步：生成视频 prompt
 
 ```
-→ 回复"出视频 prompt"（默认压缩模式 ≤1500 字）
+→ 回复"出视频 prompt"（默认压缩模式 ≤ {PLATFORM}_MAX_PROMPT_CHARS 字）
 费用：零 | 耗时：~30s
 ```
 
@@ -77,6 +98,13 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 
 ## 视频 Prompt 输出格式（压缩模式）
 
+> **⚠️ 模板强制规则**：生成视频 Prompt 前，**必须依次读取**：
+> 1. `engines/video-prompt-assembly.md`（4层 Prompt 结构权威源——第1层视频基础信息/第2层故事板序列/第3层约束层@图/第4层风格收尾。帧描述≤25字约束。@图数量=asset-map实际条目数。职责边界：角色卡/场景图/分镜图 prompt 不由本引擎生成）
+> 2. `rules/format-contract.md` §1.4（视频与关键帧格式合同——output_type=video_prompt, asset_purpose=video_asset, video_safe=true）
+> 3. `state/asset-map.md`（动态读取 @图编号→用途映射，不硬编码 @图数量）
+> 
+> 不读上述文件直接写视频 Prompt = bug。
+
 ```
 【画面内容】逐帧提取核心视觉信息（≤15字）+ 运镜 + 色彩/灯光 + 转场
 
@@ -85,40 +113,20 @@ description: AI video full workflow — 5-step recommended pipeline from storybo
 - 画面锚点：引用视频分镜图（@编号→用途见 state/asset-map.md）
 
 过渡衔接声明：continuous single shot, smooth transitions no hard cuts
-总字数 ≤1500 字
+总字数 ≤ {PLATFORM}_MAX_PROMPT_CHARS 字
 ```
 
 ## 详细模式
 
 回复 "详细模式" 或 "展开 prompt"：每帧完整叙事段落 + 音效 + 构图 + 转场 + 台词，3000+ 字。
 
-## 视频负面提示词（自动附加）
+## 视频负面提示词
 
-```
-no flickering, no frame flashing, no sudden brightness jumps, no color shifts,
-no morphing, no body distortion, no face melting, no limb warping, no extra fingers,
-no floating, no sliding feet, no hovering, no broken physics,
-no background shifting, no environment pop-in, no sky color change,
-no disappearing props, no weapon shape change, no accessory deformation,
-no clothing texture change, no fabric stiffness, no costume color drift,
-no broken continuity between frames, no jump cuts, no ghosting artifacts,
-no text garbling, no watermark, no logo, no subtitles mismatch
-```
+> **详见 `rules/qc.md` §二** — 完整视频专属负面提示词。视频 prompt 输出时自动从该文件读取并附加到尾部。
 
-## 视频生成后检查（10 项）
+## 视频生成后检查
 
-```
-□ 场景一致性：所有帧背景同一环境？
-□ 角色一致性：所有帧面部/发型/服装一致？
-□ 光照方向：所有帧主光方向一致？
-□ 道具形制：武器/配饰不变形？
-□ 动作连贯：帧间动作平滑？
-□ 画面锚点：画面是否偏离故事板？
-□ 转场流畅：帧间是否生硬闪跳？
-□ 字幕正确：时间/位置/内容准确？
-□ 材质质感：不跳变？
-□ 总体打分：0-100 分，低于 60 补全锚点重生成
-```
+> **详见 `rules/qc.md` §三** — 完整 12 项检查清单（场景/角色/光照/道具/动作/画面/转场/字幕/材质/视觉干净度/视觉可用性/台词音效）。输出后从该文件读取并逐项执行。
 
 ## 多平台支持
 
@@ -137,3 +145,33 @@ no text garbling, no watermark, no logo, no subtitles mismatch
 - 场景参考图/角色卡跨段复用
 - 支持 36 种导演衔接技法（说 "用 J-Cut 衔接"、"用图形匹配剪衔接" 等）
 - AI 自动续写下一段剧情（说 "继续下一段"）
+- 详细技法 → 见 `templates/steps.md` 跨段衔接章节
+
+## API 直接生成
+
+### 图片 API（9 平台）
+
+| 命令 | 平台 | 特点 |
+|------|------|------|
+| `用 Nano Banana 生成 [格式]` | Google Gemini | 中文原生，14张参考图 |
+| `用 GPT Image 生成 [格式]` | OpenAI DALL-E 3 | 高清模式 |
+| `用 Flux 生成 [格式]` | Replicate | SDXL 替代 |
+| `用 Ideogram 生成 [格式]` | Ideogram | 文字渲染强 |
+| `用 通义万相 生成 [格式]` | DashScope | 中文原生 |
+| `用 SD 生成 [格式]` | Stability AI | SDXL/SD3 |
+| `用 ComfyUI 生成 [格式]` | 本地 ComfyUI | 社区扩展 |
+| `用 Recraft 生成 [格式]` | Recraft | 设计风格 |
+
+> Midjourney 无官方公开 API。详见 `platforms/api-integration.md`
+
+### 视频 API（5 平台）
+
+| 命令 | 平台 | 特点 |
+|------|------|------|
+| `用 Seedance 生成视频` | 火山引擎 Ark | 多图输入，中文原生，音频输出 |
+| `用 Runway 生成视频` | Runway Gen-4.5 | 最成熟，SDK 完善 |
+| `用 可灵 生成视频` | 阿里云百炼 | 4K 输出，角色ID复用 |
+| `用 Luma 生成视频` | Luma Dream Machine | 首尾帧插值，丝滑过渡 |
+| `用 Pika 生成视频` | fal.ai Pika | 社交短视频，快速验证 |
+
+> 视频 API 为异步模式：创建任务→轮询→下载。详见 `platforms/video-api-integration.md`

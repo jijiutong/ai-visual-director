@@ -35,6 +35,7 @@
 ## 二、分镜图密度决策
 
 > 目标：根据镜数和复杂度，决定分镜图拆成几张。避免「15s/7镜挤一张图看不清」。
+> 费用为 API 调用估算（~$0.08/张参考价），实际取决于平台定价，此处仅供预算参考。
 
 ### 决策表
 
@@ -44,7 +45,8 @@
 | 4-7镜 | 剧情/对话/情绪 | 标准2图 | 2张 | 3-4帧/图 | 大多数商业片、短剧 |
 | 4-7镜 | 动作/战斗/追车 | 精细3图 | 3张 | 2-3帧/图 | 动作细节需要更大画面 |
 | 8-10镜 | 任意 | 精细拆分 | 3-4张 | 2-3帧/图 | 长片段、多阶段 |
-| >10镜 | 任意 | 逐帧模式 | N/2 或 N张 | 1-2帧/图 | 史诗级、关键战役 |
+| 11-15镜 | 任意 | 逐帧模式 | N/2 或 N张 | 1-2帧/图 | 史诗级、关键战役 |
+| >15镜 | 任意 | ⚠ 强制拆段 | — | — | 超过单段上限，必须先拆段再逐段决策 |
 
 ### 特殊规则
 
@@ -252,19 +254,63 @@
 
 ---
 
-## 六、不阻塞主链原则
+## 六、最低资产强制检查（阻断机制）
+
+> 来源：`rules/asset-minimums.md` 第四节。
+
+在输出建议前，额外执行强制检查：
 
 ```
-consistency-trigger 输出建议
-  ↓
-reference-anchor（继续执行，不等用户回复）
-  ↓
+1. 读取 rules/asset-minimums.md → 强制升级条件表
+2. 读取当前项目状态：
+   ├─ 主角出镜数（state/project-graph.md）
+   ├─ 服装复杂度（state/variable-registry.md → characters.*.costume/weapon）
+   ├─ 场景数/角度分布（state/shot-state.md → shots[].shot_size）
+   ├─ 段数（state/variable-registry.md → project.segment_count）
+   └─ 平台参考图上限（api-config.template.env → {PLATFORM}_MAX_REF_IMAGES）
+3. 逐条对照强制条件：
+   ├─ 触发 → 检查当前 asset-plan 是否已包含强制资产
+   │   ├─ 已包含 → 放行，继续建议模式
+   │   └─ 缺失 → ⚠ 阻断主链，输出缺失清单
+   └─ 未触发 → 保持建议模式（不阻断）
+```
+
+阻断输出格式：
+
+```markdown
+⚠ 一致性升级为强制：
+
+原因：[具体触发条件]
+触发规则：[rules/asset-minimums.md 对应条款]
+
+必须补充资产：
+  - [资产1]（[方法/版式]）
+  - [资产2]
+
+当前缺失：[列表]
+阻断原因：不补充则[一致性风险描述]。
+
+回复「自动补充」→ 一键生成缺失资产
+回复「跳过风险」→ 强制放行（一致性不保证）
+```
+
+---
+
+## 七、不阻塞主链原则（建议部分）
+
+```
+consistency-trigger 输出建议 + 强制检查
+  ├─ 强制条件触发且缺失 → ⚠ 阻断（等待用户确认或自动补充）
+  └─ 未触发强制条件 → 建议模式，不阻塞
+      ↓
+visual-density-controller → reference-anchor（继续执行）
+      ↓
 motion-physics → project-graph → 子路由 → video-prompt-assembly → ...
-  ↓
+      ↓
 render-package（最终输出时附带建议区块）
 ```
 
-> 建议作为 `render-package` 的前置区块，用户在拿到完整 prompt 的同时看到一致性建议。
+> 建议部分作为 `render-package` 的前置区块，强制部分阻断主链直到满足最低资产。
 
 ---
 
@@ -274,7 +320,11 @@ render-package（最终输出时附带建议区块）
 ← 读取 `state/variable-registry.md`（类型 + 场景 + 角色 + 服装）
 ← 读取 `state/project-graph.md`（角色→镜头分布）
 ← 接收 `asset-plan` 的资产规划结果（预算级别 + 已规划的资产类型）
+← **读取 `api-config.template.env`**（{PLATFORM}_MAX_REF_IMAGES → 平台参考图上限）
+← **读取 `rules/asset-minimums.md`** — 强制升级条件表，触发时执行阻断检查
 → **搜索 `rules/scene-consistency.md`** — 拉取推荐方法的完整参数（出图量/费用/耗时/强度/优缺点/触发命令），不可用简化版替代
 → **搜索 `rules/character-consistency.md`** — 同上，每个推荐方法拉取完整参数（出图量/费用/耗时/强度/平台兼容/触发命令）
 → 输出合并后的保障建议（决策逻辑 + 知识库参数）到 `render-package`
-→ 不阻塞主链（建议仅附加，不改变执行流）
+→ 建议模式不阻塞主链（建议仅附加，不改变执行流）
+→ **强制模式阻断主链**（触发 asset-minimums 强制条件且资产缺失时）
+→ 通过后放行到 `visual-density-controller`

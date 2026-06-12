@@ -1,152 +1,144 @@
 # AI Visual Director
 
 <p align="center">
-  <a href="./README.md">中文</a> · <a href="./README.en.md"><b>🇬🇧 English</b></a>
+  <b>Prompt Production OS</b> — The AI director that turns stories into films<br>
+  <sub>53 Styles · 44 Layouts · 140+ Camera Techniques · 5 Video Platforms · Zero-Hallucination Governance</sub>
 </p>
 
-> Turn a story into character sheets, scene references, storyboard boards, video prompts, and an executable video generation package.
-> Paste text / Markdown / Obsidian projects → get production-ready prompts for AI image/video tools.
+<p align="center">
+  <a href="./README.md">中文</a> · <a href="./README.en.md"><b>English</b></a>
+</p>
 
 ---
 
-## What It Is
+A story goes in. Character sheets, scene references, full boards, storyboard frames, and video prompts come out.
 
-AI Visual Director is a Claude Code Skill. Paste a story → get a professional visual development plan. Read an Obsidian or Markdown project → batch-generate chapter video packages.
+Not an inspiration toy. A **production line** with command gates, format contracts, asset-purpose separation, state locking, and multi-dimensional QC.
 
-Core abilities:
+```text
+Story → Intake → Shot Budget → Director Decisions → Asset Planning → Consistency Anchoring → Platform Adaptation → QC → Execution Package
+```
 
-- 🎬 **One-click story to video** — auto-intake story → plan assets → output a complete video package
-- 🧭 **Source routing** — direct paste / Markdown / Obsidian / frontmatter / batch chapters
-- 🎞️ **Story to storyboard** — auto-extract characters/scenes/conflict → full board with lighting/camera/color
-- 👤 **Character design** — 6-module character sheets + DNA anchoring
-- 🏯 **Scene design** — all-in-one reference + director-annotated mode
-- 🎥 **Video prompts** — one complete prompt for Seedance / Runway / Kling
-- 🎨 **50+ visual styles** — Eastern Fantasy / Wong Kar-wai / Cyberpunk / Ink Wash / 3D Animation…
-- 🧩 **40 layout styles** — all-in-one boards / character boards / scene boards / storyboard boards
-- 📱 **Multi-platform** — GPT Image / Midjourney primary; SD / DALL-E compatible
+## Why
 
----
+AI image and video tools are powerful. **Stability** is their Achilles' heel. Characters shift between frames. Scenes drift between shots. Prompts start hallucinating halfway through.
 
-## Installation
+AI Visual Director encodes **the director's workflow as a constraint system**. Every prompt passes through gates, reads locked state, and conforms to a format contract before generation. Not to limit creativity — to lock it within executable bounds.
 
-### npx install
+```text
+Full capability preserved → Default authority constrained → Exploration explicitly triggered → State committed only after confirmation → Video assembled, never redesigned
+```
+
+## By the Numbers
+
+| | |
+|---|---|
+| **53** visual styles | From Black-Gold Action to Ghibli to Glitch Art. Wong Kar-wai. Zhang Yimou. Wes Anderson. Nolan. |
+| **44** layout systems | Cinematic full board. Sci-fi HUD console. Mythic four-shot sequence. Horizontal timeline. Zen minimal. |
+| **140+** camera techniques | 15 shot sizes × 66 movements × 21 angles × 11 focal lengths × 10 aspect ratios × 8 special POVs |
+| **19** numbering systems | VS/EC/CN/CP/ME/BL/EV/WT/MT/CR/PR/HE/TR/SD/SE/FX/MU/RS/DR — fully auto-populated |
+| **5** video platforms | Seedance · Runway · Kling · Luma · Pika. Single storyboard, multi-platform output. |
+| **8** character consistency methods | 6-panel sheet → 5-angle face → 12 expressions → costume/weapon details → IP-Adapter → DNA anchoring |
+| **7** scene consistency methods | All-in-one reference → 9-grid → 720° panorama → blueprint → surround capture → diptych anchor |
+| **36** transition techniques | Graphic match cut · J-Cut · L-Cut · Freeze frame · Split screen · Color desaturation… tail-frame → head-frame lock |
+| **12** QC checkpoints | Scene / character / lighting / props / motion / framing / transitions / subtitles / materials / visual cleanliness / asset purpose / dialogue & sound |
+
+## Install
 
 ```bash
 npx ai-visual-director
 ```
 
-### sh install
+Or:
 
 ```bash
 curl -fsSL https://raw.githubusercontent.com/jijiutong/ai-visual-director/main/install.sh | sh
 ```
 
-### Install from source
-
 ```bash
-git clone https://github.com/jijiutong/ai-visual-director.git
-cd ai-visual-director
-sh install.sh
+git clone https://github.com/jijiutong/ai-visual-director.git && cd ai-visual-director && sh install.sh
 ```
 
-The default target is `~/.claude/skills/ai-visual-director`. To use another skills directory:
+Restart Claude Code. Type `/create`.
 
-```bash
-npx ai-visual-director --skills-dir ~/.claude/skills
-AI_VISUAL_DIRECTOR_SKILLS_DIR=~/.claude/skills sh install.sh
-```
-
-Restart Claude Code after installation, then use `/create`.
-
----
-
-## 30-Second Start
+## 30 Seconds
 
 ```text
-/create one-click Two swordsmen face off in a rainy temple. The master realizes his disciple has fallen to the dark side. 15s 7 shots
+/create Two swordsmen face off in a rain-drenched temple. The master realizes his disciple has fallen. 15s 7 shots
 ```
 
-Output: story intake → shot budget → character anchors → scene anchors → storyboard → video prompt → execution package
+Default `/create standard`:
 
----
+```text
+Story intake → Character anchor → Scene anchor → Full board prompt → Video prompt → QC → Execution checklist
+```
 
-## 6 Core Commands
+## Commands
 
-| Command | Use | Example |
-|---------|-----|---------|
-| `/create` | One-click orchestration | `/create one-click [story] 15s 7shots` |
-| `/source` | Obsidian / Markdown project intake | `/source read Obsidian [project]` |
-| `/storyboard` | Core asset: storyboard board | `/storyboard [story]` |
-| `/character` | Core asset: character sheet | `/character Name description` |
-| `/scene` | Core asset: scene reference | `/scene Scene description` |
-| `/video` | Video prompt / execution package | `/video prompt` |
+| Command | Does | Doesn't |
+|---------|------|---------|
+| `/create` | One-click orchestration: fast / standard / full | Choose tier automatically |
+| `/character` | Character sheets, 8 consistency methods | Touch sound, series, or multi-version |
+| `/scene` | Scene references, 7 spatial anchoring methods | Rewrite character faces |
+| `/storyboard` | Full boards, storyboard frames, shot design | Rewrite character DNA |
+| `/video` | Video prompt + execution package, 5-platform output | Redesign. Assembling only. |
+| `/source` | Obsidian / Markdown / paste / batch input | Anything beyond structuring |
+| `/dialogue` | Dialogue script + rhythm notation + subtitle plan | Writes per-shot dialogue-map |
+| `/sound` | Ambience / foley / music / reverb design | 16 SE × 20 FX × 12 MU × 8 RS |
+| `/poster` | Movie posters, 10 styles × 3 aspect ratios | Enter video pipeline. marketing_asset. |
+| `/style` | 53 style browser, fusion, migration, 14 director imitations | Write back. derived by default. |
+| `/compact` | Token compression, context management, visual declutter | Redesign characters or story |
 
-`/style` and `/poster` remain available as compatibility entries for style actions and poster outputs.
+Governance: `/lock` `/commit` `/unlock` `/check`
 
-Core asset relationship: character sheets lock **who**, scene references lock **where**, storyboards lock **how to shoot**, and `/create` orchestrates them into a complete video execution package.
+## `/create` Tiers
 
-## Common Actions
+| | fast | standard ⭐ | full |
+|---|------|------------|------|
+| Story intake | ✅ | ✅ | ✅ |
+| Shot budget | ✅ | ✅ | ✅ |
+| Character sheet | inline DNA | template | template |
+| Scene reference | inline DNA | template | template |
+| Full board | — | ✅ | ✅ |
+| Video prompt | ✅ | ✅ | ✅ |
+| Dialogue + sound | — | — | ✅ |
+| QC report | — | ✅ | ✅ |
+| Use case | Quick validation | Production | Full delivery |
 
-| Command | Use |
-|---------|-----|
-| `一键生成` | Auto best plan, full video execution package |
-| `多版本` | A/B/C version comparison |
-| `看全部` | Browse all styles & formats |
-| `Shot X...` | Precise single-shot edit |
-| `Change to X style but keep characters` | Style transfer |
-| `Read from Obsidian` | Load project/chapters and enter batch workflow |
-| `评分` | Prompt quality score + optimization |
-| `检查连续性` | Check character/scene/timeline continuity |
+## Governance
 
----
+AI Visual Director is a four-layer constraint system:
 
-## Examples
+| Layer | Policy | Role |
+|-------|--------|------|
+| **Stable** | always on | command-gate · format-contract · lock-state · prompt-qc · asset-qc |
+| **Asset** | command-driven | character sheets · scene references · storyboards · video prompts · dialogue · sound · posters |
+| **Enhanced** | project mode | camera · pacing · emotion curves · color narratives · motion physics · continuity |
+| **Exploratory** | explicit trigger | multi-version · style fusion · director imitation · migration · series · mood slider |
 
-| # | Genre | Story | Style | Sample |
-|---|-------|-------|-------|--------|
-| 01 | Wuxia | Master vs disciple in rainy temple | Eastern Fantasy | `examples/video/01-rainy-temple-action.md` |
-| 02 | Urban | Exes meet at late-night convenience store | Urban Mood | `examples/video/02-convenience-store-mood.md` |
-| 03 | Sci-fi | Android girl in derelict spaceport | Dark Sci-fi | `examples/video/03-spaceport-countdown.md` |
-| 04 | Cute | Blue desk pet delivers milk | 3D Animation | `examples/video/04-desk-pet-comedy.md` |
+```
+draft (default, no write-back) → locked (confirmed, immutable) → committed (persisted)
+```
 
----
+## Architecture
 
-## Advanced Usage
+| Directory | What |
+|-----------|------|
+| `engines/` | 40 decision engines — routing, gating, directing, planning, scoring, repair, packaging |
+| `rules/` | 19 rule files — format contracts, numbering, QC, consistency, negatives, platform red lines |
+| `templates/` | 12 prompt templates — full boards, character sheets, scene cards, storyboards, posters, dialogue, sound |
+| `knowledge/` | 32 knowledge bases — camera, lighting, composition, expression, materials, sound, era, props |
+| `sub-skills/` | 9 entry points — create / character / scene / storyboard / video / source / poster / style / compact |
+| `state/` | 14 state files — variable registry, locks, asset map, shot state, dialogue/sound maps, dependency graph |
+| `imitation/` | 14 director style libraries — Wong Kar-wai, Villeneuve, Nolan, Ghibli, Pixar, Zhang Yimou… |
 
-| Topic | Document |
-|-------|----------|
-| All commands + API reference | [docs/commands.md](docs/commands.md) |
-| User guide | [docs/user-guide.md](docs/user-guide.md) |
-| Rules & constraints | [docs/rules.md](docs/rules.md) |
-| Full skill docs | [docs/SKILL.md](docs/SKILL.md) |
-| System architecture | [docs/system-architecture.md](docs/system-architecture.md) |
-| Video workflow | [docs/video-workflow.md](docs/video-workflow.md) |
-| Obsidian / batch / series | [docs/obsidian-workflow.md](docs/obsidian-workflow.md) |
-| Platform prompt formats | [docs/platform-prompts.md](docs/platform-prompts.md) |
-| More examples | [examples/](examples/) |
+## Platforms
 
----
-
-## Platform Support
-
-| Platform | Status | Notes |
-|----------|--------|-------|
-| GPT Image | ✅ Primary | Long natural-language prompts, character sheets, full boards |
-| Midjourney | ✅ Primary | Visual style art, posters, keyframes |
-| SD / SDXL / SD3 | 📝 Template-compatible | Pos/neg prompts provided; local params user-adjusted |
-| DALL-E 3 | 📝 Template-compatible | Natural-language image prompts |
-| ComfyUI / IP-Adapter | 🔧 Community extension | No built-in local deployment; PRs welcome |
-
-> This is a Prompt Workflow Skill, not a local image generation framework.
-> Platform issues → [Open an Issue](https://github.com/jijiutong/ai-visual-director/issues)
-
----
-
-## Tests
-
-90 regression tests, all passing. See [CHANGELOG.md](CHANGELOG.md).
-
----
+| Image | Video |
+|-------|-------|
+| GPT Image 2 · Midjourney v6/7 | Seedance · Runway Gen-4 · Kling |
+| DALL-E 3 · SDXL · SD3 | Luma · Pika |
+| Flux · Ideogram · Tongyi · Recraft | ComfyUI / IP-Adapter (community) |
 
 ## License
 

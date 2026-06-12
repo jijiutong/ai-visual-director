@@ -85,7 +85,47 @@
 详细修复模式见 rules/continuity-check.md 自动修复表（场景过渡/服装变化/情绪跳跃/光源变化）
 ```
 
----
+### 策略6：视觉干净度低 → 去噪
+
+```
+检测：final-video-qc 第10项（视觉干净度）致命
+原因：背景/HUD/粒子/文字污染画面
+修复：
+  1. 调用 engines/prompt-declutter.md → 目标维度降噪
+  2. 更新 state/visual-control-state.md
+  3. 如果已有项目资产 → 触发 incremental-update 局部更新
+  4. 重新生成清理版 prompt
+  5. 重新 QC 第10项
+
+回流参考：rules/failure-routing.md（画面太脏/HUD乱飞/粒子过多/文字乱码）
+```
+
+### 策略7：失败样本 → 回流
+
+```
+检测：修复后仍失败 或 同一问题出现 2 次以上
+原因：知识库/规则/模板存在盲区
+修复：
+  1. 读取 rules/failure-routing.md → 匹配失败现象 → 找到回流位置
+  2. 记录失败样本（输入/现象/回流位置/修复动作/结果）
+  3. 如回流位置有知识库条目 → 调用 knowledge-retrieval 搜索具体修复方法
+  4. 如回流位置无对应条目 → 标注「⚠ 新失败类型，需补充规则」
+```
+
+### 策略8：台词/音效缺失 → 补设计
+
+```
+检测：final-video-qc 第12项（台词连贯性 / 音效覆盖）致命
+原因：dialogue-map 或 sound-map 缺失关键条目
+修复：
+  1. 台词问题 → 调用 engines/dialogue-engine.md → 补 dialogue-map 缺失条目
+  2. 音效问题 → 调用 engines/sound-engine.md → 补 sound-map 缺失条目
+  3. 更新 state/dialogue-map.md 或 state/sound-map.md
+  4. 重新生成 dialogue-script 或 sound-design-sheet
+  5. 重新 QC 第11-12项
+
+回流参考：rules/failure-routing.md（台词连贯性断裂 / 音效覆盖不完整）
+```
 
 ## 修复优先级
 
@@ -93,9 +133,12 @@
 1. 平台兼容（P0）—— 超限则完全生不出来
 2. 角色一致性（P0）—— 人脸漂了就直接废
 3. 场景一致性（P1）—— 场景漂移整体作废
-4. 动作清晰度（P1）—— 动作不清楚视频不通顺
-5. 连续性（P2）—— 断裂但不致命
-6. Prompt分数（P2）—— 优化项
+4. 视觉干净度（P0/P1）—— 角色卡/首帧脏=致命，其他=非致命
+5. 视觉可用性（P1）—— display_asset 误用为 video_asset=致命（见 `rules/asset-qc.md` 四维度检查）
+6. 台词/音效（P1）—— 缺失关键条目=致命，不完整=非致命
+7. 动作清晰度（P1）—— 动作不清楚视频不通顺
+8. 连续性（P2）—— 断裂但不致命
+9. Prompt分数（P2）—— 优化项
 ```
 
 ---
@@ -128,11 +171,28 @@
 ← 接收 `engines/consistency-engine.md` 的一致性评估报告（RM 阻断项触发专项修复）
 ← 接收 `engines/asset-plan.md` 的最低资产校验结果（不满足时触发策略2/3补资产）
 ← 接收 `engines/reference-anchor.md` 的平台校验结果（不通过时触发策略4压缩或策略5连续性修复）
+← 接收 `rules/final-video-qc.md` 第10项视觉干净度检查（致命时触发策略6去噪）
 ← 调用 `engines/knowledge-retrieval.md`（修复前检索 knowledge/ 获取具体操作参数）
+← 调用 `engines/prompt-declutter.md`（策略6：视觉去噪）
+← 读取 `rules/failure-routing.md`（策略7：失败回流 → 匹配回流位置）
 → 按策略链修复
 → **修复后调用 `engines/incremental-update.md`**（限定重评范围：只评估修复涉及的 RM 维度，不跑全量 5 维度）
 → 重新评分→仍不达标→再次修复（最多 REPAIR_MAX_ROUNDS 轮，从 api-config.template.env 读取）
 → REPAIR_MAX_ROUNDS 轮后仍不达标→标记为"需人工介入"
-→ 修复完成 → 输出给 `rules/final-video-qc` 做最终质检
+→ 修复完成 → 调用 `rules/asset-qc.md` 检查所有产出资产（用途一致/视频安全/一致性/可用性四维度）
+→ 输出给 `rules/final-video-qc` 做最终质检
 → final-video-qc 不通过 → 再次进入修复（QC修复循环，与评分修复循环共用 REPAIR_MAX_ROUNDS 总限制）
-→ **修复后更新 state/**：策略1→更新 `variable-registry.md`（characters.immutable_features）；策略2→更新 `variable-registry.md`（scene.fixed_elements）；策略3/5→更新 `shot-state.md`（action/transition/end_state）；策略4→更新 `variable-registry.md`（word_count）
+→ **修复后更新 state/**：策略1→更新 `variable-registry.md`（characters.immutable_features）；策略2→更新 `variable-registry.md`（scene.fixed_elements）；策略3/5→更新 `shot-state.md`（action/transition/end_state）；策略4→更新 `variable-registry.md`（word_count）；策略6→更新 `visual-control-state.md`
+→ 策略7 → 记录失败样本到 rules/failure-routing.md 回流日志
+
+---
+
+## 死循环防护
+
+| 防护 | 规则 |
+|------|------|
+| 总轮次上限 | `REPAIR_MAX_ROUNDS`（api-config.template.env，默认3）。评分修复 + QC修复累计不超此值 |
+| 连续相同修复 | 同一问题连续2轮修复后评分未提升 → 跳过该问题，标记"放弃修复" |
+| 修复降级 | 第 N 轮评分低于第 N-1 轮 → 回滚到 N-1 轮结果，标记"最优已达" |
+| 阻断项无法修复 | 任一 RM < 30 且 1 轮修复后仍 < 30 → 不继续修，直接标记"需人工介入" |
+| 修复范围收敛 | 每轮修复后，重评范围限 affected dimensions（incremental-update），不跑全量5维 |

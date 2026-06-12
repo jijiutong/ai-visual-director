@@ -25,7 +25,6 @@
     "imitation/",
     "sub-skills/",
     "docs/",
-    "examples/",
     "scripts/install.mjs",
     "install.sh",
     "README.md",
@@ -33,6 +32,7 @@
     "LICENSE"
   ],
   "scripts": {
+    "install": "node scripts/install.mjs"
   }
 }
 }

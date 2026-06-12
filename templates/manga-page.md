@@ -1,5 +1,7 @@
 # 漫画分镜页 & 四格漫画模板
 
+> **治理**：生成前读 `state/format-contract-state.md`。产出标记 `draft`，不写回主状态。资产用途 `display_asset`，不进视频 @图。详见 `rules/format-contract.md` §1.5。
+
 ## 适用场景
 
 支持两种模式：
