@@ -1,6 +1,6 @@
 ---
 name: avd/create
-description: 【AI视觉导演】一键故事到视频 — 给一个故事，输出角色卡+场景图+全案板+视频Prompt+质检报告。fast/standard/full三档可选。
+description: "【AI视觉导演】一键故事到视频。给一个故事，输出角色卡、场景图、全案板、视频 Prompt 和质检报告。fast/standard/full 三档可选；未指定模式默认 standard。"
 ---
 
 # Create — 一键故事到视频
@@ -29,7 +29,7 @@ description: 【AI视觉导演】一键故事到视频 — 给一个故事，输
 | `/avd/create fast [故事]` | **快速版** | 4项：故事摄入+镜头预算+视频结构+视频Prompt。角色/场景DNA内联，不独立出图。总输出~200行 |
 | `/avd/create standard [故事]` | **标准版** ⭐默认 | 8项：+角色卡+场景图+全案板+平台参数。资产走模板。总输出~500行 |
 | `/avd/create full [故事]` | **完整版** | 12项：+负面词+质检报告+拆段衔接+执行清单。最全。总输出~800行 |
-| `/avd/create [故事]`（未指定模式） | **展示模式选单** | 先让用户选 fast/standard/full，再执行 |
+| `/avd/create [故事]`（未指定模式） | **标准版** ⭐默认 | 直接按 standard 执行；只有用户要求“先给我选项/让我选模式”时才展示 fast/standard/full 选单 |
 
 **三种模式对比**：
 
@@ -49,7 +49,7 @@ description: 【AI视觉导演】一键故事到视频 — 给一个故事，输
 | 执行清单 | ❌ | ❌ | ✅ |
 | 适用 | 快速验证想法 | 正式出图 | 完整项目交付 |
 
-> 默认 `/avd/create [故事]` 未指定模式时，先展示 fast/standard/full 选单让用户选。
+> 默认 `/avd/create [故事]` 未指定模式时，直接执行 standard。只有用户明确要求选择模式时，才先展示 fast/standard/full 选单。
 
 ## 执行链路
 

@@ -44,14 +44,14 @@ AI Visual Director 的子技能模块。每个子技能处理一个主命令的�
 
 所有子技能共享 `state/` 变量注册中心：
 
-```
-/character   → 写入 state/variable-registry（characters.*）+ state/asset-map（@图映射）
-/scene       → 写入 state/variable-registry（scene.*）+ state/asset-map
-/storyboard  → 写入 state/variable-registry（style.*）+ state/shot-state + state/asset-map
-/create      → 写入全部 state/ + state/asset-map + state/shot-state + state/dialogue-map
-/source      → 写入 state/variable-registry（project.title/genre + characters + scene）
-/video       → 读取 state/asset-map + state/shot-state；写入 state/variable-registry + state/asset-map
-/style       → 读取 state/variable-registry（style.visual_style）；迁移时更新 state/variable-registry
+```text
+/character   → draft 输出建议写入项；确认后写入 state/variable-registry（characters.*）+ state/asset-map（@图映射）
+/scene       → draft 输出建议写入项；确认后写入 state/variable-registry（scene.*）+ state/asset-map
+/storyboard  → draft 输出建议写入项；确认后写入 state/variable-registry（style.*）+ state/shot-state + state/asset-map
+/create      → draft 输出执行包；确认后写入全部 state/ + state/asset-map + state/shot-state + state/dialogue-map
+/source      → draft 输出解析结果；确认后写入 state/variable-registry（project.title/genre + characters + scene）
+/video       → draft 读取 state/asset-map + state/shot-state 并输出执行包；确认后写入建议新增资产映射
+/style       → 读取 state/variable-registry（style.visual_style）；确认迁移后更新 state/variable-registry
 /poster      → 读取 state/variable-registry（project.title + style.visual_style）
 ```
 

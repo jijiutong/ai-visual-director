@@ -1,11 +1,11 @@
 ---
 name: avd/video
-description: 【AI视觉导演】视频工作流 — 5平台(Seedance/Runway/可灵/Luma/Pika)，声音设计，续写
+description: "【AI视觉导演】视频工作流。5 平台 Seedance/Runway/可灵/Luma/Pika，视频 Prompt、声音设计、续写和参考图方案。"
 ---
 
 # Video — AI 视频全流程
 
-> **治理**：走 `engines/command-gate.md` 权限表 §四 /video。产出标记 `draft`，不写回主状态。只读取 `state/asset-map.md`、`state/shot-state.md`、`state/dialogue-map.md`、`state/sound-map.md` 组装视频执行包，禁止临时重写角色卡、场景图或故事方向。详见 `rules/format-contract.md` §1.4。
+> **治理**：走 `engines/command-gate.md` 权限表 §四 /video。产出标记 `draft` 时，只在回复中生成状态块和执行清单，不写回 `state/` 主状态文件。只读取 `state/asset-map.md`、`state/shot-state.md`、`state/dialogue-map.md`、`state/sound-map.md` 组装视频执行包，禁止临时重写角色卡、场景图或故事方向。详见 `rules/format-contract.md` §1.4。
 
 输入故事 → 5 步推荐流程 → 输出完整视频 prompt + 参考图方案。支持 5 个视频平台。
 
@@ -60,7 +60,7 @@ description: 【AI视觉导演】视频工作流 — 5平台(Seedance/Runway/可
 → 回复"生成场景参考图"（全能参考模式，一张锁场景+角色+光照+道具）
 → 回复"生成道具细节卡"（如有特殊武器/配饰）
 出图量：2-3 张 | 费用：~USD0.08-0.24 | 耗时：~1min
-→ 写入 state/variable-registry（characters + scene）+ state/asset-map
+→ draft 阶段只输出建议写入项；用户确认后再写入 state/variable-registry（characters + scene）+ state/asset-map
 ```
 
 ### 第二步：全景图锁定全局空间（720° 全景图）
@@ -77,7 +77,7 @@ description: 【AI视觉导演】视频工作流 — 5平台(Seedance/Runway/可
 → 回复"生成视频分镜图"或"合并帧"
 → 将故事板 N 帧按动作阶段合并为 3-4 张
 出图量：3-4 张 | 费用：~USD0.12-0.32 | 耗时：~2min
-→ 写入 state/shot-state + state/asset-map（storyboard_board）
+→ draft 阶段只输出建议写入项；用户确认后再写入 state/shot-state + state/asset-map（storyboard_board）
 ```
 
 ### 第四步：生成视频 prompt

@@ -1,6 +1,6 @@
 ---
 name: avd/source
-description: 【AI视觉导演】输入源读取 — Obsidian/Markdown/粘贴/批处理，统一输出到state/variable-registry
+description: "【AI视觉导演】输入源读取。支持 Obsidian、Markdown、粘贴和批处理；draft 输出解析结果，用户确认后写入 state/variable-registry。"
 ---
 
 # Source — 输入源 / 项目读取
@@ -55,7 +55,7 @@ description: 【AI视觉导演】输入源读取 — Obsidian/Markdown/粘贴/�
 → 场景笔记
 → frontmatter 元数据
 → 建议处理方式
-→ 写入 state/variable-registry（project.title, project.genre, characters, scene）
+→ draft 阶段只输出建议写入项；用户确认后再写入 state/variable-registry（project.title, project.genre, characters, scene）
 ```
 
 之后按用户目标路由：
