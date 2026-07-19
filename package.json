@@ -29,7 +29,7 @@
     "scripts/install.mjs",
     "install.sh",
     "README.md",
-    "README.en.md",
+    "README.zh-CN.md",
     "LICENSE"
   ],
   "scripts": {

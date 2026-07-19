@@ -177,8 +177,8 @@ test("README install and release package include all runtime directories", () =>
 test("install docs expose npx and sh paths", () => {
   assertIncludes("README.md", "npx ai-visual-director");
   assertIncludes("README.md", "install.sh | sh");
-  assertIncludes("README.en.md", "npx ai-visual-director");
-  assertIncludes("README.en.md", "install.sh | sh");
+  assertIncludes("README.zh-CN.md", "npx ai-visual-director");
+  assertIncludes("README.zh-CN.md", "install.sh | sh");
   assertIncludes("package.json", "\"bin\"");
   assertIncludes("package.json", "\"ai-visual-director\"");
 });
