@@ -19,3 +19,4 @@
 | `video-prompt.md` | 视频平台 prompt 规则 |
 | `api-integration.md` | 图片 API 集成 |
 | `video-api-integration.md` | 视频 API 集成 |
+| `atlas-generate-video.mjs` | 可选 Atlas Cloud 视频提交与终态轮询客户端 |

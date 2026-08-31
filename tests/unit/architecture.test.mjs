@@ -174,6 +174,13 @@ test("README install and release package include all runtime directories", () =>
   assertIncludes("README.md", "`.claude/`");
 });
 
+test("optional Atlas Cloud video provider is packaged and documented", () => {
+  assertFile("platforms/atlas-generate-video.mjs");
+  assertIncludes("platforms/README.md", "atlas-generate-video.mjs");
+  assertIncludes("platforms/video-api-integration.md", "ATLASCLOUD_API_KEY");
+  assertIncludes("api-config.template.env", "ATLASCLOUD_VIDEO_MODEL");
+});
+
 test("install docs expose npx and sh paths", () => {
   assertIncludes("README.md", "npx ai-visual-director");
   assertIncludes("README.md", "install.sh | sh");

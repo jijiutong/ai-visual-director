@@ -34,7 +34,7 @@
   ],
   "scripts": {
     "test": "npm run test:unit && npm run test:integration",
-    "test:unit": "node tests/unit/architecture.test.mjs",
+    "test:unit": "node tests/unit/architecture.test.mjs && node tests/unit/atlas-video-client.test.mjs",
     "test:integration": "node tests/integration/story-to-video-flow.test.mjs",
     "smoke": "node scripts/smoke-create-project.mjs",
     "smoke:obsidian": "node scripts/smoke-obsidian-novel.mjs",

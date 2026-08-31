@@ -16,7 +16,7 @@ npm run smoke:incremental
 npm run test:incremental
 ```
 
-- `test:unit` checks static architecture contracts: command entries, runtime directories, state files, dynamic asset-map rules, project graph, and imitation library presence.
+- `test:unit` checks static architecture contracts and verifies that the Atlas Cloud video client submits once, then polls to completion without duplicate generation requests.
 - `test:integration` simulates the one-click story-to-video route and verifies that story intake, shot budget, director state, asset planning, reference anchoring, video prompt assembly, RM, repair, QC, and packaging stay connected.
 - `smoke` creates a deterministic local package at `.test-output/smoke/wuxia-temple/` without calling any AI model.
 - `test:e2e` runs the smoke generator and verifies that the generated package contains project state, prompts, dynamic asset mappings, QC, and render instructions.

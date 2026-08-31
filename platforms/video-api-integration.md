@@ -10,6 +10,7 @@
 
 | 平台 | Key 变量 | 模型变量 | 端点变量 |
 |------|---------|---------|---------|
+| Atlas Cloud | `ATLASCLOUD_API_KEY` | `ATLASCLOUD_VIDEO_MODEL` | `ATLASCLOUD_API_BASE_URL` |
 | Seedance 2.0 | `ARK_API_KEY` | `SEEDANCE_MODEL` | `SEEDANCE_ENDPOINT` |
 | Runway | `RUNWAY_API_KEY` | `RUNWAY_MODEL` | `RUNWAY_ENDPOINT` |
 | 可灵 Kling | `KLING_API_KEY` | `KLING_MODEL` | `KLING_ENDPOINT` |
@@ -17,6 +18,32 @@
 | Pika | `FAL_API_KEY` | `PIKA_MODEL` | `PIKA_ENDPOINT` |
 
 网络说明：Seedance/Kling 国内直连；Runway/Luma/Pika 需海外网络。
+
+---
+
+## Atlas Cloud（可选统一 Provider）
+
+Atlas Cloud 可作为独立、可选的视频生成路由；不改变现有平台默认值。仓库内置的
+`atlas-generate-video.mjs` 使用标准库提交一次生成请求，然后轮询任务直到终态。
+
+```bash
+export ATLASCLOUD_API_KEY="..."
+node platforms/atlas-generate-video.mjs \
+  --prompt="雨夜古寺，镜头缓慢推进，两名剑客隔着烛火对峙" \
+  --duration=5 \
+  --resolution=720p \
+  --ratio=16:9
+```
+
+默认使用 `bytedance/seedance-2.0-mini/text-to-video`。可通过
+`ATLASCLOUD_VIDEO_MODEL` 或 `--model` 覆盖；切换模型前应先查询 Atlas 模型目录和
+对应 schema，确认参数兼容。生成 POST 不会自动重试；仅任务查询使用有限重试，避免重复计费。
+
+成功时脚本输出任务 ID、终态和视频 URL：
+
+```json
+{"id":"prediction-id","status":"completed","outputs":["https://..."]}
+```
 
 ---
 
